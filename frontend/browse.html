@@ -1,0 +1,677 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "error": "#ba1a1a",
+          "surface-dim": "#cbdbf5",
+          "surface-tint": "#2151da",
+          "on-primary": "#ffffff",
+          "secondary": "#565e74",
+          "on-secondary": "#ffffff",
+          "on-primary-container": "#cad3ff",
+          "on-tertiary-container": "#76eab6",
+          "surface-container-high": "#dce9ff",
+          "on-surface": "#0b1c30",
+          "on-tertiary-fixed-variant": "#005137",
+          "secondary-container": "#dae2fd",
+          "surface": "#f8f9ff",
+          "surface-container": "#e5eeff",
+          "tertiary": "#004f35",
+          "surface-bright": "#f8f9ff",
+          "on-error-container": "#93000a",
+          "outline": "#747686",
+          "on-secondary-fixed": "#131b2e",
+          "inverse-primary": "#b7c4ff",
+          "primary-fixed": "#dce1ff",
+          "primary": "#0037b0",
+          "inverse-surface": "#213145",
+          "tertiary-fixed-dim": "#68dba9",
+          "on-background": "#0b1c30",
+          "on-surface-variant": "#434655",
+          "on-primary-fixed": "#001551",
+          "surface-container-low": "#eff4ff",
+          "on-secondary-container": "#5c647a",
+          "outline-variant": "#c4c5d7",
+          "on-secondary-fixed-variant": "#3f465c",
+          "tertiary-fixed": "#85f8c4",
+          "on-primary-fixed-variant": "#0039b5",
+          "tertiary-container": "#006948",
+          "primary-container": "#1d4ed8",
+          "inverse-on-surface": "#eaf1ff",
+          "surface-container-highest": "#d3e4fe",
+          "surface-variant": "#d3e4fe",
+          "on-tertiary": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "background": "#f8f9ff",
+          "on-error": "#ffffff",
+          "secondary-fixed-dim": "#bec6e0",
+          "primary-fixed-dim": "#b7c4ff",
+          "on-tertiary-fixed": "#002114",
+          "error-container": "#ffdad6",
+          "secondary-fixed": "#dae2fd"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "margin": "2rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "gutter": "1.5rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem",
+          "margin-mobile": "1rem"
+        },
+        "fontFamily": {
+          "body-sm": ["Inter"],
+          "label-sm": ["Inter"],
+          "headline-xl": ["Inter"],
+          "title-lg": ["Inter"],
+          "headline-sm": ["Inter"],
+          "label-md": ["Inter"],
+          "headline-lg-mobile": ["Inter"],
+          "headline-lg": ["Inter"],
+          "headline-xl-mobile": ["Inter"],
+          "title-md": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-md": ["Inter"],
+          "body-lg": ["Inter"]
+        },
+        "fontSize": {
+          "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+          "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+          "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+          "title-lg": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+          "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+          "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+          "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+          "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+          "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+          "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
+          "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+          "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "400" }]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-slate-50/70 font-body-md text-slate-800 antialiased min-h-screen flex flex-col"><header class="fixed top-0 inset-x-0 z-50 bg-[#0c192c] text-white border-b border-slate-800 shadow-md backdrop-blur-md"><div class="h-16 max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-2.5 group" data-path="explore-skills" href="#"><div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-blue-500/20 group-hover:bg-blue-500 transition-colors"><span class="material-symbols-outlined text-[19px]">sync_alt</span></div><div class="flex flex-col"><span class="font-headline-sm text-white tracking-tight font-bold text-lg">SkillSwap</span></div></a><nav class="hidden lg:flex items-center gap-1.5"><a aria-current="page" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white font-medium text-xs tracking-tight shadow-sm" data-path="explore-skills" href="#">Explore Skills</a><div class="relative inline-flex items-center"><a class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-xs pr-7" data-path="my-requests" href="#">My Requests</a><span class="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-full bg-blue-500 text-white font-mono text-[10px] leading-tight font-bold pointer-events-none">3</span></div><a class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-xs" data-path="my-profile" href="#">My Profile</a></nav></div><div class="flex items-center gap-space-sm md:gap-space-md"><button class="inline-flex items-center justify-center px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all active:scale-[0.98] shadow-sm shadow-blue-500/25" type="button"><span class="material-symbols-outlined text-[16px] mr-1">add</span><span class="hidden sm:inline">Request Swap</span><span class="sm:hidden">Swap</span></button><div class="relative flex items-center justify-center"><button aria-label="Notifications" class="p-2 rounded-lg border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-colors relative flex items-center justify-center bg-slate-800/80" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-blue-500 ring-2 ring-[#0c192c]"></span></button></div><div class="h-6 w-[1px] bg-slate-700/80 hidden sm:block"></div><div class="flex items-center gap-2 pl-1"><div class="w-8 h-8 rounded-full border border-blue-400/40 bg-blue-900/60 text-blue-200 flex items-center justify-center font-mono text-xs font-semibold ring-2 ring-blue-500/20">ER</div><div class="hidden md:flex flex-col text-left"><span class="font-medium text-xs text-white leading-tight truncate max-w-[120px]">Elena Rostova</span><div class="inline-flex items-center gap-1 mt-0.5"><span class="px-1.5 py-0.2 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 font-mono text-[10px] leading-none">★ 4.9 (18 swaps)</span></div></div></div></div></div></header><main class="w-full pt-16 bg-slate-50/60 flex-1"><div class="flex flex-col w-full">
+<!-- Discovery Header & Interactive Search Matrix -->
+<section class="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg pt-space-xl pb-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg"><div class="max-w-2xl"><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide uppercase mb-3 border border-blue-100"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Peer-to-Peer Exchange</div><h1 class="font-headline-xl text-3xl md:text-4xl text-slate-900 tracking-tight mb-2 font-bold">Exchange practical skills, grow together.</h1><p class="font-body-lg text-sm md:text-base text-slate-600">Trade design, coding, languages, and more with trusted community peers—no money involved.</p></div><div class="flex items-center gap-3 p-3 bg-white border border-slate-200/80 rounded-xl shadow-sm self-start md:self-auto"><div class="flex -space-x-2"><div class="w-8 h-8 rounded-full border-2 border-white bg-blue-600 text-white flex items-center justify-center font-mono text-[11px] font-bold shadow-xs">MV</div><div class="w-8 h-8 rounded-full border-2 border-white bg-indigo-600 text-white flex items-center justify-center font-mono text-[11px] font-bold shadow-xs">AN</div><div class="w-8 h-8 rounded-full border-2 border-white bg-emerald-600 text-white flex items-center justify-center font-mono text-[11px] font-bold shadow-xs">KS</div></div><div class="flex flex-col"><span class="font-semibold text-xs text-slate-900">1,480 Active Swappers</span><span class="text-[11px] text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>94 swaps occurring today</span></div></div></div>
+<!-- Multifunctional Filter & Query Console -->
+<div class="bg-white rounded-xl border border-slate-200/90 p-4 shadow-sm"><div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 items-center"><div class="lg:col-span-5 relative flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 transition-all focus-within:bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100"><span class="material-symbols-outlined text-blue-600 mr-2 text-[20px]">search</span><input class="w-full bg-transparent border-none outline-none text-slate-900 placeholder:text-slate-400 text-xs font-sans focus:ring-0" id="skill-search" placeholder="Search by skill, e.g. Figma, Python, French, SEO..." type="text"><button class="text-slate-400 hover:text-slate-800 p-0.5 hidden" id="clear-search"><span class="material-symbols-outlined text-[16px]">cancel</span></button></div><div class="lg:col-span-3 relative flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2"><span class="material-symbols-outlined text-slate-500 mr-2 text-[18px]">location_on</span><select class="w-full bg-transparent border-none outline-none text-slate-900 text-xs cursor-pointer pr-6 appearance-none font-sans"><option value="">Any Location / Remote</option><option value="berlin">Berlin, Germany</option><option value="london">London, UK</option><option value="tokyo">Tokyo, Japan</option><option value="paris">Paris, France</option><option value="austin">Austin, TX</option><option value="toronto">Toronto, Canada</option></select><span class="material-symbols-outlined text-slate-400 absolute right-2.5 pointer-events-none text-[16px]">expand_more</span></div><div class="lg:col-span-3 flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg px-3 py-2"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-blue-600 text-[18px]">calendar_today</span><span class="font-medium text-xs text-slate-700">Available this week</span></div><label class="relative inline-flex items-center cursor-pointer"><input checked="" class="sr-only peer" id="avail-toggle" type="checkbox"><div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-600"></div></label></div><div class="lg:col-span-1"><button class="w-full h-full min-h-[38px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center text-xs shadow-sm shadow-blue-600/20 transition-transform active:scale-95" title="Run Filter"><span class="material-symbols-outlined text-[18px]">tune</span></button></div></div><div class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth"><button class="category-pill active flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs whitespace-nowrap transition-all shadow-sm shadow-blue-500/25" data-category="all"><span class="material-symbols-outlined text-[16px]">apps</span><span class="font-medium">All Skills</span><span class="px-1.5 py-0.2 rounded-full bg-blue-700 text-white font-mono text-[10px]">142</span></button><button class="category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs whitespace-nowrap transition-all hover:bg-slate-50" data-category="design"><span class="material-symbols-outlined text-[16px] text-pink-500">palette</span><span class="font-medium">Design &amp; Creative</span><span class="px-1.5 py-0.2 rounded-full bg-pink-50 text-pink-700 font-mono text-[10px]">38</span></button><button class="category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs whitespace-nowrap transition-all hover:bg-slate-50" data-category="tech"><span class="material-symbols-outlined text-[16px] text-blue-600">terminal</span><span class="font-medium">Programming &amp; Tech</span><span class="px-1.5 py-0.2 rounded-full bg-blue-50 text-blue-700 font-mono text-[10px]">45</span></button><button class="category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs whitespace-nowrap transition-all hover:bg-slate-50" data-category="languages"><span class="material-symbols-outlined text-[16px] text-amber-500">translate</span><span class="font-medium">Languages</span><span class="px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-700 font-mono text-[10px]">26</span></button><button class="category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs whitespace-nowrap transition-all hover:bg-slate-50" data-category="office"><span class="material-symbols-outlined text-[16px] text-emerald-600">monitoring</span><span class="font-medium">Office &amp; Productivity</span><span class="px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-700 font-mono text-[10px]">19</span></button><button class="category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 text-xs whitespace-nowrap transition-all hover:bg-slate-50" data-category="arts"><span class="material-symbols-outlined text-[16px] text-purple-500">music_note</span><span class="font-medium">Music &amp; Arts</span><span class="px-1.5 py-0.2 rounded-full bg-purple-50 text-purple-700 font-mono text-[10px]">14</span></button></div></div>
+</section>
+<!-- Active Filter Summary & Sorting Controls -->
+<section class="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg mb-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-white p-2.5 px-4 rounded-xl border border-slate-200/90 shadow-sm"><div class="flex items-center gap-space-sm flex-wrap"><span class="font-medium text-xs text-slate-700">Showing <strong class="text-slate-900">28 peers</strong> offering skills</span><div class="flex items-center gap-1.5"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-medium border border-blue-200/60"><span class="">This Week Only</span><button class="hover:text-blue-950 flex items-center"><span class="material-symbols-outlined text-[14px]">close</span></button></span><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium"><span class="">All Categories</span></span></div></div><div class="flex items-center gap-1.5"><span class="text-xs text-slate-500">Sort by:</span><div class="relative inline-block"><select class="bg-slate-50 text-slate-900 font-medium text-xs rounded-lg border border-slate-200 py-1 px-2.5 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-blue-600" id="sort-order"><option value="rating">Highest Rated</option><option value="active">Most Active</option><option value="newest">Newest</option></select><span class="material-symbols-outlined text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-[15px]">unfold_more</span></div></div></div>
+</section>
+<!-- Core Grid of User Discovery Cards -->
+<section class="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg pb-space-xl">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="peers-container"><!-- Card 1: Marcus Vance -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="design tech" data-name="Marcus Vance">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              MV
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Online now"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">Marcus Vance</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">Berlin, Germany</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">5.0</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(22)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Weekends &amp; Evenings</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Figma UI/UX</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Design Systems</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Prototyping</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Python basics</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Data Analysis</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Figma UI/UX" data-peer="Marcus Vance">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Amina Nour -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="tech languages" data-name="Amina Nour">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              AN
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Online now"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">Amina Nour</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">London, UK</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">4.9</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(31)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Flexible</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Fullstack React</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Node.js</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Tailwind CSS</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Spanish conversation</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Graphic Design</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Fullstack React" data-peer="Amina Nour">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article>
+<!-- Card 3: Kenji Sato -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="languages office" data-name="Kenji Sato">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-600 to-amber-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              KS
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-slate-400 ring-2 ring-white" title="Away / In Session"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">Kenji Sato</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">Tokyo, Japan (Remote)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">4.8</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(14)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Weekdays</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Japanese (Native)</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Product Strategy</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Video Editing</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Premiere Pro</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Japanese (Native)" data-peer="Kenji Sato">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article>
+<!-- Card 4: Chloe Dubois -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="languages office tech" data-name="Chloe Dubois">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              CD
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Online now"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">Chloe Dubois</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">Paris, France</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">4.9</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(19)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Evenings</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Copywriting</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">SEO Content</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">French</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Webflow</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">HTML/CSS</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Copywriting" data-peer="Chloe Dubois">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article>
+<!-- Card 5: David Miller -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="tech design" data-name="David Miller">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-600 to-teal-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              DM
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Online now"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">David Miller</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">Austin, TX</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">4.7</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(9)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Weekends</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Django &amp; Python</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">PostgreSQL</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Docker</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Mobile App Design</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Figma</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Django &amp; Python" data-peer="David Miller">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article>
+<!-- Card 6: Sophia Chen -->
+<article class="peer-card group bg-white rounded-xl border border-slate-200/90 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col justify-between relative shadow-sm" data-category="design arts" data-name="Sophia Chen">
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-600 to-rose-800 text-white flex items-center justify-center font-mono font-bold text-sm shadow-sm">
+              SC
+            </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Online now"></span>
+</div>
+<div>
+<h3 class="font-semibold text-base text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">Sophia Chen</h3>
+<div class="flex items-center gap-1 text-slate-500 text-xs mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+<span class="">Toronto, Canada</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+<span class="text-emerald-600">★</span>
+<span class="">5.0</span>
+<span class="text-emerald-700/70 text-[11px] font-normal">(17)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mb-4 text-slate-600 text-xs bg-slate-50/80 border border-slate-100 px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-blue-600">schedule</span>
+<span class="">Available: <span class="text-slate-900 font-medium">Flexible</span></span>
+</div>
+<div class="space-y-3 mb-2">
+<div>
+<span class="text-[11px] font-semibold text-blue-700 uppercase tracking-wider block mb-1.5">Offers</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">Motion Graphics</span>
+<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-medium">After Effects</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Wants</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Piano Basics</span>
+<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs">Music Theory</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 bg-slate-50/60 px-5 py-3 rounded-b-xl flex items-center justify-between gap-2">
+<a class="font-medium text-xs text-slate-600 hover:text-blue-700 transition-colors flex items-center gap-1" href="#">
+<span class="">View Profile</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<button class="open-swap-btn px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" data-offer="Motion Graphics" data-peer="Sophia Chen">
+<span class="material-symbols-outlined text-[15px]">handshake</span>
+<span class="">Request Swap</span>
+</button>
+</div>
+</article></div>
+<!-- Load More / Community Pagination Banner -->
+<div class="mt-space-xl flex flex-col items-center justify-center gap-2 text-center">
+<button class="px-6 py-2.5 rounded-lg border border-slate-300 hover:border-blue-500 bg-white hover:bg-blue-50/40 text-slate-800 font-medium text-xs shadow-sm transition-all flex items-center gap-2" id="load-more-btn"><span class="material-symbols-outlined text-[18px] text-blue-600">expand_more</span><span class="">Load more skill partners</span></button>
+<span class="font-mono text-[11px] text-slate-500">Viewing 6 of 28 available active swappers</span>
+</div>
+</section>
+</div>
+<!-- Interactive Quick Swap Modal Drawer -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-slate-950/60 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-200" id="swap-modal">
+<div class="bg-white w-full max-w-lg rounded-xl border border-slate-200 shadow-2xl p-space-lg relative transform scale-95 transition-transform duration-200" id="modal-container">
+<div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">handshake</span>
+</div>
+<div>
+<h2 class="font-semibold text-base text-slate-900">Initiate Skill Swap</h2>
+<p class="font-mono text-xs text-slate-500" id="modal-subhead">Propose an exchange with Marcus Vance</p>
+</div>
+</div>
+<button class="p-1 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors" id="close-modal-btn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<form class="space-y-4" id="swap-request-form" onsubmit="event.preventDefault(); submitSwapForm();">
+<div>
+<label class="block font-medium text-xs text-slate-700 mb-1">Peer's Offered Skill</label>
+<input class="w-full bg-slate-50 text-slate-800 rounded-lg px-3 py-2 text-xs border border-slate-300 font-mono cursor-not-allowed" id="target-skill-field" readonly="" type="text">
+</div>
+<div>
+<label class="block font-medium text-xs text-slate-700 mb-1">What will you offer in return?</label>
+<select class="w-full bg-white text-slate-900 rounded-lg px-3 py-2 text-xs border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none font-sans" required="">
+<option value="react">Fullstack React &amp; Next.js</option>
+<option value="branding">Brand Identity &amp; Strategy</option>
+<option value="video">Motion &amp; Video Editing</option>
+<option value="spanish">Spanish Conversation (B2)</option>
+</select>
+</div>
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-medium text-xs text-slate-700">Personal Note &amp; Goals</label>
+<span class="font-mono text-[11px] text-slate-400" id="char-counter">0/300</span>
+</div>
+<textarea class="w-full bg-slate-50 focus:bg-white text-slate-900 rounded-lg p-3 text-xs border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none font-sans" id="swap-note" maxlength="300" placeholder="Introduce yourself, outline your weekly schedule, and detail what you hope to achieve together..." rows="3"></textarea>
+</div>
+<div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+<button class="px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white text-slate-700 font-medium text-xs transition-colors" id="cancel-swap-btn" type="button">
+            Cancel
+          </button>
+<button class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shadow-blue-600/20" type="submit">
+<span class="material-symbols-outlined text-[16px]">send</span>
+<span class="">Send Proposal</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Toast Notification System -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2.5 bg-slate-900 text-white border border-slate-800 px-4 py-3 rounded-xl shadow-xl text-xs" id="toast">
+<span class="material-symbols-outlined text-emerald-400 text-[18px]">check_circle</span>
+<span class="font-medium" id="toast-message">Swap request dispatched!</span>
+</div>
+<!-- Interactive Search & Modal Client Logic -->
+<script>
+    (function() {
+      // Elements
+      const searchInput = document.getElementById('skill-search');
+      const clearBtn = document.getElementById('clear-search');
+      const categoryPills = document.querySelectorAll('.category-pill');
+      const peerCards = document.querySelectorAll('.peer-card');
+      const modal = document.getElementById('swap-modal');
+      const modalContainer = document.getElementById('modal-container');
+      const modalSubhead = document.getElementById('modal-subhead');
+      const targetSkillField = document.getElementById('target-skill-field');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      const cancelSwapBtn = document.getElementById('cancel-swap-btn');
+      const swapButtons = document.querySelectorAll('.open-swap-btn');
+      const noteField = document.getElementById('swap-note');
+      const charCounter = document.getElementById('char-counter');
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      const loadMoreBtn = document.getElementById('load-more-btn');
+
+      // Live Search Filter
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        clearBtn.classList.toggle('hidden', query.length === 0);
+        
+        peerCards.forEach(card => {
+          const cardText = card.innerText.toLowerCase();
+          if (cardText.includes(query)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.classList.add('hidden');
+        peerCards.forEach(card => card.classList.remove('hidden'));
+        searchInput.focus();
+      });
+
+      // Category Pill Filtering
+      categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          categoryPills.forEach(p => {
+            p.classList.remove('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-500/25', 'active');
+            p.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+          });
+          pill.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+          pill.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-500/25', 'active');
+
+          const category = pill.getAttribute('data-category');
+          peerCards.forEach(card => {
+            if (category === 'all') {
+              card.classList.remove('hidden');
+            } else {
+              const cardCats = card.getAttribute('data-category') || '';
+              if (cardCats.includes(category)) {
+                card.classList.remove('hidden');
+              } else {
+                card.classList.add('hidden');
+              }
+            }
+          });
+        });
+      });
+
+      // Character counter for proposal note
+      if (noteField && charCounter) {
+        noteField.addEventListener('input', (e) => {
+          charCounter.textContent = `${e.target.value.length}/300`;
+        });
+      }
+
+      // Modal Dialog handlers
+      function openModal(peerName, skillName) {
+        modalSubhead.textContent = `Propose an exchange with ${peerName}`;
+        targetSkillField.value = skillName;
+        modal.classList.remove('pointer-events-none', 'opacity-0');
+        modalContainer.classList.remove('scale-95');
+        modalContainer.classList.add('scale-100');
+        if (noteField) noteField.value = '';
+        if (charCounter) charCounter.textContent = '0/300';
+      }
+
+      function closeModal() {
+        modalContainer.classList.remove('scale-100');
+        modalContainer.classList.add('scale-95');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      swapButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const peer = btn.getAttribute('data-peer');
+          const offer = btn.getAttribute('data-offer');
+          openModal(peer, offer);
+        });
+      });
+
+      closeModalBtn.addEventListener('click', closeModal);
+      cancelSwapBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // Toast notification helper
+      window.showToast = function(message) {
+        toastMsg.textContent = message;
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }, 3500);
+      };
+
+      // Form submission mock
+      window.submitSwapForm = function() {
+        closeModal();
+        window.showToast('Swap request dispatched successfully! Peer has been notified.');
+      };
+
+      // Load more simulated interaction
+      loadMoreBtn.addEventListener('click', () => {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin text-blue-600">refresh</span><span>Fetching peers...</span>';
+        setTimeout(() => {
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] text-emerald-600">check</span><span>All active peers loaded</span>';
+          window.showToast('Updated peer list with recent platform signups.');
+        }, 800);
+      });
+    })();
+  </script>
+</main><footer class="w-full bg-white border-t border-slate-200 mt-auto"><div class="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg py-8"><div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100"><div class="flex flex-col items-center md:items-start text-center md:text-left"><div class="flex items-center gap-2 mb-1"><span class="font-bold text-sm text-slate-900">SkillSwap</span><span class="text-slate-400 text-xs">•</span><span class="text-xs text-slate-600 font-medium">Peer-to-peer talent &amp; skill exchange</span></div><p class="text-xs text-slate-500 max-w-md">Learn new abilities, share your craft, and build trust-based connections without monetary barriers.</p></div><div class="flex flex-wrap items-center justify-center gap-4 md:gap-6"><a class="text-xs text-slate-600 hover:text-blue-700 transition-colors" data-path="trust-and-safety" href="#">Trust &amp; Safety</a><a class="text-xs text-slate-600 hover:text-blue-700 transition-colors" data-path="help-center" href="#">Help Center</a></div></div><div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left"><span class="text-xs text-slate-500">© 2025 SkillSwap. All rights reserved.</span><div class="flex items-center gap-4 text-xs text-slate-500"><a class="hover:text-blue-700 transition-colors" href="#">Privacy</a><a class="hover:text-blue-700 transition-colors" href="#">Terms</a></div></div></div></footer>
+
+
+</body></html>

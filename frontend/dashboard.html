@@ -1,0 +1,512 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "error": "#ba1a1a",
+          "surface-dim": "#cbdbf5",
+          "surface-tint": "#2151da",
+          "on-primary": "#ffffff",
+          "secondary": "#565e74",
+          "on-secondary": "#ffffff",
+          "on-primary-container": "#cad3ff",
+          "on-tertiary-container": "#76eab6",
+          "surface-container-high": "#dce9ff",
+          "on-surface": "#0b1c30",
+          "on-tertiary-fixed-variant": "#005137",
+          "secondary-container": "#dae2fd",
+          "surface": "#f8f9ff",
+          "surface-container": "#e5eeff",
+          "tertiary": "#004f35",
+          "surface-bright": "#f8f9ff",
+          "on-error-container": "#93000a",
+          "outline": "#747686",
+          "on-secondary-fixed": "#131b2e",
+          "inverse-primary": "#b7c4ff",
+          "primary-fixed": "#dce1ff",
+          "primary": "#0037b0",
+          "inverse-surface": "#213145",
+          "tertiary-fixed-dim": "#68dba9",
+          "on-background": "#0b1c30",
+          "on-surface-variant": "#434655",
+          "on-primary-fixed": "#001551",
+          "surface-container-low": "#eff4ff",
+          "on-secondary-container": "#5c647a",
+          "outline-variant": "#c4c5d7",
+          "on-secondary-fixed-variant": "#3f465c",
+          "tertiary-fixed": "#85f8c4",
+          "on-primary-fixed-variant": "#0039b5",
+          "tertiary-container": "#006948",
+          "primary-container": "#1d4ed8",
+          "inverse-on-surface": "#eaf1ff",
+          "surface-container-highest": "#d3e4fe",
+          "surface-variant": "#d3e4fe",
+          "on-tertiary": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "background": "#f8f9ff",
+          "on-error": "#ffffff",
+          "secondary-fixed-dim": "#bec6e0",
+          "primary-fixed-dim": "#b7c4ff",
+          "on-tertiary-fixed": "#002114",
+          "error-container": "#ffdad6",
+          "secondary-fixed": "#dae2fd"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-mobile": "1rem",
+          "margin": "2rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "gutter": "1.5rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem",
+          "margin-mobile": "1rem"
+        },
+        "fontFamily": {
+          "body-sm": ["Inter"],
+          "label-sm": ["Inter"],
+          "headline-xl": ["Inter"],
+          "title-lg": ["Inter"],
+          "headline-sm": ["Inter"],
+          "label-md": ["Inter"],
+          "headline-lg-mobile": ["Inter"],
+          "headline-lg": ["Inter"],
+          "headline-xl-mobile": ["Inter"],
+          "title-md": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-md": ["Inter"],
+          "body-lg": ["Inter"]
+        },
+        "fontSize": {
+          "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+          "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+          "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+          "title-lg": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+          "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+          "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+          "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+          "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+          "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+          "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
+          "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+          "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "400" }]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-slate-100/70 font-body-md text-body-md text-slate-800 antialiased min-h-screen flex flex-col"><header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"><div class="h-20 max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group" data-path="explore-skills" href="#"><div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-700 to-indigo-600 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm shadow-blue-500/20">SS</div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-slate-900 tracking-tight font-bold">SkillSwap</span><span class="font-label-sm text-[11px] text-blue-600 hidden sm:inline-block font-medium">Enterprise Hub</span></div></a><nav class="hidden lg:flex items-center gap-space-xs"><a class="px-space-md py-space-sm rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors font-medium text-body-md" data-path="explore-skills" href="#">Explore Skills</a><div class="relative inline-flex items-center"><a aria-current="page" class="px-space-md py-space-sm rounded-lg transition-colors pr-8 bg-blue-50 text-blue-700 font-semibold border border-blue-200/70 shadow-xs" data-path="my-requests" href="#">My Requests</a><span class="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-full bg-blue-600 text-white font-label-sm text-[11px] leading-tight font-semibold pointer-events-none">3</span></div><a class="px-space-md py-space-sm rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors font-medium text-body-md" data-path="my-profile" href="#">My Profile</a></nav></div><div class="flex items-center gap-space-sm md:gap-space-md"><button class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-sm shadow-blue-600/25 active:scale-[0.98]" type="button"><span class="material-symbols-outlined text-[18px] mr-1.5">add</span><span class="hidden sm:inline">Request Swap</span><span class="sm:hidden">Swap</span></button><div class="relative flex items-center justify-center"><button aria-label="Notifications" class="p-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors relative flex items-center justify-center shadow-xs" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white"></span></button></div><div class="h-7 w-[1px] bg-slate-200 hidden sm:block"></div><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-9 h-9 rounded-full border border-blue-200 object-cover ring-2 ring-blue-500/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGKfJvpRcrieJLtQhRkFNiizoDv48DRZvEqEFuFNYjZPuCWm2OKbpApIfV9Dd647uaHCWusR--El-upsgtDnu4ihj0f3aWygrBEt74m9fUs4hmk4b5Uz5hjH5V46jdU9H-vubqY9bVXWhcBHLtywafff0s376SBdUdzCgtM2q8hMysTjVYIzHK5lpyckdW4qHMjK-kJC4J8kIuliwn13PcNtsai-IpeOWY6zJOl6m5JPJ9BkwgE72vpw"><div class="hidden md:flex flex-col text-left"><span class="font-headline-sm text-sm text-slate-900 font-semibold leading-tight truncate max-w-[120px]">Elena Rostova</span><div class="inline-flex items-center gap-1 mt-0.5"><span class="px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800 font-label-sm text-[11px] font-semibold leading-none border border-amber-200/80">★ 4.9 (18 swaps)</span></div></div></div></div></div></header><main class="w-full pt-20 bg-slate-100/70 flex-1"><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-margin md:px-margin-md lg:px-margin-lg py-space-xl">
+<!-- Top Editorial Header & Quick Action -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div class="space-y-space-xs max-w-2xl">
+
+<h1 class="font-headline-xl text-headline-xl text-slate-900 tracking-tight font-bold">Swap Requests</h1>
+<p class="font-body-lg text-body-lg text-slate-600">Manage incoming peer proposals, track active skill exchanges, and endorse completed learning partnerships.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<div class="px-4 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 shadow-xs flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">verified_user</span>
+<span class="font-label-md text-sm text-slate-700">Community Guarantee: <strong class="text-emerald-800 font-semibold">100% Peer Verified</strong></span>
+</div>
+</div>
+</div>
+<!-- Top KPI Metric Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-xl">
+<!-- Amber: Received Pending -->
+<div class="bg-white rounded-xl border border-amber-200/90 p-5 flex flex-col justify-between relative overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+<div class="absolute top-0 left-0 right-0 h-1 bg-amber-500"></div>
+<div class="flex items-center justify-between mb-3">
+<span class="font-label-md text-xs uppercase tracking-wider text-slate-500 font-semibold">Received (Pending)</span>
+<div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200/60 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[20px]">inbox</span></div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-3xl text-slate-900 font-bold">1</span>
+<span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">requires action</span>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Awaiting your review</span>
+<span class="font-medium text-amber-600">1 new</span>
+</div>
+</div>
+<!-- Amber/Slate: Sent Pending -->
+<div class="bg-white rounded-xl border border-indigo-200/80 p-5 flex flex-col justify-between relative overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+<div class="absolute top-0 left-0 right-0 h-1 bg-indigo-500"></div>
+<div class="flex items-center justify-between mb-3">
+<span class="font-label-md text-xs uppercase tracking-wider text-slate-500 font-semibold">Sent (Pending)</span>
+<div class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200/60 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[20px]">outbox</span></div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-3xl text-slate-900 font-bold">1</span>
+<span class="text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">awaiting peer</span>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Partner: Amina Nour</span>
+<span class="font-medium text-indigo-600">Sent 1d ago</span>
+</div>
+</div>
+<!-- Emerald: Accepted Swaps -->
+<div class="bg-white rounded-xl border border-emerald-200/90 p-5 flex flex-col justify-between relative overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+<div class="absolute top-0 left-0 right-0 h-1 bg-emerald-500"></div>
+<div class="flex items-center justify-between mb-3">
+<span class="font-label-md text-xs uppercase tracking-wider text-slate-500 font-semibold">Accepted Swaps</span>
+<div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/60 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[20px]">handshake</span></div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-3xl text-slate-900 font-bold">1</span>
+<span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">in progress</span>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">With Marcus Vance</span>
+<span class="font-medium text-emerald-600">Active</span>
+</div>
+</div>
+<!-- Blue: Completed Swaps -->
+<div class="bg-white rounded-xl border border-blue-200/90 p-5 flex flex-col justify-between relative overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+<div class="absolute top-0 left-0 right-0 h-1 bg-blue-600"></div>
+<div class="flex items-center justify-between mb-3">
+<span class="font-label-md text-xs uppercase tracking-wider text-slate-500 font-semibold">Completed Swaps</span>
+<div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/60 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[20px]">check_circle</span></div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-3xl text-slate-900 font-bold">1</span>
+<span class="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">ready for rating</span>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">With Sarah Lin</span>
+<span class="font-medium text-blue-600">Pending review</span>
+</div>
+</div>
+</div>
+<!-- Controls Bar: Filter Search & Segmented Navigation Tabs -->
+<div class="bg-white rounded-xl border border-slate-200 p-space-md mb-space-lg flex flex-col lg:flex-row lg:items-center justify-between gap-space-md shadow-xs">
+<!-- Tab Navigation with Live Pill Counters -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-space-xs lg:pb-0 scrollbar-none" id="swap-tabs"><button class="tab-button inline-flex items-center gap-space-xs px-4 py-2 rounded-lg bg-blue-600 text-white font-medium text-sm transition-all shadow-xs border border-blue-600" data-tab="received" type="button"><span class="">Received</span><span class="px-2 py-0.5 rounded-full bg-blue-700 text-white text-[11px] font-semibold">2</span></button><button class="tab-button inline-flex items-center gap-space-xs px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium text-sm transition-all border border-transparent" data-tab="sent" type="button"><span class="">Sent</span><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-semibold">1</span></button><button class="tab-button inline-flex items-center gap-space-xs px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium text-sm transition-all border border-transparent" data-tab="all" type="button"><span class="">All Swaps</span><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-semibold">4</span></button></div>
+<!-- Quick Search / Keyword Filter Input -->
+<div class="relative min-w-[280px] lg:w-80">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 hover:bg-white rounded-lg border border-slate-200 text-sm font-body-md text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" id="request-search" placeholder="Search by name, skill..." type="text">
+<button class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900" id="clear-search" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- Active Filter Chips / Sub-bar -->
+<div class="flex items-center justify-between gap-space-md mb-space-md text-label-md text-label-md text-slate-600 px-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-headline-sm text-headline-sm text-slate-900 font-semibold" id="list-status-heading">Showing 2 requests</span>
+<span class="text-slate-300">•</span>
+<span class="text-slate-500 font-medium">Sorted by newest activity</span>
+</div>
+<div class="hidden sm:flex items-center gap-space-xs text-slate-500 text-xs">
+<span class="material-symbols-outlined text-[16px] text-amber-500">schedule</span>
+<span class="">Unanswered requests expire automatically after 7 days</span>
+</div>
+</div>
+<!-- Request Items List Flow -->
+<div class="space-y-space-lg" id="requests-container"><article class="request-item bg-white rounded-xl border border-slate-200/90 hover:border-amber-300/80 p-space-lg overflow-hidden relative transition-all shadow-xs hover:shadow-md" data-name="kenji sato" data-skill="python programming figma ui/ux" data-status="received pending"><div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-lg"><div class="flex-1 space-y-space-md"><div class="flex flex-wrap items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><div class="relative"><img alt="Kenji Sato" class="w-12 h-12 rounded-full border border-slate-200 object-cover ring-2 ring-amber-500/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLxlsfOHQO-E6Stu0JfgZBxU0OZV5HudeGztizV-oQOU3DrSoC-O6l6auRk3sLuCLxzMeMkGhxHbkcEsf1neZO7dYKUe6_au7p5o2xaOwbDgUOaba2x1wI2UsYCm7X-pfHO5xERVJld7bkI6w1HrtLUy2GlIVosLPeCJ7AbB2dww9OHQr6831eIHQGaMPwHmcRm2_PcWArQkW8C82PtQDVGWGwvvs73MB3jczBiTBsSYZ5wnBT1_Ql6Q"><span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-amber-500 ring-2 ring-white"></span></div><div><div class="flex items-center gap-space-xs flex-wrap"><h3 class="font-headline-md text-headline-md text-slate-900 font-semibold">Kenji Sato</h3><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-label-sm text-[12px] border border-amber-200 font-medium"><span class="text-amber-600 text-[11px]">★</span><span class="">4.9</span></span></div><div class="flex items-center gap-space-xs text-body-sm text-slate-500 mt-0.5"><span class="font-medium text-slate-600">Requester</span><span class="">•</span><span class="">Received 2 hrs ago</span></div></div></div><span class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 font-label-md text-xs font-semibold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>Pending (Received)</span></div><div class="grid grid-cols-1 md:grid-cols-2 gap-space-md p-space-md bg-slate-50/80 rounded-xl border border-slate-200/80"><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Skill Offered</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-blue-200 text-blue-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>Python Programming</span></div></div><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Skill Wanted</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>Figma UI/UX</span></div></div></div><div class="bg-slate-50/50 p-space-md rounded-xl border border-slate-200/80"><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-slate-400 mt-0.5">chat_bubble_outline</span><div><span class="font-label-sm text-slate-500 font-semibold block mb-0.5">Request Note</span><p class="font-body-md text-body-md text-slate-700 italic leading-relaxed">“Would love to exchange 2 sessions before exams.”</p></div></div></div></div><div class="lg:w-60 flex flex-col justify-between gap-space-sm pt-space-xs lg:pt-0 shrink-0"><div class="bg-amber-50/60 border border-amber-200/70 p-3.5 rounded-xl text-center"><span class="font-label-sm text-xs text-amber-700 font-medium block">Action Needed</span><span class="font-headline-sm text-sm text-amber-950 font-bold">Pending Decision</span></div><div class="flex flex-col gap-space-xs w-full"><button class="w-full inline-flex items-center justify-center gap-space-xs px-space-md py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]" onclick="handleAccept(this, 'Kenji Sato')" type="button"><span class="material-symbols-outlined text-[18px]">check</span><span class="">Accept Proposal</span></button><button class="w-full inline-flex items-center justify-center gap-space-xs px-space-md py-2 rounded-lg bg-white hover:bg-rose-50 text-rose-700 hover:text-rose-800 font-medium text-sm border border-rose-200 transition-all" onclick="handleDecline(this, 'Kenji Sato')" type="button"><span class="material-symbols-outlined text-[18px]">close</span><span class="">Decline</span></button></div></div></div></article><article class="request-item bg-white rounded-xl border border-slate-200/90 hover:border-indigo-300/80 p-space-lg overflow-hidden relative transition-all shadow-xs hover:shadow-md hidden" data-name="amina nour" data-skill="react frontend ui animation" data-status="sent pending"><div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-lg"><div class="flex-1 space-y-space-md"><div class="flex flex-wrap items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><div class="relative"><img alt="Amina Nour" class="w-12 h-12 rounded-full border border-slate-200 object-cover ring-2 ring-indigo-500/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtRjDxteuMVJXzoODZ6OeWGgGO5gSECBHQeCIdz7uXTossHpFTk-W-Z-TbCCc_xNeJwDzKkn-f3s9FAzwaBEoV7IWFzLsnq0X-WcSbcnYhwo366WjCgTot8vrWDe_vOJJVBgsiwGiaXzti95glUg7e64cWSOSWagAA8N2RORhQKvWpyZ-TqoKKq6rHmTlFI5_ZNzKCPOACV6AdIOdU5yqBblXBoL5mKfiitJc13J4MDifyUIVAHBOdaQ"><span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-slate-400 ring-2 ring-white"></span></div><div><div class="flex items-center gap-space-xs flex-wrap"><h3 class="font-headline-md text-headline-md text-slate-900 font-semibold">Amina Nour</h3><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-label-sm text-[12px] border border-amber-200 font-medium"><span class="text-amber-600 text-[11px]">★</span><span class="">5.0</span></span></div><div class="flex items-center gap-space-xs text-body-sm text-slate-500 mt-0.5"><span class="font-medium text-slate-600">Receiver (Partner)</span><span class="">•</span><span class="">Sent 1 day ago</span></div></div></div><span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200/80 font-label-md text-xs font-semibold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>Pending (Sent)</span></div><div class="grid grid-cols-1 md:grid-cols-2 gap-space-md p-space-md bg-slate-50/80 rounded-xl border border-slate-200/80"><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Skill Offered</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-blue-200 text-blue-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>React Frontend</span></div></div><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Skill Wanted</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>UI Animation</span></div></div></div><div class="bg-slate-50/50 p-space-md rounded-xl border border-slate-200/80"><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-slate-400 mt-0.5">chat_bubble_outline</span><div><span class="font-label-sm text-slate-500 font-semibold block mb-0.5">Your Proposal Note</span><p class="font-body-md text-body-md text-slate-700 italic leading-relaxed">“Looking forward to collaborating!”</p></div></div></div></div><div class="lg:w-60 flex flex-col justify-between gap-space-sm pt-space-xs lg:pt-0 shrink-0"><div class="bg-slate-100 border border-slate-200 p-3.5 rounded-xl text-center"><span class="font-label-sm text-xs text-slate-500 font-medium block">Sent Status</span><span class="font-headline-sm text-sm text-slate-800 font-semibold">Awaiting Partner Reply</span></div><div class="flex flex-col gap-space-xs w-full"><button class="w-full inline-flex items-center justify-center gap-space-xs px-space-md py-2.5 rounded-lg bg-white hover:bg-rose-50 text-rose-700 hover:text-rose-800 font-semibold text-sm border border-rose-200 transition-all shadow-xs" onclick="handleDecline(this, 'Amina Nour')" type="button"><span class="material-symbols-outlined text-[18px]">cancel</span><span class="">Cancel Request</span></button></div></div></div></article><article class="request-item bg-white rounded-xl border border-slate-200/90 hover:border-emerald-300/80 p-space-lg overflow-hidden relative transition-all shadow-xs hover:shadow-md" data-name="marcus vance" data-skill="figma tokens django apis" data-status="received accepted in-progress"><div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-lg"><div class="flex-1 space-y-space-md"><div class="flex flex-wrap items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><div class="relative"><img alt="Marcus Vance" class="w-12 h-12 rounded-full border border-slate-200 object-cover ring-2 ring-emerald-500/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPbjikia34OFxl_Gv4JgRdwEFjQbLoLjsgysykkLPhXM7Ay7LlCKQUgNZtj5AOkZzwVtJKDA74DIOzsmY6UtXd-hlaKd1Ysyn7daj-YKaJHfbs9kARnAtdhnldVDMdtkxj4G82CmmfO8UXm911giT0EKkTjb8Lgd_FVcP706c-s-aV4G2vc3PF3Sji4ZvWgeq_XMjw2cD7tZMDQxLDXRfF1Lvu_jlVkuJhTHhhgjike6Tyy-v5nvybog"><span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-white"></span></div><div><div class="flex items-center gap-space-xs flex-wrap"><h3 class="font-headline-md text-headline-md text-slate-900 font-semibold">Marcus Vance</h3><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-label-sm text-[12px] border border-amber-200 font-medium"><span class="text-amber-600 text-[11px]">★</span><span class="">4.8</span></span></div><div class="flex items-center gap-space-xs text-body-sm text-slate-500 mt-0.5"><span class="font-medium text-slate-600">Learning Partner</span><span class="">•</span><span class="">Accepted 3 days ago</span></div></div></div><span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-label-md text-xs font-semibold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-600"></span>Accepted (In Progress)</span></div><div class="grid grid-cols-1 md:grid-cols-2 gap-space-md p-space-md bg-slate-50/80 rounded-xl border border-slate-200/80"><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Offered Skill</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-blue-200 text-blue-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>Figma Tokens</span></div></div><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Wanted Skill</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>Django APIs</span></div></div></div><div class="bg-slate-50/50 p-space-md rounded-xl border border-slate-200/80"><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-blue-600 mt-0.5">track_changes</span><div><span class="font-label-sm text-slate-500 font-semibold block mb-0.5">Swap Objective</span><p class="font-body-md text-body-md text-slate-700 leading-relaxed">Active exchange of Figma design systems knowledge for REST architecture guidance.</p></div></div></div></div><div class="lg:w-60 flex flex-col justify-between gap-space-sm pt-space-xs lg:pt-0 shrink-0"><div class="bg-emerald-50/60 border border-emerald-200/70 p-3.5 rounded-xl text-center"><span class="font-label-sm text-xs text-emerald-700 font-medium block">Exchange Status</span><span class="font-headline-sm text-sm text-emerald-950 font-bold">In Progress (Session 2/3)</span></div><div class="flex flex-col gap-space-xs w-full"><button class="w-full inline-flex items-center justify-center gap-space-xs px-space-md py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm shadow-blue-600/20 transition-all active:scale-[0.98]" onclick="handleCompleteSwap(this, 'Marcus Vance')" type="button"><span class="material-symbols-outlined text-[18px]">task_alt</span><span class="">Mark Completed</span></button></div></div></div></article><article class="request-item bg-white rounded-xl border border-slate-200/90 hover:border-blue-300/80 p-space-lg overflow-hidden relative transition-all shadow-xs hover:shadow-md hidden" data-name="sarah lin" data-skill="product wireframes data viz" data-status="completed"><div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-lg"><div class="flex-1 space-y-space-md"><div class="flex flex-wrap items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><div class="relative"><img alt="Sarah Lin" class="w-12 h-12 rounded-full border border-slate-200 object-cover ring-2 ring-blue-500/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB97mf1pvX-ANY2T5G3wVezvwHqZ6VsoJnWF4l-6EdKNrc2bRAvhg1V40qKkCjyIJi2o7bsmYbx4MNaSEKQ-9gJPB17S12A5UNUqdAw6JQr00gEB4hP7ljMLZ2e3h4aOZv7qpp1GaOOtzr7rZMSV3Z2POX3RzDKQ1MHFcv5DhiNXbREqg4wsX8Y02JrfQLAbXXE5WTeWtnGPA_xaAVOnGIhxXITTXuk7_tzEd7o0DzPkIbYkmptnSv1Zw"><span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-blue-600 ring-2 ring-white"></span></div><div><div class="flex items-center gap-space-xs flex-wrap"><h3 class="font-headline-md text-headline-md text-slate-900 font-semibold">Sarah Lin</h3><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-label-sm text-[12px] border border-amber-200 font-medium"><span class="text-amber-600 text-[11px]">★</span><span class="">4.9</span></span></div><div class="flex items-center gap-space-xs text-body-sm text-slate-500 mt-0.5"><span class="font-medium text-slate-600">Learning Partner</span><span class="">•</span><span class="">Completed yesterday</span></div></div></div><span class="px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 font-label-md text-xs font-semibold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span>Completed</span></div><div class="grid grid-cols-1 md:grid-cols-2 gap-space-md p-space-md bg-slate-50/80 rounded-xl border border-slate-200/80"><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Offered Skill</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-blue-200 text-blue-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>Product Wireframes</span></div></div><div class="space-y-space-xs"><span class="text-slate-500 text-[11px] font-semibold uppercase tracking-wider block">Wanted Skill</span><div class="flex flex-wrap items-center gap-space-xs"><span class="px-3 py-1 rounded-lg bg-white border border-indigo-200 text-indigo-800 font-medium text-body-md shadow-xs flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>Data Viz</span></div></div></div><div class="bg-slate-50/50 p-space-md rounded-xl border border-slate-200/80"><div class="flex items-start gap-space-sm"><span class="material-symbols-outlined text-[18px] text-emerald-600 mt-0.5">verified</span><div><span class="font-label-sm text-slate-500 font-semibold block mb-0.5">Exchange Summary</span><p class="font-body-md text-body-md text-slate-700 leading-relaxed">Completed full peer learning exchange. Pending reciprocal rating to finalize verification badge.</p></div></div></div></div><div class="lg:w-60 flex flex-col justify-between gap-space-sm pt-space-xs lg:pt-0 shrink-0"><div class="bg-blue-50/60 border border-blue-200/70 p-3.5 rounded-xl text-center"><span class="font-label-sm text-xs text-blue-700 font-medium block">Outcome</span><span class="font-headline-sm text-sm text-blue-950 font-bold">Exchange Finished</span></div><div class="flex flex-col gap-space-xs w-full"><button class="w-full inline-flex items-center justify-center gap-space-xs px-space-md py-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm shadow-sm shadow-amber-500/25 transition-all active:scale-[0.98]" onclick="openReviewModal('Sarah Lin')" type="button"><span class="material-symbols-outlined text-[18px]">star</span><span class="">Leave Rating</span></button></div></div></div></article></div>
+<!-- Empty State (Hidden by default, shown when filters match nothing) -->
+<div class="hidden bg-white rounded-xl border border-slate-200 p-space-xl text-center shadow-xs my-space-md" id="no-results-state">
+<div class="w-14 h-14 rounded-full border border-blue-100 bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-space-md shadow-xs">
+<span class="material-symbols-outlined text-[28px]">filter_alt_off</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-slate-900 mb-1 font-semibold">No swap requests match your search</h3>
+<p class="font-body-md text-body-md text-slate-500 max-w-md mx-auto mb-space-lg">
+        Try adjusting your keywords, switching tab views, or clear the search field to view all proposals.
+      </p>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg border border-blue-600 bg-blue-600 text-white font-semibold hover:bg-blue-700 shadow-sm transition-colors" onclick="resetFilters()" type="button">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+<span class="">Reset Search &amp; Filters</span>
+</button>
+</div>
+<!-- Helpful Micro-Guidance Banner -->
+<div class="mt-space-xl bg-gradient-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 rounded-xl border border-blue-200/70 p-space-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md shadow-xs"><div class="flex items-center gap-space-md"><div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/25"><span class="material-symbols-outlined text-[20px]">handshake</span></div><div><h4 class="font-headline-sm text-headline-sm text-slate-900 font-semibold">SkillSwap Protocol</h4><p class="font-body-md text-body-md text-slate-600">Direct peer-to-peer knowledge exchange without monetary fees. Complete sessions and rate each other to build mutual trust.</p></div></div></div>
+</div>
+<!-- Interactive Modal: Leave Review & Rating -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-space-md bg-slate-900/60 backdrop-blur-sm transition-opacity" id="review-modal">
+<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-space-xl relative overflow-hidden transform transition-all">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition-colors p-1" onclick="closeReviewModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<div class="space-y-space-md">
+<div class="text-left">
+<span class="font-label-sm text-xs font-semibold text-blue-600 uppercase tracking-wider block mb-1">EVALUATION FORM</span>
+<h3 class="font-headline-lg text-headline-lg text-slate-900 font-bold" id="modal-partner-name">Rate your swap with Kenji Sato</h3>
+<p class="font-body-md text-body-md text-slate-500">Your honest feedback fuels trust in our peer knowledge network.</p>
+</div>
+<!-- Star Rating Picker -->
+<div class="p-space-md bg-amber-50/50 rounded-xl border border-amber-200/80 flex flex-col items-center justify-center gap-space-xs">
+<span class="font-label-sm text-xs text-amber-800 font-semibold uppercase tracking-wider">OVERALL EXPERIENCE</span>
+<div class="flex items-center gap-2" id="star-rating-container">
+<button class="star-btn text-[28px] text-amber-500 transition-transform hover:scale-110" data-val="1" type="button">★</button>
+<button class="star-btn text-[28px] text-amber-500 transition-transform hover:scale-110" data-val="2" type="button">★</button>
+<button class="star-btn text-[28px] text-amber-500 transition-transform hover:scale-110" data-val="3" type="button">★</button>
+<button class="star-btn text-[28px] text-amber-500 transition-transform hover:scale-110" data-val="4" type="button">★</button>
+<button class="star-btn text-[28px] text-amber-500 transition-transform hover:scale-110" data-val="5" type="button">★</button>
+</div>
+<span class="font-label-sm text-sm text-amber-900 font-bold" id="rating-label">5.0 - Exceptional Partner</span>
+</div>
+<!-- Written Feedback -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between font-label-sm text-xs text-slate-600 font-medium">
+<span class="">WRITTEN REVIEW</span>
+<span class="text-slate-400" id="char-counter">0 / 300</span>
+</div>
+<textarea class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-body-md font-body-md text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none text-sm" id="review-textarea" maxlength="300" placeholder="What made this learning exchange valuable? Highlight punctuality, depth of teaching, and communication..." rows="4"></textarea>
+</div>
+<!-- Skill Verification Checkbox -->
+<label class="flex items-center gap-space-sm cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 accent-blue-600" type="checkbox">
+<span class="font-body-md text-body-md text-slate-700">Verify partner proficiency in <strong class="text-slate-900">Exchange Topic</strong></span>
+</label>
+<!-- CTAs -->
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-2.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-sm transition-all" onclick="closeReviewModal()" type="button">
+            Cancel
+          </button>
+<button class="px-space-lg py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm shadow-blue-600/20 transition-all" onclick="submitReview()" type="button">
+            Submit Review
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Toast Notification Feedback -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-space-sm px-space-lg py-space-md rounded-xl border border-slate-800 bg-slate-900 text-white text-sm shadow-2xl" id="toast">
+<span class="material-symbols-outlined text-emerald-400 text-[20px]" id="toast-icon">check_circle</span>
+<span class="text-sm font-medium" id="toast-message">Action successful</span>
+</div>
+</div>
+<script>
+  // Filter and Tab state management
+  const searchInput = document.getElementById('request-search');
+  const clearSearchBtn = document.getElementById('clear-search');
+  const requestCards = document.querySelectorAll('.request-item');
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const noResultsState = document.getElementById('no-results-state');
+  const listStatusHeading = document.getElementById('list-status-heading');
+  const reviewModal = document.getElementById('review-modal');
+  const reviewTextarea = document.getElementById('review-textarea');
+  const charCounter = document.getElementById('char-counter');
+  let currentTab = 'received';
+
+  function filterRequests() {
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    if (query.length > 0) {
+      clearSearchBtn.classList.remove('hidden');
+    } else {
+      clearSearchBtn.classList.add('hidden');
+    }
+
+    requestCards.forEach(card => {
+      const cardName = card.getAttribute('data-name') || '';
+      const cardSkill = card.getAttribute('data-skill') || '';
+      const cardStatus = card.getAttribute('data-status') || '';
+
+      const matchesSearch = query === '' || cardName.includes(query) || cardSkill.includes(query);
+      
+      let matchesTab = true;
+      if (currentTab === 'received') {
+        matchesTab = cardStatus.includes('received');
+      } else if (currentTab === 'in-progress') {
+        matchesTab = cardStatus.includes('in-progress') || cardStatus.includes('accepted');
+      } else if (currentTab === 'completed') {
+        matchesTab = cardStatus.includes('completed');
+      } else if (currentTab === 'sent') {
+        matchesTab = cardStatus.includes('sent');
+      }
+
+      if (matchesSearch && matchesTab) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (visibleCount === 0) {
+      noResultsState.classList.remove('hidden');
+      listStatusHeading.textContent = 'No matching requests';
+    } else {
+      noResultsState.classList.add('hidden');
+      listStatusHeading.textContent = `Showing ${visibleCount} request${visibleCount === 1 ? '' : 's'}`;
+    }
+  }
+
+  // Tab switching logic
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => {
+        b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600', 'shadow-xs');
+        b.classList.add('text-slate-600', 'border-transparent');
+        const badge = b.querySelector('span:last-child');
+        if (badge) {
+          badge.classList.remove('bg-blue-700', 'text-white');
+          badge.classList.add('bg-slate-100', 'text-slate-600');
+        }
+      });
+
+      btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600', 'shadow-xs');
+      btn.classList.remove('text-slate-600', 'border-transparent');
+      const activeBadge = btn.querySelector('span:last-child');
+      if (activeBadge) {
+        activeBadge.classList.add('bg-blue-700', 'text-white');
+        activeBadge.classList.remove('bg-slate-100', 'text-slate-600');
+      }
+
+      currentTab = btn.getAttribute('data-tab');
+      filterRequests();
+    });
+  });
+
+  searchInput.addEventListener('input', filterRequests);
+  
+  clearSearchBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    filterRequests();
+    searchInput.focus();
+  });
+
+  function resetFilters() {
+    searchInput.value = '';
+    const receivedTabBtn = document.querySelector('[data-tab="received"]');
+    if (receivedTabBtn) {
+      receivedTabBtn.click();
+    } else {
+      filterRequests();
+    }
+  }
+
+  // Toast feedback helper
+  function showToast(msg, icon = 'check_circle') {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toast-message');
+    const toastIcon = document.getElementById('toast-icon');
+    
+    toastMsg.textContent = msg;
+    toastIcon.textContent = icon;
+    
+    toast.classList.remove('translate-y-20', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-20', 'opacity-0');
+    }, 3200);
+  }
+
+  // Card CTA Handlers
+  function handleAccept(btn, name) {
+    const card = btn.closest('.request-item');
+    card.style.opacity = '0.5';
+    showToast(`Accepted proposal from ${name}! Exchange is now In Progress.`, 'verified');
+    setTimeout(() => {
+      card.setAttribute('data-status', 'in-progress accepted');
+      card.style.opacity = '1';
+      filterRequests();
+    }, 600);
+  }
+
+  function handleDecline(btn, name) {
+    const card = btn.closest('.request-item');
+    if (confirm(`Are you sure you want to decline the swap proposal from ${name}?`)) {
+      card.style.transition = 'all 0.3s ease';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        card.remove();
+        showToast(`Declined swap with ${name}.`, 'info');
+        filterRequests();
+      }, 300);
+    }
+  }
+
+  function handleQuickMessage(name) {
+    showToast(`Opening quick chat thread with ${name}...`, 'forum');
+  }
+
+  function handleCompleteSwap(btn, name) {
+    const card = btn.closest('.request-item');
+    if (confirm(`Mark your learning partnership with ${name} as fully completed?`)) {
+      card.setAttribute('data-status', 'completed');
+      showToast(`Exchange with ${name} marked as completed! ⭐`, 'task_alt');
+      filterRequests();
+    }
+  }
+
+  function handleSchedule(name) {
+    showToast(`Calendar sync opened for session with ${name}`, 'event');
+  }
+
+  function handleViewNotes(name) {
+    showToast(`Loading archived learning log for ${name}...`, 'description');
+  }
+
+  // Modal Rating functions
+  function openReviewModal(name) {
+    document.getElementById('modal-partner-name').textContent = `Rate your swap with ${name}`;
+    reviewModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReviewModal() {
+    reviewModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function submitReview() {
+    closeReviewModal();
+    showToast('Your rating and verified endorsement were submitted!', 'verified');
+  }
+
+  // Character counter for review textarea
+  if (reviewTextarea) {
+    reviewTextarea.addEventListener('input', (e) => {
+      charCounter.textContent = `${e.target.value.length} / 300`;
+    });
+  }
+
+  // Star click preview
+  const starButtons = document.querySelectorAll('.star-btn');
+  const ratingLabel = document.getElementById('rating-label');
+  const ratingDescriptions = {
+    1: '1.0 - Needs Improvement',
+    2: '2.0 - Fair Exchange',
+    3: '3.0 - Good Session',
+    4: '4.0 - Great Partner',
+    5: '5.0 - Exceptional Partner'
+  };
+
+  starButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = parseInt(btn.getAttribute('data-val'), 10);
+      starButtons.forEach(s => {
+        const sVal = parseInt(s.getAttribute('data-val'), 10);
+        if (sVal <= val) {
+          s.classList.add('text-amber-500');
+          s.classList.remove('text-slate-200');
+        } else {
+          s.classList.remove('text-amber-500');
+          s.classList.add('text-slate-200');
+        }
+      });
+      ratingLabel.textContent = ratingDescriptions[val] || `${val}.0`;
+    });
+  });
+
+  // Initial pass to setup clean counts
+  filterRequests();
+</script></main><footer class="w-full bg-white border-t border-slate-200 mt-auto shadow-xs"><div class="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg py-space-xl"><div class="flex flex-col md:flex-row items-center justify-between gap-space-md pb-space-lg border-b border-slate-100"><div class="flex flex-col items-center md:items-start text-center md:text-left"><div class="flex items-center gap-space-xs mb-1"><span class="font-headline-sm text-headline-sm text-slate-900 font-bold">SkillSwap</span></div><p class="font-body-md text-body-md text-slate-500 max-w-md">Empowering cross-functional talent growth through verifiable peer skill exchanges.</p></div><div class="flex flex-wrap items-center justify-center gap-space-md md:gap-space-lg"><a class="font-body-md text-sm text-slate-600 hover:text-blue-700 transition-colors font-medium" data-path="trust-and-safety" href="#">Trust &amp; Safety</a><a class="font-body-md text-sm text-slate-600 hover:text-blue-700 transition-colors font-medium" data-path="help-center" href="#">Help Center</a></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm text-center sm:text-left"><span class="font-label-sm text-xs text-slate-500">© 2025 SkillSwap Platform Inc. All rights reserved.</span></div></div></footer>
+
+
+</body></html>

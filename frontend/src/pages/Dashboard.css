@@ -1,0 +1,144 @@
+.dashboard-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+}
+
+.dashboard-header {
+    margin-bottom: var(--space-lg);
+}
+
+.dashboard-tabs {
+    display: flex;
+    gap: var(--space-md);
+    border-bottom: 1px solid var(--c-surface-border);
+    margin-bottom: var(--space-lg);
+}
+
+.tab-item {
+    padding: var(--space-sm) 0;
+    color: var(--c-text-secondary);
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--c-text-primary);
+}
+
+.tab-item.active {
+    color: var(--c-primary);
+    border-bottom-color: var(--c-primary);
+}
+
+.requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.request-card {
+    background-color: var(--c-surface-card);
+    border: 1px solid var(--c-surface-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+}
+
+.req-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+}
+
+.req-users {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.req-icon {
+    color: var(--c-text-muted);
+}
+
+.status-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+.status-pending {
+    background-color: var(--c-status-pending-bg);
+    color: var(--c-status-pending);
+    border: 1px solid var(--c-status-pending-border);
+}
+
+.status-accepted {
+    background-color: var(--c-status-accepted-bg);
+    color: var(--c-status-accepted);
+    border: 1px solid var(--c-status-accepted-border);
+}
+
+.req-exchange {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    background-color: var(--c-surface-subdued);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+}
+
+.exchange-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.exchange-label {
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.exchange-arrow {
+    color: var(--c-outline-variant);
+}
+
+.req-note {
+    font-style: italic;
+    color: var(--c-text-secondary);
+    font-size: 14px;
+    border-left: 2px solid var(--c-surface-border);
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.req-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+    border-top: 1px solid var(--c-surface-border);
+    padding-top: var(--space-md);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--c-surface-border);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    color: var(--c-text-primary);
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background-color: var(--c-surface-subdued);
+}
