@@ -24,23 +24,23 @@ Users should be able to:
 ### Overall aesthetic
 
 - Minimal, card-based interface
-- Clean white/light-gray background
+- Dark-mode-first aesthetic (slate, charcoals, teal accents)
 - One accent color for primary actions and key states
 - Clear status colors for pending, accepted, rejected, and completed requests
-- Simple sans-serif typography
-- Plenty of whitespace for readability
+- System font scaling with `Manrope` typography
+- Deep backgrounds with elevated surface cards for readability
 - Functional, community-oriented feel rather than highly gamified visuals
 
 ### Visual system
 
-- Neutral base palette: white, gray, charcoal
-- Primary action color: blue or teal accent
+- Neutral base palette: deep slate `#111316`, surface `#1a1c1f`, elevated card `#1f242b`
+- Primary action color: `#7ed6cb` (Soft teal)
 - Status colors:
-  - Pending: amber/yellow
-  - Accepted: green
-  - Rejected: red or muted gray
-  - Completed: blue or subdued green
-- Icons optional, mainly to support skill scanning and status recognition
+  - Pending: amber (`#D97706`)
+  - Accepted: emerald (`#10B981`)
+  - Rejected: rose (`#E11D48`)
+  - Completed: blue (`#3B82F6`)
+- Icons utilized for navigation mapping and swap status identifiers
 
 ### UX principles
 
@@ -97,7 +97,19 @@ A moderator or staff user responsible for approving skills, managing inappropria
 
 ## 6. Screen Requirements
 
-### 6.1 Auth screens
+### 6.1 Landing screen (New Entry Point)
+
+This represents the primary onboarding screen prior to login.
+
+Required elements:
+- Hero branding introducing the 1-on-1 peer exchange mission
+- Quick-filter topic badges for unauthenticated preview
+- Looping community swap examples (marquee-style scrolling list)
+- Primary CTA to explore the platform or create an account
+
+---
+
+### 6.2 Auth screens
 
 #### Login
 

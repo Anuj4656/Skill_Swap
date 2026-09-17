@@ -3,8 +3,8 @@
 **Type:** College mini project
 **Owner:** Solo
 **Deadline:** September 21
-**Stack:** Django + DRF (backend), React + Vite (frontend), PostgreSQL, JWT auth
-**Deployment:** Backend → Render, Frontend → Vercel
+**Stack:** Django + DRF (backend), React 18 + Vite + Tailwind V4 (frontend), PostgreSQL, JWT auth
+**Design:** V2 Dark-Mode (Quiet Craft Community via Stitch)
 
 ---
 

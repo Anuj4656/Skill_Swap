@@ -1,0 +1,474 @@
+<!DOCTYPE html><html class="dark" lang="en" style="width: 1280px; height: 1270px; overflow: hidden; position: relative;"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"badge-wanted-bg":"#1E232B","primary-fixed-dim":"#7ed6cb","error-container":"#93000a","secondary-fixed":"#dde3ec","on-tertiary-fixed-variant":"#72351d","surface-elevated":"#1F242B","secondary-fixed-dim":"#c1c7d0","inverse-on-surface":"#2f3034","badge-wanted-border":"#4B5563","on-primary-container":"#00302c","status-pending-bg":"#2A1E0D","surface-card":"#181B20","on-tertiary-container":"#4d1904","outline-variant":"#3e4947","error":"#ffb4ab","text-muted":"#8B949E","on-primary":"#003733","on-error-container":"#ffdad6","outline":"#889391","status-accepted-bg":"#0D2A20","text-secondary":"#C9D1D9","surface-dim":"#111316","on-primary-fixed-variant":"#00504a","on-secondary-fixed":"#161c23","surface-container-low":"#1a1c1f","on-secondary-container":"#b0b5be","on-background":"#e2e2e6","surface-container-highest":"#333538","primary-fixed":"#9bf2e7","surface-bright":"#37393d","surface-variant":"#333538","on-surface-variant":"#bdc9c6","border-strong":"#30363D","on-error":"#690005","status-completed-bg":"#12213D","status-rejected":"#E11D48","inverse-surface":"#e2e2e6","border-subtle":"#2D333B","background":"#111316","on-primary-fixed":"#00201d","tertiary":"#ffb59b","on-tertiary":"#562009","surface":"#111316","text-primary":"#E6EDF3","tertiary-container":"#cc7c5f","surface-container-high":"#282a2d","on-tertiary-fixed":"#380d00","surface-container-lowest":"#0c0e11","surface-tint":"#7ed6cb","on-surface":"#e2e2e6","status-completed":"#3B82F6","status-accepted":"#10B981","inverse-primary":"#006a62","surface-base":"#121417","status-rejected-bg":"#2F1119","secondary":"#c1c7d0","on-secondary":"#2b3138","surface-container":"#1e2023","secondary-container":"#41474f","primary":"#7ed6cb","primary-container":"#459f95","tertiary-fixed-dim":"#ffb59b","on-secondary-fixed-variant":"#41474f","tertiary-fixed":"#ffdbcf","status-pending":"#D97706"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xl":"2rem","gutter":"1.25rem","gutter-mobile":"0.75rem","margin-mobile":"1rem","space-sm":"0.5rem","space-md":"1rem","margin":"2rem","space-lg":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["Manrope"],"headline-md":["Manrope"],"title-md":["Manrope"],"body-lg":["Manrope"],"caption":["Manrope"],"headline-xl":["Manrope"],"headline-lg":["Manrope"],"body-md":["Manrope"],"label-sm":["Manrope"]},"fontSize":{"label-md":["13px",{"lineHeight":"18px","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"caption":["11px",{"lineHeight":"14px","fontWeight":"400"}],"headline-xl":["32px",{"lineHeight":"40px","fontWeight":"600"}],"headline-lg":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface-base font-body-md text-text-primary min-h-screen"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md border-b border-border-subtle"><div class="h-16 max-w-6xl mx-auto px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Skill Swap Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XAXuyozRnk2Os9KtnusOxzt1cPCQcK6fRnB61HaS2qcjJ5PLbXUDPNDjeTVaM0K3py9o6JHtF_JO7xOHkjKnDDA_QNJk2rbiheg0pqhWIFImLXhcYTipuQJS_sGb0GSpNfJAkku7naH1tQp87cyTjkYU_yqlBt4sQMfIodL261L9PQBHcRLrv8GO0C2xnK8Od14_Y-_ZeI7to1qacdhbaPl7U73hBPuVgNtHIFNoOxtfV7kMwc01WcWzOr"><span class="font-title-md text-title-md text-text-primary tracking-tight">Skill Swap</span></div><nav class="flex items-center gap-space-lg h-full" data-active-classes="text-text-primary border-b-2 border-primary"><a aria-current="page" class="inline-flex items-center h-full transition-colors font-label-md pt-0.5 text-text-primary border-b-2 border-primary" data-path="browse-users" href="#">Browse Users</a><a class="inline-flex items-center h-full text-text-muted hover:text-text-primary transition-colors font-label-md text-label-md gap-space-xs pt-0.5" data-path="my-swaps" href="#">My Swaps<span class="px-1.5 py-0.5 rounded-lg bg-surface-elevated text-text-muted text-caption font-caption border border-border-strong">2</span></a><a class="inline-flex items-center h-full text-text-muted hover:text-text-primary transition-colors font-label-md text-label-md pt-0.5" data-path="community-skills" href="#">Community Skills</a></nav><div class="flex items-center gap-space-md"><button aria-label="Search" class="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Notifications" class="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-1.5 h-1.5 bg-primary rounded-full"></span></button><div class="h-5 w-px bg-border-subtle"></div><div class="flex items-center gap-space-sm pl-space-xs cursor-pointer group"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-border-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUGDUtSX2YsLSl5QLaKJbo6lwG-GdQdnlqas1a0mfGTm0JpfcEYrrVn_--1_c1f7Mp3zgqrxhWeoDYdVM5cUcBbu9gvMfHOWFVtsb_Va_rfbLxO-qkEnT6hZN6BmfIv7mCNOt7fSmpekpKp7YdPc-_FID0jgXhN00SvBOvEsuTHG5swzKh1Bbnow2CNEMEoKp3t72A9-sEKt1j5qZOwpnslANgpCns5JrPsiyeE1BoiP3u4PtXD2IGNQ"><span class="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">Elena Vance</span><span class="material-symbols-outlined text-[18px] text-text-muted group-hover:text-text-primary transition-colors">keyboard_arrow_down</span></div></div></div></header><main class="w-full pt-16 bg-surface-base"><div class="max-w-6xl mx-auto px-gutter py-space-xl"><div class="flex flex-col w-full">
+<!-- Header / Headline Section with Micro Metric Badges -->
+<section class="flex flex-col md:flex-row md:items-end justify-between pb-space-xl gap-space-lg">
+<div class="max-w-2xl">
+
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">
+        Find skills to swap in your community
+      </h1>
+
+</div>
+<!-- Active network micro-stat spark -->
+
+</section>
+<!-- Search & Filter Controls -->
+<section class="flex flex-col gap-space-md mb-space-xl">
+<!-- Primary Search & Action Input Row -->
+<div class="flex flex-col sm:flex-row items-stretch gap-space-sm">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-text-muted text-[20px] pointer-events-none">search</span>
+<input class="w-full h-12 pl-11 pr-space-md bg-surface-container rounded-xl text-text-primary placeholder:text-text-muted font-body-md text-body-md focus:outline-none focus:bg-surface-elevated transition-colors" id="skill-search-input" placeholder="Search by skill (e.g. Python, UI Design, Pottery) or name..." type="text">
+<button class="hidden absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary" id="clear-search-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</div>
+<!-- Quick Toggles -->
+<div class="flex items-center gap-space-sm">
+<div class="relative min-w-[170px]">
+<select class="w-full h-12 px-space-md bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors">
+<option value="all">Availability: All</option>
+<option value="weekends">Weekends</option>
+<option value="evenings">Evenings</option>
+<option value="flexible">Flexible</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted pointer-events-none text-[18px]">expand_more</span>
+</div>
+<div class="relative min-w-[180px]">
+<select class="w-full h-12 px-space-md bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors">
+<option value="trust">Sort by: Trust Score</option>
+<option value="swaps">Sort by: Most Swaps</option>
+<option value="rating">Sort by: Highest Rating</option>
+<option value="recent">Sort by: Recently Joined</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted pointer-events-none text-[18px]">swap_vert</span>
+</div>
+</div>
+</div>
+<!-- Category Filter Pills -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1" id="category-pills">
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-primary text-on-primary transition-colors" type="button">
+        All
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Design &amp; Creative
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Development
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Language
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Craft &amp; DIY
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Music
+      </button>
+<button class="category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors" type="button">
+        Academic
+      </button>
+</div>
+</section>
+<!-- 3-Column Responsive User Cards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg w-full mb-space-xl">
+<!-- User Card 1: Marcus Chen -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Editorial close portrait of Marcus Chen, an Asian male software engineer in his late 20s wearing dark charcoal crewneck against a dim minimalist background with soft cool lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUIKSDWSzbBkuuat5L3_aS3VZNjVhFYz4rDaxksPyX39j3gh5d6Ekx7x3Lv4PVQKD7_QT5avdXPMHkh769xgEhvi_8AJnGS9WdIZaz0I45bLabwzuI_tW09Cao-7DUaf7HNnijfqJrL_HQR66yIHB_aSmngBW6yAkokYNgw8SDrwkH7YwAb7zIfVr1Q4w1BoUNbZvtRrUKT6fVO3CBUa836ncIDFdNU6fkspBLBbD8H0YRgPZ3S-409w">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">Marcus Chen</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                Portland, OR
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Available weekends
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Python</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">PostgreSQL</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">FastAPI</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Figma / UI Design</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Ceramics</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">4.9</span>
+<span class="font-caption text-caption text-text-muted">(14 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+<!-- User Card 2: Sarah Miller -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Intimate portrait of Sarah Miller, a Caucasian woman with auburn hair tied back, subtle glasses, wearing an olive linen shirt inside a naturally lit architectural design studio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9udVhMOUDGWxu9eFjWJ_QLKT_PdaG49RXrmdtdu9mxl8Ji3SkQR3JAMSeDh9HCIEjZcCIWtIjkeJpYVoehZWJomggVw5zwSBDNIXsFk8snQKejmOBlYbarE7CEO9HNM3ijs-2Vi92vDp7uMfkpyIJAN1UlfIDT8m25IFU7wFgtxGehbxhI9-GJY_K82SafdccjN4Q1alQm5x2pIBmZ9cjimJ5SAuKPIOYQfFZsTQwb3zOl_rwM2TvYw">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">Sarah Miller</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                Chicago, IL
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Available evenings
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Product Design</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Design Systems</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Django</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">React</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">5.0</span>
+<span class="font-caption text-caption text-text-muted">(22 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+<!-- User Card 3: David Adebayo -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Cinematic portrait of David Adebayo, a Black male musician with a clean beard and warm smile, holding acoustic guitar neck in warm evening acoustic studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAnKYBGWgXmvfdynBCHNFubbniZJYxxEcVy0k8_IYO-Au5YL5pmHp6BvWuBsW2_JPAf6kCYXZNRZTJECPgz771CrIrcypujwbulCj3t2ialE3ROhKWctILYIzsoSwgmG-00hhZHSqqADv43yo-8QTR7KdH6ggeYCA2DruGkcgqulzQHBMUsCVswsGUknIhqg3p6tP86oLVTeLOysbqWkLS-294dHAqN2NLnDKGbmOQIlKJGyk2UnnE_Q">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">David Adebayo</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                Austin, TX
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Flexible
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Acoustic Guitar</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Audio Mixing</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Spanish Conversation</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">4.8</span>
+<span class="font-caption text-caption text-text-muted">(9 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+<!-- User Card 4: Maya Lin -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Realistic portrait of Maya Lin, an East Asian woman woodworker wearing a canvas workshop apron, hands dusted with light wood powder, calm focused expression in a sunlit woodworking shop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV3yM2yyYSb8lX_xcLcoq9NmGroHMB50d0nyt3jZnJOhY2RNAim-Vhs53O41OgnytiC68UeZzOBoeI_cGS9TLwGR4AYDX8YPssB6PyYrxgO5sCBjlpvS_tA2zOcsJdQUQV8ONstOIWPqDrlApDSFUipoNh493M5S7K-KLMkmpxpTHWqo__0u25kpJZma8A3-wfYLJMGesSReVFjY3CIHR_6_DXhpuaMHOx5PkfGO5pz2N2wiYOpoPYQ">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">Maya Lin</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                Seattle, WA
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Available weekends
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Woodworking</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Furniture Restoration</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Tax Preparation</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Web Development</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">4.9</span>
+<span class="font-caption text-caption text-text-muted">(18 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+<!-- User Card 5: Lucas Rossi -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Editorial headshot of Lucas Rossi, a South American man with wavy hair and dark eyes wearing a dark knit sweater, holding a ceramic espresso cup in an artisan Brooklyn kitchen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5pHR12VB6eCu4xA8Jw2RoY3E1bc7V8z-rprO8KGBh4LCa60hjtWFVexQT-l25kiROJogTAjNuAdh8lnPL-bx2qaeYOr-Tr2EuN17J2928J6OchTz7TJI_S_vd3IasOA4x2A1zJc_XgG2zbUvPt-BY_uigBzsLaGl0ZjiuOW8RGOuiDdgZ5JD1fkyWfn4NuR6mIdnZ9r3ha4bLVGou-MZ6f5NY_UPPCWHt_DmNoSAT1TKbf31nthkaUg">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">Lucas Rossi</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                Brooklyn, NY
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Available evenings
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Italian (Native)</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Pasta Making</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Tailwind CSS</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">TypeScript</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">4.7</span>
+<span class="font-caption text-caption text-text-muted">(8 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+<!-- User Card 6: Amara Okafor -->
+<article class="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-container" data-alt="Crisp professional portrait of Amara Okafor, a West African woman with braided hair and tortoiseshell glasses, smiling softly in a modern architectural loft office filled with potted plants." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjxyO5tYW0DJXgmBoVpn_gPCbE_bMD3zSC10QPcbVl9leGszqNNsMdKH-VBTdfXyvx4thWMZjumzof0MwMtjOo4U3u93SUJ6pwXojqM4ebk5qxJk7Ku8ieEJ9qZlDdS30ahkSbmS-qpoLOWKL3QWHb7YdLdLxSORTVdai7-ecKKlkYfSzQkKlziAl6iuZAL8SV4n9UejB7kpzkO-hQJFo6z3W0Ev3i3VJYcN-NdeUxDFOOhf1XOzEkJQ">
+<div>
+<h2 class="font-title-md text-title-md text-text-primary">Amara Okafor</h2>
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                San Francisco, CA
+              </div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+<span class="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
+            Flexible
+          </span>
+</div>
+<!-- Skills Sections -->
+<div class="space-y-space-md mb-space-md">
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">Technical Writing</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">SEO Strategy</span>
+</div>
+</div>
+<div>
+<span class="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Sourdough Baking</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">Gardening</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Metrics & Actions -->
+<div class="pt-space-md mt-space-md bg-surface-container-low/60 -mx-space-lg -mb-space-lg p-space-lg rounded-b-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-status-pending text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-text-primary">5.0</span>
+<span class="font-caption text-caption text-text-muted">(31 swaps)</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors" type="button">
+            Profile
+          </button>
+<button class="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+            Request Swap
+          </button>
+</div>
+</div>
+</article>
+</section>
+<!-- Clean Pagination & Summary Bar -->
+<footer class="flex flex-col sm:flex-row items-center justify-between py-space-md px-space-lg bg-surface-container rounded-xl gap-space-md">
+<div class="font-body-md text-body-md text-text-muted">Showing <span class="font-label-md text-label-md text-text-primary">6 members</span></div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-muted cursor-not-allowed opacity-60 flex items-center gap-1" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+        Previous
+      </button>
+<div class="flex items-center gap-1 px-space-xs">
+<button class="w-8 h-8 rounded-lg font-label-sm text-label-sm bg-primary text-on-primary flex items-center justify-center" type="button">1</button>
+<button class="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors" type="button">2</button>
+<button class="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors" type="button">3</button>
+<span class="text-text-muted px-1 text-caption">…</span>
+<button class="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors" type="button">8</button>
+</div>
+<button class="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors" type="button">
+        Next
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</footer>
+<!-- Subtle Micro-interaction script -->
+<script>
+    (function() {
+      const searchInput = document.getElementById('skill-search-input');
+      const clearBtn = document.getElementById('clear-search-btn');
+      const pills = document.querySelectorAll('.category-pill');
+
+      if (searchInput && clearBtn) {
+        searchInput.addEventListener('input', (e) => {
+          if (e.target.value.trim().length > 0) {
+            clearBtn.classList.remove('hidden');
+          } else {
+            clearBtn.classList.add('hidden');
+          }
+        });
+
+        clearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          clearBtn.classList.add('hidden');
+          searchInput.focus();
+        });
+      }
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => {
+            p.classList.remove('bg-primary', 'text-on-primary');
+            p.classList.add('bg-surface-container', 'text-text-secondary');
+          });
+          pill.classList.remove('bg-surface-container', 'text-text-secondary');
+          pill.classList.add('bg-primary', 'text-on-primary');
+        });
+      });
+    })();
+  </script>
+</div></div></main><footer class="w-full bg-surface-container-low border-t border-border-subtle py-space-xl"><div class="max-w-6xl mx-auto px-gutter flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-label-md text-label-md text-text-primary">Skill Swap</span><span class="font-caption text-caption text-text-muted">— Collegial peer-to-peer knowledge exchange</span></div><div class="flex items-center gap-space-lg font-caption text-caption text-text-muted"><a class="hover:text-text-primary transition-colors" href="#">Guidelines</a><a class="hover:text-text-primary transition-colors" href="#">Exchange Principles</a><a class="hover:text-text-primary transition-colors" href="#">Help Center</a><span class="text-border-strong">•</span><span class="">© 2025 Skill Swap</span></div></div></footer><div id="snapdom-sandbox" data-snapdom-sandbox="true" aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div></body></html>
