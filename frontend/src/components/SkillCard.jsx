@@ -54,9 +54,9 @@ export default function SkillCard({ user }) {
                     <Link to={`/profile/${user.id}`} className="flex items-center justify-center w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors">
                         Profile
                     </Link>
-                    <button className="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">
+                    <Link to={`/profile/${user.id}?action=request`} className="flex items-center justify-center w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors">
                         Request Swap
-                    </button>
+                    </Link>
                 </div>
             </div>
         </article>

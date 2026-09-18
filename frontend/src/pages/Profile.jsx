@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { getImageUrl } from '../utils';
 
 export default function Profile() {
     const { id } = useParams();
@@ -15,6 +16,7 @@ export default function Profile() {
     const [wantedSki, setWantedSki] = useState('');
 
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -23,7 +25,7 @@ export default function Profile() {
             return;
         }
 
-        const url = id ? `http://127.0.0.1:8000/api/users/${id}/` : `http://127.0.0.1:8000/api/profile/me/`;
+        const url = id ? `http://127.0.0.1:8000/api/profile/${id}/` : `http://127.0.0.1:8000/api/profile/me/`;
 
         const p1 = fetch(url, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json());
         const p2 = id ? fetch('http://127.0.0.1:8000/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()) : Promise.resolve(null);
@@ -33,12 +35,17 @@ export default function Profile() {
                 setProfile(targetProfile);
                 if (myProf) setMyProfile(myProf);
                 setLoading(false);
+
+                // Auto-open modal if directed by Browse page
+                if (searchParams.get('action') === 'request' && id && targetProfile?.is_public) {
+                    setShowModal(true);
+                }
             })
             .catch(err => {
                 console.error("Error fetching data:", err);
                 setLoading(false);
             });
-    }, [navigate, id]);
+    }, [navigate, id, searchParams]);
 
     useEffect(() => {
         if (!profile || !profile.user) return;
@@ -49,6 +56,26 @@ export default function Profile() {
     }, [profile]);
 
     if (loading) return null;
+
+    if (id && profile && !profile.is_public && myProfile?.user?.id !== profile.user?.id) {
+        return (
+            <main className="w-full pt-16 bg-surface-base relative min-h-screen">
+                <div className="max-w-6xl mx-auto px-gutter py-space-xl">
+                    <div className="flex items-center justify-between mb-space-lg">
+                        <Link to="/browse" className="inline-flex items-center gap-space-xs font-label-md text-label-md text-text-muted hover:text-text-primary transition-colors group">
+                            <span className="material-symbols-outlined text-[18px] text-text-muted group-hover:text-primary transition-colors group-hover:-translate-x-0.5 transform duration-150">arrow_back</span>
+                            <span>Back to Browse</span>
+                        </Link>
+                    </div>
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <span className="material-symbols-outlined text-[64px] text-text-secondary mb-space-md">lock</span>
+                        <h1 className="font-headline-lg text-headline-lg text-text-primary mb-space-sm">Private Profile</h1>
+                        <p className="font-body-lg text-body-lg text-text-secondary max-w-md">This user has set their profile to private. You cannot view their skills or request a swap.</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
     const handleRequestSwap = async (e) => {
         e.preventDefault();
@@ -83,10 +110,6 @@ export default function Profile() {
                             <span className="material-symbols-outlined text-[18px] text-text-muted group-hover:text-primary transition-colors group-hover:-translate-x-0.5 transform duration-150">arrow_back</span>
                             <span>Back to Browse</span>
                         </Link>
-                        <div className="flex items-center gap-space-sm font-caption text-caption text-text-muted">
-                            <span className="inline-block w-2 h-2 rounded-full bg-status-accepted"></span>
-                            <span>Profile active</span>
-                        </div>
                     </div>
 
                     <div className="relative bg-surface-card rounded-xl p-space-lg md:p-space-xl shadow-xl overflow-hidden mb-space-xl">
@@ -95,7 +118,7 @@ export default function Profile() {
                         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-space-lg min-w-0">
                                 <div className="relative flex-shrink-0">
-                                    <img className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-md" alt="Profile avatar" src={profile?.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
+                                    <img className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-md" alt="Profile avatar" src={getImageUrl(profile?.photo)} />
                                     <div className="absolute -bottom-1 -right-1 bg-surface-card p-1 rounded-full shadow-sm" title="Verified Peer">
                                         <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                                     </div>
@@ -122,7 +145,7 @@ export default function Profile() {
                                     <div className="flex flex-wrap items-center gap-space-xs">
                                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-accepted-bg text-status-accepted font-label-sm text-label-sm capitalize">
                                             <span className="w-1.5 h-1.5 rounded-full bg-status-accepted animate-pulse"></span>
-                                            Available {profile?.availability}
+                                            Available {profile?.availability || 'flexible'}
                                         </span>
                                     </div>
                                 </div>
@@ -155,8 +178,14 @@ export default function Profile() {
                                 <div className="flex items-center text-status-pending">
                                     <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                                 </div>
-                                <span className="font-label-md text-label-md text-text-primary">{profile?.trust_score ?? '5.0'}</span>
-                                <span>({profile?.reviews_count || 0} reviews)</span>
+                                <span className="font-label-md text-label-md text-text-primary">{profile?.trust_score && profile?.trust_score > 0 ? (Math.round(profile.trust_score * 10) / 10).toFixed(1) : 'New'}</span>
+                                <span>({ratings.length || 0} reviews)</span>
+                            </div>
+                            <span className="text-border-strong">•</span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-[16px] text-status-accepted">task_alt</span>
+                                <span className="font-label-md text-label-md text-text-primary">{(profile?.completion_rate && profile.completion_rate <= 1 ? profile.completion_rate * 100 : 100).toFixed(0)}%</span>
+                                <span>Completion</span>
                             </div>
                             <span className="text-border-strong">•</span>
                             <div className="flex items-center gap-1.5">
@@ -228,7 +257,7 @@ export default function Profile() {
                                         <div key={rating.id} className="flex flex-col pb-space-md border-b border-surface-container-high last:border-b-0 last:pb-0">
                                             <div className="flex items-center justify-between mb-space-xs">
                                                 <div className="flex items-center gap-space-sm">
-                                                    <img className="w-7 h-7 rounded-full object-cover" alt="Rater Profile" src={rating.rater?.profile?.photo || "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"} />
+                                                    <img className="w-7 h-7 rounded-full object-cover" alt="Rater Profile" src={getImageUrl(rating.rater?.profile?.photo)} />
                                                     <div>
                                                         <span className="font-label-md text-label-md text-text-primary">{rating.rater?.username}</span>
                                                         <span className="font-caption text-caption text-text-muted ml-1">• {new Date(rating.created_at).toLocaleDateString()}</span>
@@ -274,17 +303,30 @@ export default function Profile() {
                             <form onSubmit={handleRequestSwap} className="flex flex-col gap-space-md">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-sm text-label-sm text-text-secondary">Which of your skills will you teach?</label>
-                                    <select className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:bg-surface-container">
-                                        <option value="ui">Figma &amp; UI Design (Your profile)</option>
-                                        <option value="other">Other custom offer...</option>
+                                    <select
+                                        className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:bg-surface-container"
+                                        value={offeredSki}
+                                        onChange={(e) => setOfferedSki(e.target.value)}
+                                        required
+                                    >
+                                        <option value="" disabled>Select a skill you offer...</option>
+                                        {myProfile?.skills_offered?.map(s => (
+                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="font-label-sm text-label-sm text-text-secondary">Which skill do you want to learn from Marcus?</label>
-                                    <select className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:bg-surface-container">
-                                        <option value="py">Python (Advanced, Core &amp; Testing)</option>
-                                        <option value="pg">PostgreSQL (Schema Design &amp; Optimization)</option>
-                                        <option value="api">FastAPI (Production REST APIs)</option>
+                                    <label className="font-label-sm text-label-sm text-text-secondary">Which skill do you want to learn from {profile?.user?.first_name}?</label>
+                                    <select
+                                        className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:bg-surface-container"
+                                        value={wantedSki}
+                                        onChange={(e) => setWantedSki(e.target.value)}
+                                        required
+                                    >
+                                        <option value="" disabled>Select a skill they offer...</option>
+                                        {profile?.skills_offered?.map(s => (
+                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className="flex flex-col gap-1.5">

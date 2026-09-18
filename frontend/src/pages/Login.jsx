@@ -6,6 +6,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [activePill, setActivePill] = useState('Flexible');
     const navigate = useNavigate();
+    const [toast, setToast] = useState('');
 
     const handleAuth = async (e) => {
         e.preventDefault();
@@ -53,7 +54,8 @@ export default function Login() {
                 });
                 if (response.ok) {
                     setIsLogin(true);
-                    alert("Registration successful! Please login.");
+                    setToast("Registration successful! You may now log in.");
+                    setTimeout(() => setToast(''), 3000);
                 } else {
                     console.error("Registration failed:", await response.text());
                 }
@@ -71,7 +73,15 @@ export default function Login() {
     };
 
     return (
-        <div className="flex flex-col w-full items-center justify-center py-space-xl px-margin-mobile md:px-margin min-h-screen pt-24">
+        <div className="flex flex-col w-full items-center justify-center py-space-xl px-margin-mobile md:px-margin min-h-screen pt-24 relative">
+            {/* Custom Toast Alert */}
+            {toast && (
+                <div className="fixed bottom-space-xl right-space-lg bg-surface-elevated border border-surface-container-high rounded-lg p-space-md shadow-lg text-text-primary z-50 flex items-center gap-space-sm border-l-4 border-l-status-accepted animate-fade-in-up">
+                    <span className="material-symbols-outlined text-status-accepted">check_circle</span>
+                    <span className="font-label-md text-label-md">{toast}</span>
+                </div>
+            )}
+
             <div className="w-full max-w-[480px] bg-surface-card rounded-xl p-space-md sm:p-space-lg shadow-xl relative overflow-hidden">
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
                 <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SkillCard from '../components/SkillCard';
+import { getImageUrl } from '../utils';
 
 export default function Browse() {
     const [allUsers, setAllUsers] = useState([]);
@@ -12,6 +13,8 @@ export default function Browse() {
     const [categories, setCategories] = useState([{ id: 'all', name: 'All' }]);
     const [availability, setAvailability] = useState('all');
     const [sortMode, setSortMode] = useState('recent');
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 6;
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/categories/')
@@ -24,7 +27,10 @@ export default function Browse() {
 
     useEffect(() => {
         setLoading(true);
-        fetch('http://127.0.0.1:8000/api/users/')
+        const token = localStorage.getItem('access_token');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+        fetch('http://127.0.0.1:8000/api/users/', { headers })
             .then(res => res.json())
             .then(data => {
                 const mappedUsers = data.map(u => ({
@@ -32,7 +38,7 @@ export default function Browse() {
                     name: `${u.user.first_name} ${u.user.last_name}`,
                     location: u.location || 'Unknown',
                     availability: u.availability ? `Available ${u.availability}` : 'Flexible',
-                    avatar: u.photo || 'https://www.gravatar.com/avatar/00?d=mp',
+                    avatar: getImageUrl(u.photo),
                     offering: u.skills_offered || [],
                     lookingFor: u.skills_wanted || [],
                     rating: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
@@ -79,7 +85,14 @@ export default function Browse() {
         }
 
         setDisplayedUsers(result);
+        setCurrentPage(1); // Reset to page 1 on filter changes
     }, [allUsers, searchQuery, searchMode, activeCategory, availability, sortMode]);
+
+    const totalPages = Math.max(1, Math.ceil(displayedUsers.length / ITEMS_PER_PAGE));
+    const paginatedUsers = displayedUsers.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <main className="w-full pt-16 bg-surface-base">
@@ -166,7 +179,7 @@ export default function Browse() {
                     </section>
 
                     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg w-full mb-space-xl">
-                        {displayedUsers.map(user => <SkillCard key={user.id} user={user} />)}
+                        {paginatedUsers.map(user => <SkillCard key={user.id} user={user} />)}
                         {displayedUsers.length === 0 && !loading && (
                             <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-space-xl text-text-muted font-body-lg text-body-lg">
                                 No users found matching your filters.
@@ -179,17 +192,28 @@ export default function Browse() {
                         )}
                     </section>
 
-                    <footer className="flex flex-col sm:flex-row items-center justify-between py-space-md px-space-lg bg-surface-container rounded-xl gap-space-md">
-                        <div className="font-body-md text-body-md text-text-muted">Showing <span className="font-label-md text-label-md text-text-primary">{displayedUsers.length} members</span></div>
-                        <div className="flex items-center gap-space-xs">
-                            <button className="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-muted cursor-not-allowed opacity-60 flex items-center gap-1" disabled type="button">
+                    <footer className="flex justify-center py-space-md px-space-lg bg-surface-container rounded-xl mb-space-sm">
+                        <div className="flex items-center gap-space-md">
+                            <button
+                                className={`h-9 px-space-md rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors ${currentPage === 1 ? 'bg-surface-elevated text-text-muted cursor-not-allowed opacity-60' : 'bg-surface-elevated text-text-secondary hover:text-text-primary'}`}
+                                disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                type="button"
+                            >
                                 <span className="material-symbols-outlined text-[16px]">chevron_left</span>
                                 Previous
                             </button>
-                            <div className="flex items-center gap-1 px-space-xs">
-                                <button className="w-8 h-8 rounded-lg font-label-sm text-label-sm bg-primary text-on-primary flex items-center justify-center">1</button>
+
+                            <div className="font-body-md text-body-md text-text-secondary px-space-sm">
+                                Page <span className="font-label-md text-text-primary">{totalPages === 0 ? 0 : currentPage}</span> of <span className="font-label-md text-text-primary">{totalPages}</span>
                             </div>
-                            <button className="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-muted cursor-not-allowed opacity-60 flex items-center gap-1 transition-colors" disabled type="button">
+
+                            <button
+                                className={`h-9 px-space-md rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors ${currentPage >= totalPages || totalPages === 0 ? 'bg-surface-elevated text-text-muted cursor-not-allowed opacity-60' : 'bg-surface-elevated text-text-secondary hover:text-text-primary'}`}
+                                disabled={currentPage >= totalPages || totalPages === 0}
+                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                type="button"
+                            >
                                 Next
                                 <span className="material-symbols-outlined text-[16px]">chevron_right</span>
                             </button>

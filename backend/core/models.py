@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     location = models.CharField(max_length=255, blank=True, null=True)
-    photo = models.URLField(blank=True, null=True) # use URLs or ImageField later if needed
+    photo = models.ImageField(upload_to='avatars/', blank=True, null=True)
     availability = models.CharField(max_length=20, choices=AVAILABILITY_CHOICES, default='flexible')
     is_public = models.BooleanField(default=True)
     is_banned = models.BooleanField(default=False)

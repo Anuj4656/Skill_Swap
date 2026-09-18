@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { getImageUrl } from '../utils';
 
 export default function Navbar() {
     const location = useLocation();
@@ -57,7 +58,7 @@ export default function Navbar() {
                     {userProfile ? (
                         <div className="flex items-center gap-space-md pl-space-xs">
                             <Link to="/profile" className="flex items-center gap-space-sm cursor-pointer group">
-                                <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src={userProfile.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
+                                <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src={getImageUrl(userProfile.photo)} />
                                 <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
                                     {userProfile.first_name} {userProfile.last_name}
                                 </span>

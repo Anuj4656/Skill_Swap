@@ -29,7 +29,7 @@ class ProfileMeView(generics.RetrieveUpdateAPIView):
         return profile
 
 class ProfileDetailView(generics.RetrieveAPIView):
-    queryset = UserProfile.objects.filter(is_public=True)
+    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 

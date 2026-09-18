@@ -17,7 +17,7 @@ export default function Landing() {
                 <section className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between px-margin-mobile lg:px-margin max-w-7xl mx-auto pt-space-xl pb-space-xl overflow-hidden">
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         <img
-                            src="https://lh3.googleusercontent.com/aida/AEtjO1WnESZLjM3kxWDSip3FJUSiCmS774_U_4nnGLU8m6GqmlQfVXR1EA7Tcya6tBcuXmx8uPnLye-EE9eZUvdWUX_1AkUs4UeauSNsooTCN8MRL-T1cOvuSphkNSYnjxkb9usIkdrOEieaoY9mUTUHL_g7anQL7ZOnwH44mnIxv-jRVQ5ScCiww7T5P6MlNC0XZ9N088B24EpOUxog7Y629A9HOzkErEQUGHaAQmow_olhCSXlq3EFa0mIgDeZ"
+                            src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
                             alt="Two university students studying together in library"
                             className="w-full h-full object-cover object-center"
                             style={{ opacity: 0.8 }}

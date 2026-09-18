@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getImageUrl } from '../utils';
 
 export default function EditProfile() {
     const navigate = useNavigate();
@@ -7,8 +8,7 @@ export default function EditProfile() {
     const [saveText, setSaveText] = useState('Save Profile');
     const [loading, setLoading] = useState(true);
 
-    const [first, setFirst] = useState('');
-    const [last, setLast] = useState('');
+    const [fullName, setFullName] = useState('');
     const [location, setLocation] = useState('');
     const [availability, setAvailability] = useState('flexible');
     const [isPublic, setIsPublic] = useState(true);
@@ -28,8 +28,8 @@ export default function EditProfile() {
         Promise.all([
             fetch('http://127.0.0.1:8000/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
             fetch('http://127.0.0.1:8000/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://127.0.0.1:8000/api/user-skills-offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://127.0.0.1:8000/api/user-skills-wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
+            fetch('http://127.0.0.1:8000/api/profile/me/offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch('http://127.0.0.1:8000/api/profile/me/wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
         ])
             .then(async ([profileRes, skillsRes, offeredRes, wantedRes]) => {
                 const data = await profileRes.json();
@@ -37,15 +37,18 @@ export default function EditProfile() {
                 const offeredData = await offeredRes.json();
                 const wantedData = await wantedRes.json();
 
-                setFirst(data.user?.first_name || '');
-                setLast(data.user?.last_name || '');
+                const skillsFinal = Array.isArray(skillsData) ? skillsData : skillsData.results || [];
+
+                const fName = data.user?.first_name || '';
+                const lName = data.user?.last_name || '';
+                setFullName([fName, lName].filter(Boolean).join(' '));
                 setLocation(data.location || '');
                 setAvailability(data.availability || 'flexible');
                 setIsPublic(data.is_public);
-                setPhoto(data.photo || 'https://www.gravatar.com/avatar/00?d=mp');
+                setPhoto(getImageUrl(data.photo));
 
-                setAvailableSkills(skillsData);
-                setOffered(offeredData);
+                setAvailableSkills(skillsFinal);
+                setOffered(Array.isArray(offeredData) ? offeredData : offeredData.results || []);
                 setWanted(wantedData);
 
                 setLoading(false);
@@ -59,7 +62,7 @@ export default function EditProfile() {
     const handleAddOffered = async () => {
         if (!selectedOfferedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch('http://127.0.0.1:8000/api/user-skills-offered/', {
+        const res = await fetch('http://127.0.0.1:8000/api/profile/me/offered/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedOfferedSkill })
@@ -72,7 +75,7 @@ export default function EditProfile() {
 
     const handleRemoveOffered = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/user-skills-offered/${id}/`, {
+        const res = await fetch(`http://127.0.0.1:8000/api/profile/me/offered/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -82,7 +85,7 @@ export default function EditProfile() {
     const handleAddWanted = async () => {
         if (!selectedWantedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch('http://127.0.0.1:8000/api/user-skills-wanted/', {
+        const res = await fetch('http://127.0.0.1:8000/api/profile/me/wanted/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedWantedSkill })
@@ -95,7 +98,7 @@ export default function EditProfile() {
 
     const handleRemoveWanted = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/user-skills-wanted/${id}/`, {
+        const res = await fetch(`http://127.0.0.1:8000/api/profile/me/wanted/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -107,19 +110,27 @@ export default function EditProfile() {
         setSaveText('Saving...');
 
         const token = localStorage.getItem('access_token');
+        const nameParts = fullName.trim().split(' ');
+        const first = nameParts[0] || '';
+        const last = nameParts.slice(1).join(' ');
+
+        const formData = new FormData();
+        formData.append('first_name', first);
+        formData.append('last_name', last);
+        formData.append('location', location);
+        formData.append('availability', availability);
+        formData.append('is_public', isPublic);
+        // Only append photo if it's a File object (user selected a new file)
+        if (photo instanceof File) {
+            formData.append('photo', photo);
+        }
+
         fetch('http://127.0.0.1:8000/api/profile/me/', {
             method: 'PATCH',
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                first_name: first,
-                last_name: last,
-                location: location,
-                availability: availability,
-                is_public: isPublic
-            })
+            body: formData
         })
             .then(res => {
                 if (res.ok) {
@@ -174,28 +185,37 @@ export default function EditProfile() {
                                     {/* Avatar Unit */}
                                     <div className="relative group shrink-0">
                                         <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-surface-elevated">
-                                            <img alt="Portrait" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src={photo} />
+                                            <img alt="Portrait" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src={photo instanceof File ? URL.createObjectURL(photo) : getImageUrl(photo)} />
                                         </div>
-                                        <button aria-label="Change photo" className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all" title="Change Profile Photo" type="button">
+                                        <input
+                                            type="file"
+                                            id="photoUpload"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                if (e.target.files && e.target.files[0]) {
+                                                    setPhoto(e.target.files[0]);
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            aria-label="Change photo"
+                                            className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all"
+                                            title="Change Profile Photo"
+                                            onClick={() => document.getElementById('photoUpload').click()}
+                                            type="button"
+                                        >
                                             <span className="material-symbols-outlined text-[16px]">photo_camera</span>
                                         </button>
                                     </div>
 
                                     {/* Basic Metadata Fields */}
-                                    <div className="space-y-space-md w-full max-w-md">
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="firstName">
-                                                    First Name
-                                                </label>
-                                                <input value={first} onChange={e => setFirst(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="firstName" type="text" />
-                                            </div>
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="lastName">
-                                                    Last Name
-                                                </label>
-                                                <input value={last} onChange={e => setLast(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" type="text" />
-                                            </div>
+                                    <div className="space-y-space-md w-full max-w-lg">
+                                        <div>
+                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="fullName">
+                                                Full Name
+                                            </label>
+                                            <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="fullName" placeholder="Your full name" type="text" />
                                         </div>
                                         <div>
                                             <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">
@@ -231,9 +251,8 @@ export default function EditProfile() {
                                     </div>
                                 </div>
 
-                                {/* Right: Privacy Switch & Trust Metrics Ledger */}
+                                {/* Right: Privacy Switch */}
                                 <div className="w-full lg:w-80 flex flex-col gap-space-lg shrink-0">
-                                    {/* Visibility Switch */}
                                     <div className="p-space-md rounded-lg bg-surface-elevated flex flex-col gap-space-xs">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
@@ -248,37 +267,6 @@ export default function EditProfile() {
                                         <p className="font-caption text-caption text-text-muted leading-relaxed">
                                             Your profile and offered skills are visible in Browse &amp; Search. Disabling hides you from prospective partners.
                                         </p>
-                                    </div>
-
-                                    {/* Trust Score Ledger Box */}
-                                    <div className="p-space-md rounded-lg bg-surface-container-low flex flex-col gap-space-sm">
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-caption text-caption uppercase tracking-wider text-text-muted">Reputation Metric</span>
-                                            <span className="inline-flex items-center gap-1 font-label-sm text-label-sm text-status-accepted bg-status-accepted-bg px-2 py-0.5 rounded">
-                                                <span className="material-symbols-outlined text-[14px]">verified</span>
-                                                Verified Peer
-                                            </span>
-                                        </div>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="font-headline-xl text-headline-xl text-text-primary tracking-tight">4.9</span>
-                                            <span className="font-body-md text-body-md text-text-muted">/ 5.0 Trust Score</span>
-                                        </div>
-                                        <div className="pt-2 grid grid-cols-3 gap-2 text-center bg-surface-card rounded p-2">
-                                            <div>
-                                                <div className="flex items-center justify-center gap-0.5 text-text-primary font-label-md text-label-md">
-                                                    5.0 <span className="material-symbols-outlined text-[13px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                                </div>
-                                                <span className="font-caption text-caption text-text-muted block mt-0.5">Rating</span>
-                                            </div>
-                                            <div>
-                                                <div className="font-label-md text-label-md text-text-primary">12</div>
-                                                <span className="font-caption text-caption text-text-muted block mt-0.5">Swaps</span>
-                                            </div>
-                                            <div>
-                                                <div className="font-label-md text-label-md text-status-accepted">100%</div>
-                                                <span className="font-caption text-caption text-text-muted block mt-0.5">Completion</span>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +287,7 @@ export default function EditProfile() {
                                                 Skills you can teach or mentor peers in during collaborative sessions.
                                             </p>
                                         </div>
-                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">{offered.length} Active</span>
+                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary whitespace-nowrap">{offered.length} Active</span>
                                     </div>
 
                                     <div className="space-y-space-xs mt-space-sm">
@@ -354,7 +342,7 @@ export default function EditProfile() {
                                                 Skills you are looking to learn from fellow members in exchange.
                                             </p>
                                         </div>
-                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">{wanted.length} Active</span>
+                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary whitespace-nowrap">{wanted.length} Active</span>
                                     </div>
 
                                     <div className="space-y-space-xs mt-space-sm">

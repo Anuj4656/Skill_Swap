@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { getImageUrl } from '../utils';
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('received');
     const [activeStatus, setActiveStatus] = useState('all');
@@ -44,7 +44,7 @@ export default function Dashboard() {
                                 tab: tab,
                                 status: swap.status,
                                 title: `${otherUser.first_name} ${otherUser.last_name}`,
-                                avatar: otherUser.photo || 'https://www.gravatar.com/avatar/00?d=mp',
+                                avatar: getImageUrl(otherUser?.photo),
                                 location: 'Remote', // location isn't on User instance directly in this response
                                 verified: 'Verified Member',
                                 youOffer: {
