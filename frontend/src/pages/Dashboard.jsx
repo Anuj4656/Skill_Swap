@@ -5,6 +5,9 @@ export default function Dashboard() {
     const [activeStatus, setActiveStatus] = useState('all');
 
     const [cards, setCards] = useState([]);
+    const [ratingModal, setRatingModal] = useState(null);
+    const [ratingScore, setRatingScore] = useState(5);
+    const [ratingComment, setRatingComment] = useState("");
 
     React.useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -64,6 +67,62 @@ export default function Dashboard() {
             })
             .catch(err => console.error("Error fetching swaps:", err));
     }, []);
+
+    const handleUpdateSwap = (id, status) => {
+        const token = localStorage.getItem('access_token');
+        fetch(`http://127.0.0.1:8000/api/swaps/${id}/`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status })
+        })
+            .then(res => res.json())
+            .then(updated => {
+                setCards(prev => prev.map(c => {
+                    if (c.id === id) {
+                        return {
+                            ...c,
+                            status: updated.status,
+                            completedMode: updated.status === 'completed' || updated.status === 'rejected',
+                            tab: updated.status === 'rejected' ? 'past' : c.tab
+                        };
+                    }
+                    return c;
+                }));
+            })
+            .catch(err => console.error("Error updating swap:", err));
+    };
+    const handleDeleteSwap = (id) => {
+        const token = localStorage.getItem('access_token');
+        fetch(`http://127.0.0.1:8000/api/swaps/${id}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        }).then(res => {
+            if (res.ok) {
+                setCards(prev => prev.filter(c => c.id !== id));
+            }
+        }).catch(err => console.error("Error cancelling swap:", err));
+    };
+
+    const submitRating = (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('access_token');
+        fetch(`http://127.0.0.1:8000/api/swaps/${ratingModal}/rate/`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ score: ratingScore, comment: ratingComment })
+        }).then(res => {
+            if (res.ok) {
+                setCards(prev => prev.map(c => c.id === ratingModal ? { ...c, isRated: true } : c));
+                setRatingModal(null);
+                setRatingScore(5);
+                setRatingComment("");
+            }
+        }).catch(err => console.error("Error rating swap:", err));
+    };
+
 
     const filteredCards = cards.filter(c =>
         (activeTab === 'all' || c.tab === activeTab) &&
@@ -149,8 +208,6 @@ export default function Dashboard() {
                                             <div className="flex items-center gap-space-xs text-text-muted font-caption text-caption">
                                                 {!card.completedMode && <span className="material-symbols-outlined text-[14px]">location_on</span>}
                                                 <span>{card.location}</span>
-                                                <span>•</span>
-                                                <span>{card.verified}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -209,26 +266,47 @@ export default function Dashboard() {
                                 {card.status === 'pending' && card.tab === 'received' && (
                                     <div className="flex flex-col sm:flex-row items-center justify-between pt-space-sm gap-space-md">
                                         <div className="flex items-center gap-space-md text-caption font-caption text-text-muted">
-                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[15px]">schedule</span> 3 hours estimated</span>
+                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[15px]">schedule</span> Pending Review</span>
                                         </div>
                                         <div className="flex items-center gap-space-sm w-full sm:w-auto">
-                                            <button className="w-1/2 sm:w-auto px-space-md py-2 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors flex items-center justify-center gap-1">
+                                            <button onClick={() => handleUpdateSwap(card.id, 'rejected')} className="w-1/2 sm:w-auto px-space-md py-2 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors flex items-center justify-center gap-1">
                                                 <span className="material-symbols-outlined text-[18px]">close</span> Decline
                                             </button>
-                                            <button className="w-1/2 sm:w-auto px-space-lg py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-1.5">
+                                            <button onClick={() => handleUpdateSwap(card.id, 'accepted')} className="w-1/2 sm:w-auto px-space-lg py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-1.5">
                                                 <span className="material-symbols-outlined text-[18px]">handshake</span> Accept Swap
                                             </button>
                                         </div>
                                     </div>
                                 )}
 
-                                {card.completedMode && (
+                                {card.status === 'pending' && card.tab === 'sent' && (
+                                    <div className="flex flex-col sm:flex-row items-center justify-between pt-space-sm gap-space-md">
+                                        <div className="flex items-center gap-space-md text-caption font-caption text-text-muted">
+                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[15px]">schedule</span> Sent</span>
+                                        </div>
+                                        <div className="flex items-center gap-space-sm w-full sm:w-auto">
+                                            <button onClick={() => handleDeleteSwap(card.id)} className="w-1/2 sm:w-auto px-space-md py-2 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors flex items-center justify-center gap-1">
+                                                <span className="material-symbols-outlined text-[18px]">delete</span> Cancel Request
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {card.completedMode && !card.isRated && card.status === 'completed' && (
                                     <div className="bg-surface-elevated/50 rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mt-2">
                                         <div className="flex items-center gap-space-md">
-                                            <div className="flex items-center gap-0.5 text-primary">
-                                                {[...Array(5)].map((_, i) => <span key={i} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>)}
-                                            </div>
-                                            <span className="font-label-md text-label-md text-text-primary">Rated 5.0 • <span className="font-caption text-caption text-text-muted">"Phenomenal sessions, super patient mentor."</span></span>
+                                            <span className="font-label-md text-label-md text-text-primary">Session Completed. Verify the exchange to build trust!</span>
+                                        </div>
+                                        <button onClick={() => setRatingModal(card.id)} className="px-space-md py-2 rounded-lg font-label-md bg-primary text-on-primary transition-colors hover:opacity-90">
+                                            Leave a Review
+                                        </button>
+                                    </div>
+                                )}
+                                {card.completedMode && card.isRated && (
+                                    <div className="bg-surface-elevated/50 rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mt-2">
+                                        <div className="flex items-center gap-space-md text-status-accepted">
+                                            <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                                            <span className="font-label-md text-label-md text-text-primary">You rated this member.</span>
                                         </div>
                                     </div>
                                 )}
@@ -249,6 +327,34 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-        </main>
+
+            {ratingModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-gutter transition-opacity duration-200">
+                    <div className="bg-surface-elevated rounded-xl max-w-md w-full p-space-lg shadow-2xl">
+                        <div className="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+                            <h2 className="font-title-md text-text-primary">Leave a Review</h2>
+                            <button onClick={() => setRatingModal(null)} className="p-1 rounded bg-surface-container-high hover:bg-surface-container-highest transition-colors text-text-secondary" type="button">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        </div>
+                        <form onSubmit={submitRating} className="flex flex-col gap-space-md">
+                            <div>
+                                <label className="block font-label-sm text-text-secondary mb-2">Rating (1 to 5)</label>
+                                <input type="number" min="1" max="5" required value={ratingScore} onChange={(e) => setRatingScore(e.target.value)} className="w-full bg-surface-container-lowest border border-surface-container-high focus:border-border-strong rounded-lg px-space-md py-2 text-text-primary font-body-md transition-colors outline-none" />
+                            </div>
+                            <div>
+                                <label className="block font-label-sm text-text-secondary mb-2">Comment</label>
+                                <textarea rows="3" required value={ratingComment} onChange={(e) => setRatingComment(e.target.value)} className="w-full bg-surface-container-lowest border border-surface-container-high focus:border-border-strong rounded-lg px-space-md py-2 text-text-primary font-body-md transition-colors outline-none resize-none" placeholder="Provide feedback about the session..." />
+                            </div>
+                            <div className="flex items-center justify-end gap-space-sm pt-space-sm border-t border-surface-container-high">
+                                <button onClick={() => setRatingModal(null)} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary bg-surface-container-high" type="button">Cancel</button>
+                                <button type="submit" className="px-space-md py-2 rounded-lg bg-primary text-on-primary">Submit Review</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )
+            }
+        </main >
     );
 }

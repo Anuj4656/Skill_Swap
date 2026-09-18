@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Landing() {
+    const [recentRatings, setRecentRatings] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/ratings/recent/')
+            .then(res => res.json())
+            .then(data => setRecentRatings(data))
+            .catch(err => console.error("Error fetching recent ratings:", err));
+    }, []);
+
     return (
         <main className="w-full pt-16 bg-surface-base min-h-screen">
             <div className="flex flex-col w-full">
@@ -103,42 +112,26 @@ export default function Landing() {
                         <div className="flex gap-space-md shrink-0 animate-marquee items-stretch py-space-xs">
                             {[1, 2].map((groupIndex) => (
                                 <React.Fragment key={groupIndex}>
-                                    <div className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
-                                        <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
-                                            “Marcus walked me through async event loops in Python, and I helped him structure his Figma component variants.”
-                                        </p>
-                                        <div className="flex items-center justify-between pt-space-xs text-text-muted font-caption text-caption">
-                                            <span className="text-primary font-label-sm">Dev &amp; Design swap</span>
-                                            <span>2h exchanged</span>
+                                    {recentRatings.map(rating => (
+                                        <div key={rating.id} className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
+                                            <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
+                                                “{rating.comment}”
+                                            </p>
+                                            <div className="flex items-center justify-between pt-space-xs text-text-muted font-caption text-caption">
+                                                <span className="text-primary font-label-sm">{rating.swap?.skill_offered?.name} ↔ {rating.swap?.skill_wanted?.name}</span>
+                                                <span className="flex items-center gap-1">
+                                                    <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> {rating.score}.0
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
-                                        <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
-                                            “Zero money changed hands. Traded 2 hours of PostgreSQL indexing tips for 2 hours of React performance tuning.”
-                                        </p>
-                                        <div className="flex items-center justify-between pt-space-xs text-text-muted font-caption text-caption">
-                                            <span className="text-primary font-label-sm">Database &amp; Frontend</span>
-                                            <span>Direct swap</span>
+                                    ))}
+                                    {recentRatings.length === 0 && (
+                                        <div className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
+                                            <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
+                                                “Skill Swap helped me trade Python tutoring for Figma classes!”
+                                            </p>
                                         </div>
-                                    </div>
-                                    <div className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
-                                        <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
-                                            “Simple, direct, and accountable. Both of us reviewed the swap afterwards to verify our mutual trust scores.”
-                                        </p>
-                                        <div className="flex items-center justify-between pt-space-xs text-text-muted font-caption text-caption">
-                                            <span className="text-primary font-label-sm">Peer Review Complete</span>
-                                            <span>Trust score updated</span>
-                                        </div>
-                                    </div>
-                                    <div className="w-[380px] sm:w-[440px] p-space-md rounded-lg bg-surface-elevated flex flex-col justify-between shrink-0">
-                                        <p className="font-body-md text-body-md text-text-secondary leading-relaxed mb-space-md">
-                                            “Traded Django REST Framework debugging for Docker setup assistance. Exactly what a student project needs.”
-                                        </p>
-                                        <div className="flex items-center justify-between pt-space-xs text-text-muted font-caption text-caption">
-                                            <span className="text-primary font-label-sm">Backend &amp; DevOps</span>
-                                            <span>Student peer swap</span>
-                                        </div>
-                                    </div>
+                                    )}
                                 </React.Fragment>
                             ))}
                         </div>

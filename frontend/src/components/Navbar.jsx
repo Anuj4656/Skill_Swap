@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
     const location = useLocation();
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            fetch('http://127.0.0.1:8000/api/profile/me/', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(res => {
+                    if (res.ok) return res.json();
+                    return null;
+                })
+                .then(data => {
+                    if (data) setUserProfile(data);
+                })
+                .catch(err => console.error("Error fetching navbar user context", err));
+        }
+    }, [location.pathname]); // Refetch if logged in status could change, using pathname as simple trigger or rely on global state.
 
     const getNavClass = (path) => {
         const isActive = location.pathname === path;
@@ -23,9 +41,11 @@ export default function Navbar() {
                     <Link to="/browse" className={getNavClass('/browse')}>Browse Users</Link>
                     <Link to="/dashboard" className={`${getNavClass('/dashboard')} gap-space-xs`}>
                         My Swaps
-                        <span className="px-1.5 py-0.5 rounded-lg bg-surface-elevated text-text-muted text-caption font-caption border border-border-strong">2</span>
                     </Link>
                     <Link to="#" className={getNavClass('#')}>Community Skills</Link>
+                    {userProfile?.is_staff && (
+                        <Link to="/admin" className={getNavClass('/admin')}>Admin</Link>
+                    )}
                 </nav>
                 <div className="flex items-center gap-space-md">
                     <button aria-label="Search" className="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated" type="button">
@@ -37,8 +57,10 @@ export default function Navbar() {
                     </button>
                     <div className="h-5 w-px bg-border-subtle"></div>
                     <Link to="/profile" className="flex items-center gap-space-sm pl-space-xs cursor-pointer group">
-                        <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUGDUtSX2YsLSl5QLaKJbo6lwG-GdQdnlqas1a0mfGTm0JpfcEYrrVn_--1_c1f7Mp3zgqrxhWeoDYdVM5cUcBbu9gvMfHOWFVtsb_Va_rfbLxO-qkEnT6hZN6BmfIv7mCNOt7fSmpekpKp7YdPc-_FID0jgXhN00SvBOvEsuTHG5swzKh1Bbnow2CNEMEoKp3t72A9-sEKt1j5qZOwpnslANgpCns5JrPsiyeE1BoiP3u4PtXD2IGNQ" />
-                        <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">Elena Vance</span>
+                        <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src={userProfile?.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
+                        <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
+                            {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'Login'}
+                        </span>
                         <span className="material-symbols-outlined text-[18px] text-text-muted group-hover:text-text-primary transition-colors">keyboard_arrow_down</span>
                     </Link>
                 </div>

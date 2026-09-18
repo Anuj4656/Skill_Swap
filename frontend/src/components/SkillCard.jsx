@@ -27,7 +27,7 @@ export default function SkillCard({ user }) {
                         <span className="font-caption text-caption tracking-wider uppercase text-primary-container block mb-1.5">Offering</span>
                         <div className="flex flex-wrap gap-1.5">
                             {user.offering.map((skill, index) => (
-                                <span key={index} className="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">{skill}</span>
+                                <span key={index} className="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-badge-wanted-bg text-primary-fixed">{skill.name || skill}</span>
                             ))}
                         </div>
                     </div>
@@ -35,7 +35,7 @@ export default function SkillCard({ user }) {
                         <span className="font-caption text-caption tracking-wider uppercase text-text-muted block mb-1.5">Looking For</span>
                         <div className="flex flex-wrap gap-1.5">
                             {user.lookingFor.map((skill, index) => (
-                                <span key={index} className="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">{skill}</span>
+                                <span key={index} className="font-label-sm text-label-sm px-2 py-0.5 rounded-lg bg-surface-container text-text-secondary">{skill.name || skill}</span>
                             ))}
                         </div>
                     </div>
@@ -51,7 +51,7 @@ export default function SkillCard({ user }) {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-space-xs">
-                    <Link to="/profile" className="flex items-center justify-center w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors">
+                    <Link to={`/profile/${user.id}`} className="flex items-center justify-center w-full h-9 rounded-lg font-label-md text-label-md bg-surface-elevated text-text-secondary hover:text-text-primary transition-colors">
                         Profile
                     </Link>
                     <button className="w-full h-9 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors" type="button">

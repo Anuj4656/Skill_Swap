@@ -9,21 +9,48 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    trust_score = serializers.FloatField(read_only=True)
+    first_name = serializers.CharField(source='user.first_name', required=False)
+    last_name = serializers.CharField(source='user.last_name', required=False)
+    trust_score = serializers.SerializerMethodField()
+    completed_swaps = serializers.SerializerMethodField()
+    reviews_count = serializers.SerializerMethodField()
+    date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)
+    is_staff = serializers.BooleanField(source='user.is_staff', read_only=True)
     skills_offered = serializers.SerializerMethodField()
     skills_wanted = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'location', 'photo', 'availability', 'is_public', 'trust_score', 'skills_offered', 'skills_wanted']
+        fields = ['id', 'user', 'first_name', 'last_name', 'location', 'photo', 'availability', 'is_public', 'trust_score', 'completed_swaps', 'reviews_count', 'date_joined', 'is_staff', 'skills_offered', 'skills_wanted']
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})
+        if 'first_name' in user_data:
+            instance.user.first_name = user_data['first_name']
+        if 'last_name' in user_data:
+            instance.user.last_name = user_data['last_name']
+        instance.user.save()
+
+        return super().update(instance, validated_data)
 
     def get_skills_offered(self, obj):
-        # We need this to return a list of skills for the frontend. 
-        # obj.skills_offered.all() returns UserSkillOffered instances.
-        return [skill.skill.name for skill in obj.skills_offered.all()]
+        return [{"id": skill.skill.id, "name": skill.skill.name} for skill in obj.skills_offered.all()]
 
     def get_skills_wanted(self, obj):
-        return [skill.skill.name for skill in obj.skills_wanted.all()]
+        return [{"id": skill.skill.id, "name": skill.skill.name} for skill in obj.skills_wanted.all()]
+
+    def get_trust_score(self, obj):
+        from django.db.models import Avg
+        avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
+        return round(avg, 1) if avg is not None else 5.0
+
+    def get_completed_swaps(self, obj):
+        return obj.user.sent_requests.filter(status='completed').count() + \
+               obj.user.received_requests.filter(status='completed').count()
+
+    def get_reviews_count(self, obj):
+        return obj.user.ratings_received.count()
+
 
 class SkillCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,7 +96,11 @@ class SwapRequestSerializer(serializers.ModelSerializer):
         read_only_fields = ['status']
 
 class RatingSerializer(serializers.ModelSerializer):
+    rater = UserSerializer(read_only=True)
+    ratee = UserSerializer(read_only=True)
+    swap = SwapRequestSerializer(read_only=True)
+
     class Meta:
         model = Rating
-        fields = ['id', 'swap', 'score', 'comment', 'created_at']
+        fields = ['id', 'swap', 'rater', 'ratee', 'score', 'comment', 'created_at']
         read_only_fields = ['swap']

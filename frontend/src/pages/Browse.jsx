@@ -43,7 +43,7 @@ export default function Browse() {
                     offering: u.skills_offered || [],
                     lookingFor: u.skills_wanted || [],
                     rating: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
-                    swaps: 0 // Mocking swaps since it's not exported by default
+                    swaps: u.completed_swaps || 0
                 }));
                 setUsers(mappedUsers);
                 setLoading(false);

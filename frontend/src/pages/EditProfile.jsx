@@ -1,23 +1,147 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function EditProfile() {
     const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
     const [saveText, setSaveText] = useState('Save Profile');
+    const [loading, setLoading] = useState(true);
+
+    const [first, setFirst] = useState('');
+    const [last, setLast] = useState('');
+    const [location, setLocation] = useState('');
+    const [availability, setAvailability] = useState('flexible');
+    const [isPublic, setIsPublic] = useState(true);
+    const [photo, setPhoto] = useState('');
+
+    // Skills state
+    const [offered, setOffered] = useState([]);
+    const [wanted, setWanted] = useState([]);
+    const [availableSkills, setAvailableSkills] = useState([]);
+    const [selectedOfferedSkill, setSelectedOfferedSkill] = useState('');
+    const [selectedWantedSkill, setSelectedWantedSkill] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (!token) return navigate('/login');
+
+        Promise.all([
+            fetch('http://127.0.0.1:8000/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch('http://127.0.0.1:8000/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch('http://127.0.0.1:8000/api/user-skills-offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch('http://127.0.0.1:8000/api/user-skills-wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
+        ])
+            .then(async ([profileRes, skillsRes, offeredRes, wantedRes]) => {
+                const data = await profileRes.json();
+                const skillsData = await skillsRes.json();
+                const offeredData = await offeredRes.json();
+                const wantedData = await wantedRes.json();
+
+                setFirst(data.user?.first_name || '');
+                setLast(data.user?.last_name || '');
+                setLocation(data.location || '');
+                setAvailability(data.availability || 'flexible');
+                setIsPublic(data.is_public);
+                setPhoto(data.photo || 'https://www.gravatar.com/avatar/00?d=mp');
+
+                setAvailableSkills(skillsData);
+                setOffered(offeredData);
+                setWanted(wantedData);
+
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching data", err);
+                setLoading(false);
+            });
+    }, [navigate]);
+
+    const handleAddOffered = async () => {
+        if (!selectedOfferedSkill) return;
+        const token = localStorage.getItem('access_token');
+        const res = await fetch('http://127.0.0.1:8000/api/user-skills-offered/', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ skill_id: selectedOfferedSkill })
+        });
+        if (res.ok) {
+            const newItem = await res.json();
+            setOffered([...offered, newItem]);
+        }
+    };
+
+    const handleRemoveOffered = async (id) => {
+        const token = localStorage.getItem('access_token');
+        const res = await fetch(`http://127.0.0.1:8000/api/user-skills-offered/${id}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) setOffered(offered.filter(item => item.id !== id));
+    };
+
+    const handleAddWanted = async () => {
+        if (!selectedWantedSkill) return;
+        const token = localStorage.getItem('access_token');
+        const res = await fetch('http://127.0.0.1:8000/api/user-skills-wanted/', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ skill_id: selectedWantedSkill })
+        });
+        if (res.ok) {
+            const newItem = await res.json();
+            setWanted([...wanted, newItem]);
+        }
+    };
+
+    const handleRemoveWanted = async (id) => {
+        const token = localStorage.getItem('access_token');
+        const res = await fetch(`http://127.0.0.1:8000/api/user-skills-wanted/${id}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) setWanted(wanted.filter(item => item.id !== id));
+    };
 
     const handleSave = () => {
         setIsSaving(true);
         setSaveText('Saving...');
-        setTimeout(() => {
-            setSaveText('Saved!');
-            setTimeout(() => {
+
+        const token = localStorage.getItem('access_token');
+        fetch('http://127.0.0.1:8000/api/profile/me/', {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                first_name: first,
+                last_name: last,
+                location: location,
+                availability: availability,
+                is_public: isPublic
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    setSaveText('Saved!');
+                    setTimeout(() => {
+                        setIsSaving(false);
+                        setSaveText('Save Profile');
+                        navigate('/profile');
+                    }, 1000);
+                } else {
+                    throw new Error("Failed to save");
+                }
+            })
+            .catch(err => {
+                console.error("Save error", err);
                 setIsSaving(false);
-                setSaveText('Save Profile');
-                navigate('/profile'); // simulate navigating to profile looking back
-            }, 1000);
-        }, 600);
+                setSaveText('Save Failed');
+                setTimeout(() => setSaveText('Save Profile'), 2000);
+            });
     };
+
+    if (loading) return null;
 
     return (
         <main className="w-full pt-16 bg-surface-base min-h-screen">
@@ -50,7 +174,7 @@ export default function EditProfile() {
                                     {/* Avatar Unit */}
                                     <div className="relative group shrink-0">
                                         <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-surface-elevated">
-                                            <img alt="Portrait of Elena Vance" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUGDUtSX2YsLSl5QLaKJbo6lwG-GdQdnlqas1a0mfGTm0JpfcEYrrVn_--1_c1f7Mp3zgqrxhWeoDYdVM5cUcBbu9gvMfHOWFVtsb_Va_rfbLxO-qkEnT6hZN6BmfIv7mCNOt7fSmpekpKp7YdPc-_FID0jgXhN00SvBOvEsuTHG5swzKh1Bbnow2CNEMEoKp3t72A9-sEKt1j5qZOwpnslANgpCns5JrPsiyeE1BoiP3u4PtXD2IGNQ" />
+                                            <img alt="Portrait" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src={photo} />
                                         </div>
                                         <button aria-label="Change photo" className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all" title="Change Profile Photo" type="button">
                                             <span className="material-symbols-outlined text-[16px]">photo_camera</span>
@@ -59,11 +183,19 @@ export default function EditProfile() {
 
                                     {/* Basic Metadata Fields */}
                                     <div className="space-y-space-md w-full max-w-md">
-                                        <div>
-                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="fullName">
-                                                Full Name
-                                            </label>
-                                            <input className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="fullName" placeholder="Your full name" type="text" defaultValue="Elena Vance" />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="firstName">
+                                                    First Name
+                                                </label>
+                                                <input value={first} onChange={e => setFirst(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="firstName" type="text" />
+                                            </div>
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="lastName">
+                                                    Last Name
+                                                </label>
+                                                <input value={last} onChange={e => setLast(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" type="text" />
+                                            </div>
                                         </div>
                                         <div>
                                             <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">
@@ -71,7 +203,7 @@ export default function EditProfile() {
                                             </label>
                                             <div className="relative flex items-center">
                                                 <span className="material-symbols-outlined absolute left-3 text-text-muted text-[18px] pointer-events-none">location_on</span>
-                                                <input className="w-full h-9 pl-9 pr-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="userLocation" placeholder="City, State or Country" type="text" defaultValue="Portland, OR (PST / UTC-8)" />
+                                                <input value={location} onChange={e => setLocation(e.target.value)} className="w-full h-9 pl-9 pr-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="userLocation" placeholder="City, State or Country" type="text" />
                                             </div>
                                         </div>
 
@@ -81,19 +213,19 @@ export default function EditProfile() {
                                                 General Availability
                                             </label>
                                             <div aria-label="Availability" className="flex flex-wrap gap-2" role="radiogroup">
-                                                <button aria-checked="false" className="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high transition-colors" role="radio" type="button">
-                                                    Weekends
-                                                </button>
-                                                <button aria-checked="true" className="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-primary-container text-on-primary-container flex items-center gap-1.5 shadow-sm" role="radio" type="button">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>
-                                                    Evenings
-                                                </button>
-                                                <button aria-checked="false" className="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high transition-colors" role="radio" type="button">
-                                                    Weekdays
-                                                </button>
-                                                <button aria-checked="false" className="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high transition-colors" role="radio" type="button">
-                                                    Flexible
-                                                </button>
+                                                {['weekends', 'evenings', 'weekdays', 'flexible'].map(opt => (
+                                                    <button
+                                                        key={opt}
+                                                        onClick={() => setAvailability(opt)}
+                                                        className={`px-3 py-1.5 rounded-lg text-label-sm font-label-sm capitalize transition-colors ${availability === opt
+                                                            ? 'bg-primary-container text-on-primary-container shadow-sm flex items-center gap-1.5'
+                                                            : 'bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high'
+                                                            }`}
+                                                        type="button">
+                                                        {availability === opt && <span className="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>}
+                                                        {opt}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +241,7 @@ export default function EditProfile() {
                                                 <span className="font-title-md text-title-md text-text-primary">Public Profile</span>
                                             </div>
                                             <label className="relative inline-flex items-center cursor-pointer">
-                                                <input defaultChecked className="sr-only peer" id="publicToggle" type="checkbox" />
+                                                <input checked={isPublic} onChange={e => setIsPublic(e.target.checked)} className="sr-only peer" id="publicToggle" type="checkbox" />
                                                 <div className="w-10 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-base after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-text-primary after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container"></div>
                                             </label>
                                         </div>
@@ -167,85 +299,41 @@ export default function EditProfile() {
                                                 Skills you can teach or mentor peers in during collaborative sessions.
                                             </p>
                                         </div>
-                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">3 Active</span>
+                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">{offered.length} Active</span>
                                     </div>
 
                                     <div className="space-y-space-xs mt-space-sm">
-                                        <div className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
-                                            <div className="flex flex-col min-w-0 pr-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-label-md text-label-md text-text-primary truncate">Product Design &amp; Prototyping</span>
-                                                    <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-container-high text-primary-fixed-dim">Advanced</span>
+                                        {offered.map(item => (
+                                            <div key={item.id} className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
+                                                <div className="flex flex-col min-w-0 pr-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-label-md text-label-md text-text-primary truncate">{item.skill?.name}</span>
+                                                    </div>
+                                                    <span className="font-caption text-caption text-text-muted mt-0.5">Category: {item.skill?.category?.name || 'Uncategorized'}</span>
                                                 </div>
-                                                <span className="font-caption text-caption text-text-muted mt-0.5">Category: Design &amp; Creative</span>
+                                                <button onClick={() => handleRemoveOffered(item.id)} aria-label="Remove Skill" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
+                                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                                </button>
                                             </div>
-                                            <button aria-label="Remove Product Design" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
-                                                <span className="material-symbols-outlined text-[18px]">close</span>
-                                            </button>
-                                        </div>
-
-                                        <div className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
-                                            <div className="flex flex-col min-w-0 pr-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-label-md text-label-md text-text-primary truncate">Figma Design Systems</span>
-                                                    <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-container-high text-primary-fixed-dim">Advanced</span>
-                                                </div>
-                                                <span className="font-caption text-caption text-text-muted mt-0.5">Category: Design &amp; Creative</span>
-                                            </div>
-                                            <button aria-label="Remove Figma Design Systems" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
-                                                <span className="material-symbols-outlined text-[18px]">close</span>
-                                            </button>
-                                        </div>
-
-                                        <div className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
-                                            <div className="flex flex-col min-w-0 pr-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-label-md text-label-md text-text-primary truncate">User Research &amp; Usability Testing</span>
-                                                    <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-container-high text-text-secondary">Intermediate</span>
-                                                </div>
-                                                <span className="font-caption text-caption text-text-muted mt-0.5">Category: Design &amp; Creative</span>
-                                            </div>
-                                            <button aria-label="Remove User Research &amp; Usability Testing" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
-                                                <span className="material-symbols-outlined text-[18px]">close</span>
-                                            </button>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
 
                                 <div className="mt-space-lg pt-space-md rounded-lg bg-surface-elevated p-space-md">
                                     <span className="font-label-sm text-label-sm text-text-secondary block mb-space-sm">Add New Offered Skill</span>
                                     <div className="space-y-space-sm">
-                                        <div>
-                                            <label className="sr-only" htmlFor="offeredSkillInput">Skill Name</label>
-                                            <input className="w-full h-9 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="offeredSkillInput" placeholder="Select or type a skill (e.g. React Fundamentals)" type="text" />
+                                        <div className="relative">
+                                            <label className="sr-only" htmlFor="offeredSkillSelect">Select Skill</label>
+                                            <select value={selectedOfferedSkill} onChange={e => setSelectedOfferedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="offeredSkillSelect">
+                                                <option value="" disabled>Select a skill you can teach...</option>
+                                                {availableSkills.map(skill => (
+                                                    <option key={skill.id} value={skill.id}>{skill.name}</option>
+                                                ))}
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-2 top-1.5 text-text-muted text-[18px] pointer-events-none">expand_more</span>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                            <div>
-                                                <label className="sr-only" htmlFor="offeredCategorySelect">Category</label>
-                                                <div className="relative flex items-center">
-                                                    <select className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-secondary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="offeredCategorySelect">
-                                                        <option value="design">Design &amp; Creative</option>
-                                                        <option value="dev">Software Development</option>
-                                                        <option value="product">Product Management</option>
-                                                        <option value="marketing">Growth &amp; Marketing</option>
-                                                        <option value="data">Data &amp; Analytics</option>
-                                                    </select>
-                                                    <span className="material-symbols-outlined absolute right-2 text-text-muted text-[18px] pointer-events-none">expand_more</span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label className="sr-only" htmlFor="proficiencySelect">Proficiency</label>
-                                                <div className="relative flex items-center">
-                                                    <select className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-secondary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="proficiencySelect" defaultValue="intermediate">
-                                                        <option value="advanced">Advanced (Mentored peers)</option>
-                                                        <option value="intermediate">Intermediate (Competent)</option>
-                                                        <option value="beginner">Beginner (Foundational)</option>
-                                                    </select>
-                                                    <span className="material-symbols-outlined absolute right-2 text-text-muted text-[18px] pointer-events-none">expand_more</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button className="w-full mt-1 h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary-fixed font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+
+                                        <button onClick={handleAddOffered} className="w-full mt-1 h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary-fixed font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
                                             <span className="material-symbols-outlined text-[16px]">add</span>
                                             Add Offered Skill
                                         </button>
@@ -266,46 +354,40 @@ export default function EditProfile() {
                                                 Skills you are looking to learn from fellow members in exchange.
                                             </p>
                                         </div>
-                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">2 Active</span>
+                                        <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary">{wanted.length} Active</span>
                                     </div>
 
                                     <div className="space-y-space-xs mt-space-sm">
-                                        <div className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
-                                            <div className="flex items-center gap-space-sm min-w-0 pr-2">
-                                                <span className="material-symbols-outlined text-[18px] text-tertiary">psychology</span>
-                                                <div className="flex flex-col min-w-0">
-                                                    <span className="font-label-md text-label-md text-text-primary truncate">Python for Data Analysis</span>
-                                                    <span className="font-caption text-caption text-text-muted">Target: Pandas, NumPy &amp; EDA workflows</span>
+                                        {wanted.map(item => (
+                                            <div key={item.id} className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
+                                                <div className="flex items-center gap-space-sm min-w-0 pr-2">
+                                                    <span className="material-symbols-outlined text-[18px] text-tertiary">psychology</span>
+                                                    <div className="flex flex-col min-w-0">
+                                                        <span className="font-label-md text-label-md text-text-primary truncate">{item.skill?.name}</span>
+                                                    </div>
                                                 </div>
+                                                <button onClick={() => handleRemoveWanted(item.id)} aria-label="Remove Target Skill" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
+                                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                                </button>
                                             </div>
-                                            <button aria-label="Remove Python for Data Analysis" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
-                                                <span className="material-symbols-outlined text-[18px]">close</span>
-                                            </button>
-                                        </div>
-
-                                        <div className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
-                                            <div className="flex items-center gap-space-sm min-w-0 pr-2">
-                                                <span className="material-symbols-outlined text-[18px] text-tertiary">database</span>
-                                                <div className="flex flex-col min-w-0">
-                                                    <span className="font-label-md text-label-md text-text-primary truncate">PostgreSQL Schema Architecture</span>
-                                                    <span className="font-caption text-caption text-text-muted">Target: Query optimization, index strategies</span>
-                                                </div>
-                                            </div>
-                                            <button aria-label="Remove PostgreSQL Schema Architecture" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
-                                                <span className="material-symbols-outlined text-[18px]">close</span>
-                                            </button>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
 
                                 <div className="mt-space-lg pt-space-md rounded-lg bg-surface-elevated p-space-md">
                                     <span className="font-label-sm text-label-sm text-text-secondary block mb-space-sm">Add Desired Learning Goal</span>
                                     <div className="space-y-space-sm">
-                                        <div>
-                                            <label className="sr-only" htmlFor="wantedSkillInput">Skill Name</label>
-                                            <input className="w-full h-9 px-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="wantedSkillInput" placeholder="Skill name (e.g. Next.js App Router, Cloud Architecture)" type="text" />
+                                        <div className="relative">
+                                            <label className="sr-only" htmlFor="wantedSkillSelect">Select Wanted Skill</label>
+                                            <select value={selectedWantedSkill} onChange={e => setSelectedWantedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="wantedSkillSelect">
+                                                <option value="" disabled>Select a skill you want to learn...</option>
+                                                {availableSkills.map(skill => (
+                                                    <option key={skill.id} value={skill.id}>{skill.name}</option>
+                                                ))}
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-2 top-1.5 text-text-muted text-[18px] pointer-events-none">expand_more</span>
                                         </div>
-                                        <button className="w-full h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+                                        <button onClick={handleAddWanted} className="w-full h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
                                             <span className="material-symbols-outlined text-[16px]">add</span>
                                             Add Wanted Skill
                                         </button>

@@ -97,6 +97,13 @@ class SwapRequestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(requester=self.request.user, status='pending')
 
+    def perform_destroy(self, instance):
+        if instance.requester == self.request.user and instance.status == 'pending':
+            instance.delete()
+        else:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("You can only cancel your own pending requests.")
+
 @api_view(['PATCH'])
 @permission_classes([permissions.IsAuthenticated])
 def accept_swap(request, pk):
@@ -137,3 +144,42 @@ class UserRatingsListView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs.get('pk')
         return Rating.objects.filter(ratee_id=user_id)
+
+
+class AdminPendingSkillsView(generics.ListAPIView):
+    serializer_class = SkillSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        return Skill.objects.filter(is_approved=False)
+
+
+@api_view(['PATCH'])
+@permission_classes([permissions.IsAdminUser])
+def admin_approve_skill(request, pk):
+    try:
+        skill = Skill.objects.get(pk=pk)
+        skill.is_approved = True
+        skill.save()
+        return Response({'status': 'skill approved', 'id': skill.id})
+    except Skill.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PATCH', 'DELETE'])
+@permission_classes([permissions.IsAdminUser])
+def admin_reject_skill(request, pk):
+    try:
+        skill = Skill.objects.get(pk=pk)
+        skill.delete()
+        return Response({'status': 'skill rejected and deleted'})
+    except Skill.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class RecentRatingsView(generics.ListAPIView):
+    serializer_class = RatingSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Rating.objects.select_related('rater', 'ratee', 'swap').order_by('-created_at')[:4]

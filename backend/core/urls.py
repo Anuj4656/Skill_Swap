@@ -30,7 +30,13 @@ urlpatterns = [
     
     # Ratings
     path('swaps/<int:pk>/rate/', views.RatingCreateView.as_view(), name='rating-create'),
+    path('ratings/recent/', views.RecentRatingsView.as_view(), name='recent-ratings'),
     path('users/<int:pk>/ratings/', views.UserRatingsListView.as_view(), name='user-ratings-list'),
+
+    # Admin
+    path('admin/skills/pending/', views.AdminPendingSkillsView.as_view(), name='admin-skills-pending'),
+    path('admin/skills/<int:pk>/approve/', views.admin_approve_skill, name='admin-skills-approve'),
+    path('admin/skills/<int:pk>/reject/', views.admin_reject_skill, name='admin-skills-reject'),
 
     path('', include(router.urls)),
 ]
