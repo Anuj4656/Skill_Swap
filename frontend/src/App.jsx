@@ -9,7 +9,6 @@ import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import Browse from './pages/Browse';
 import Landing from './pages/Landing';
-import Admin from './pages/Admin';
 
 function Layout() {
     return (
@@ -39,7 +38,6 @@ function App() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="profile/:id" element={<Profile />} />
                     <Route path="profile/edit" element={<EditProfile />} />
-                    <Route path="admin" element={<Admin />} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -34,15 +34,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def get_skills_offered(self, obj):
-        return [{"id": skill.skill.id, "name": skill.skill.name} for skill in obj.skills_offered.all()]
+        return [{"id": skill.skill.id, "name": skill.skill.name, "category": skill.skill.category_id} for skill in obj.skills_offered.all()]
 
     def get_skills_wanted(self, obj):
-        return [{"id": skill.skill.id, "name": skill.skill.name} for skill in obj.skills_wanted.all()]
+        return [{"id": skill.skill.id, "name": skill.skill.name, "category": skill.skill.category_id} for skill in obj.skills_wanted.all()]
 
     def get_trust_score(self, obj):
         from django.db.models import Avg
         avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
-        return round(avg, 1) if avg is not None else 5.0
+        return round(avg, 1) if avg is not None else 0.0
 
     def get_completed_swaps(self, obj):
         return obj.user.sent_requests.filter(status='completed').count() + \

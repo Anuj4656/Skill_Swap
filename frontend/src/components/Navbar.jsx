@@ -42,27 +42,40 @@ export default function Navbar() {
                     <Link to="/dashboard" className={`${getNavClass('/dashboard')} gap-space-xs`}>
                         My Swaps
                     </Link>
-                    <Link to="#" className={getNavClass('#')}>Community Skills</Link>
+                    <a href="#footer" className={getNavClass('#footer')}>About Us</a>
                     {userProfile?.is_staff && (
-                        <Link to="/admin" className={getNavClass('/admin')}>Admin</Link>
+                        <a href="http://127.0.0.1:8000/admin/" className={getNavClass('/admin')}>Admin</a>
                     )}
                 </nav>
                 <div className="flex items-center gap-space-md">
-                    <button aria-label="Search" className="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated" type="button">
-                        <span className="material-symbols-outlined text-[20px]">search</span>
-                    </button>
+
                     <button aria-label="Notifications" className="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated relative" type="button">
                         <span className="material-symbols-outlined text-[20px]">notifications</span>
                         <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-primary rounded-full"></span>
                     </button>
                     <div className="h-5 w-px bg-border-subtle"></div>
-                    <Link to="/profile" className="flex items-center gap-space-sm pl-space-xs cursor-pointer group">
-                        <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src={userProfile?.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
-                        <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
-                            {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'Login'}
-                        </span>
-                        <span className="material-symbols-outlined text-[18px] text-text-muted group-hover:text-text-primary transition-colors">keyboard_arrow_down</span>
-                    </Link>
+                    {userProfile ? (
+                        <div className="flex items-center gap-space-md pl-space-xs">
+                            <Link to="/profile" className="flex items-center gap-space-sm cursor-pointer group">
+                                <img alt="Profile" className="w-8 h-8 rounded-full object-cover border border-border-subtle" src={userProfile.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
+                                <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
+                                    {userProfile.first_name} {userProfile.last_name}
+                                </span>
+                            </Link>
+                            <button
+                                onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); window.location.href = '/login'; }}
+                                className="font-label-md text-label-md text-text-muted hover:text-primary transition-colors border border-border-subtle px-space-sm py-1 rounded-md hover:border-primary"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="flex items-center gap-space-sm pl-space-xs cursor-pointer group">
+                            <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
+                                Login
+                            </span>
+                        </Link>
+                    )}
                 </div>
             </div>
         </header>

@@ -150,9 +150,7 @@ export default function Landing() {
                             <Link to="/login" className="px-space-lg py-space-sm rounded-lg bg-primary-container text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">
                                 Create Member Profile
                             </Link>
-                            <button type="button" className="px-space-md py-space-sm rounded-lg bg-surface-elevated text-text-secondary hover:text-text-primary font-label-md text-label-md transition-colors">
-                                Read Guidelines
-                            </button>
+
                         </div>
                     </div>
                 </section>

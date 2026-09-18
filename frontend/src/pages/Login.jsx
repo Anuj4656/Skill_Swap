@@ -9,21 +9,15 @@ export default function Login() {
 
     const handleAuth = async (e) => {
         e.preventDefault();
-        const email = document.getElementById('email').value;
+        const emailOrUsername = document.getElementById('emailOrUsername').value;
         const password = document.getElementById('password').value;
 
         try {
             if (isLogin) {
-                // simplejwt requires username and password (which is either username or email in generic setup)
-                // Wait, Django `User` defaults username. We might need to send 'username' instead of 'email' or adjust Django to accept email.
-                // Because in the seed, username=marcus, email=marcus@example.com for example.
-                // Standard simplejwt expects `username` and `password`. If use email, we need to extract username from email's prefix roughly for this MVP.
-                const username = email.split('@')[0];
-
                 const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ username: emailOrUsername, password })
                 });
 
                 if (response.ok) {
@@ -36,7 +30,15 @@ export default function Login() {
                 }
             } else {
                 const fullName = document.getElementById('full-name').value;
-                const username = email.split('@')[0];
+                let username = emailOrUsername;
+                let email = emailOrUsername;
+                if (!emailOrUsername.includes('@')) {
+                    // Registration typically requires a valid email. If they entered a username for registration, 
+                    // this logic might need tweaking. But for this MVP let's assume they enter an email to register.
+                    email = `${emailOrUsername}@example.com`; // Fallback if they only put a username during registration
+                } else {
+                    username = emailOrUsername.split('@')[0];
+                }
 
                 const response = await fetch('http://127.0.0.1:8000/api/auth/register/', {
                     method: 'POST',
@@ -87,7 +89,7 @@ export default function Login() {
                         onClick={() => setIsLogin(true)}
                         className={`py-2 text-center rounded-lg font-label-md text-label-md transition-all ${isLogin ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'}`}
                     >
-                        Sign In
+                        Log in
                     </button>
                     <button
                         type="button"
@@ -109,9 +111,9 @@ export default function Login() {
                     )}
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="email">Email Address</label>
+                        <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="emailOrUsername">Username or Email</label>
                         <div className="relative">
-                            <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="email" placeholder="elena.vance@example.edu" required type="email" />
+                            <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="emailOrUsername" placeholder="elena.vance or elena@example.edu" required type="text" />
                         </div>
                     </div>
 
@@ -168,7 +170,7 @@ export default function Login() {
 
                     <div className="pt-2">
                         <button className="w-full h-[38px] bg-[#2E8B82] hover:bg-[#349A90] active:bg-[#27756E] text-text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm" type="submit">
-                            <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                            <span>{isLogin ? 'Log in' : 'Create Account'}</span>
                             <span className="material-symbols-outlined text-[16px]">{isLogin ? 'login' : 'arrow_forward'}</span>
                         </button>
                     </div>
@@ -179,7 +181,7 @@ export default function Login() {
                         {isLogin ? (
                             <>Don't have an account yet? <span className="text-primary-fixed-dim font-label-md underline underline-offset-4">Register here</span></>
                         ) : (
-                            <>Already have an account? <span className="text-primary-fixed-dim font-label-md underline underline-offset-4">Sign in here</span></>
+                            <>Already have an account? <span className="text-primary-fixed-dim font-label-md underline underline-offset-4">Log in here</span></>
                         )}
                     </button>
                 </div>

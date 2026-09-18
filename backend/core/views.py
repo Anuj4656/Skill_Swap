@@ -25,7 +25,8 @@ class ProfileMeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.profile
+        profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+        return profile
 
 class ProfileDetailView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.filter(is_public=True)
@@ -81,6 +82,10 @@ class UserBrowseView(generics.ListAPIView):
 
     def get_queryset(self):
         qs = UserProfile.objects.filter(is_public=True)
+        qs = qs.exclude(skills_offered__isnull=True)
+        if self.request.user.is_authenticated:
+            qs = qs.exclude(user=self.request.user)
+        
         skill_name = self.request.query_params.get('skill', None)
         if skill_name:
             qs = qs.filter(skills_offered__skill__name__icontains=skill_name)

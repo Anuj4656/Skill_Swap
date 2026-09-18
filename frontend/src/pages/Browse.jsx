@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import SkillCard from '../components/SkillCard';
 
 export default function Browse() {
+    const [allUsers, setAllUsers] = useState([]);
+    const [displayedUsers, setDisplayedUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchMode, setSearchMode] = useState('skill'); // 'skill' or 'name'
     const [activeCategory, setActiveCategory] = useState({ id: 'all', name: 'All' });
     const [categories, setCategories] = useState([{ id: 'all', name: 'All' }]);
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [availability, setAvailability] = useState('all');
+    const [sortMode, setSortMode] = useState('recent');
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/categories/')
@@ -18,22 +23,10 @@ export default function Browse() {
     }, []);
 
     useEffect(() => {
-        let url = 'http://127.0.0.1:8000/api/users/';
-        const params = new URLSearchParams();
-        if (searchQuery) {
-            params.append('skill', searchQuery);
-        }
-
-        // Wait, UserBrowseView filters by skill using ?skill=. It does not natively filter by category yet unless I pass category_id, but the PRD says browse users by skill. For now, fetch users and filter by skill if search query is there.
-        if (params.toString()) {
-            url += '?' + params.toString();
-        }
-
         setLoading(true);
-        fetch(url)
+        fetch('http://127.0.0.1:8000/api/users/')
             .then(res => res.json())
             .then(data => {
-                // Map over DRF response to match SkillCard component format.
                 const mappedUsers = data.map(u => ({
                     id: u.id,
                     name: `${u.user.first_name} ${u.user.last_name}`,
@@ -45,14 +38,48 @@ export default function Browse() {
                     rating: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
                     swaps: u.completed_swaps || 0
                 }));
-                setUsers(mappedUsers);
+                setAllUsers(mappedUsers);
                 setLoading(false);
             })
             .catch(err => {
                 console.error("Error fetching users:", err);
                 setLoading(false);
             });
-    }, [searchQuery]);
+    }, []);
+
+    useEffect(() => {
+        let result = [...allUsers];
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            if (searchMode === 'skill') {
+                result = result.filter(u =>
+                    u.offering.some(s => s.name?.toLowerCase().includes(query)) ||
+                    u.lookingFor.some(s => s.name?.toLowerCase().includes(query))
+                );
+            } else {
+                result = result.filter(u => u.name?.toLowerCase().includes(query));
+            }
+        }
+
+        if (activeCategory.id !== 'all') {
+            result = result.filter(u => u.offering.some(s => s.category === activeCategory.id));
+        }
+
+        if (availability !== 'all') {
+            result = result.filter(u => u.availability.toLowerCase().includes(availability.toLowerCase()));
+        }
+
+        if (sortMode === 'trust' || sortMode === 'rating') {
+            result.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
+        } else if (sortMode === 'swaps') {
+            result.sort((a, b) => b.swaps - a.swaps);
+        } else if (sortMode === 'recent') {
+            result.sort((a, b) => b.id - a.id);
+        }
+
+        setDisplayedUsers(result);
+    }, [allUsers, searchQuery, searchMode, activeCategory, availability, sortMode]);
 
     return (
         <main className="w-full pt-16 bg-surface-base">
@@ -69,24 +96,38 @@ export default function Browse() {
 
                     <section className="flex flex-col gap-space-md mb-space-xl">
                         <div className="flex flex-col sm:flex-row items-stretch gap-space-sm">
-                            <div className="relative flex-1">
-                                <span className="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-text-muted text-[20px] pointer-events-none">search</span>
-                                <input
-                                    className="w-full h-12 pl-11 pr-space-md bg-surface-container rounded-xl text-text-primary placeholder:text-text-muted font-body-md text-body-md focus:outline-none focus:bg-surface-elevated transition-colors"
-                                    placeholder="Search by skill (e.g. Python, UI Design, Pottery) or name..."
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                {searchQuery && (
-                                    <button onClick={() => setSearchQuery('')} className="absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary">
-                                        <span className="material-symbols-outlined text-[18px]">cancel</span>
-                                    </button>
-                                )}
+                            <div className="relative flex-1 flex">
+                                <select
+                                    className="h-12 px-space-md bg-surface-elevated rounded-l-xl border-r border-border-subtle text-text-secondary font-label-md text-label-md focus:outline-none cursor-pointer transition-colors"
+                                    value={searchMode}
+                                    onChange={(e) => setSearchMode(e.target.value)}
+                                >
+                                    <option value="skill">Skill</option>
+                                    <option value="name">Person</option>
+                                </select>
+                                <div className="relative flex-1">
+                                    <span className="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-text-muted text-[20px] pointer-events-none">search</span>
+                                    <input
+                                        className="w-full h-12 pl-11 pr-space-md bg-surface-container rounded-r-xl text-text-primary placeholder:text-text-muted font-body-md text-body-md focus:outline-none focus:bg-surface-elevated transition-colors"
+                                        placeholder={searchMode === 'skill' ? "Search by skill (e.g. Python, UI Design, Pottery)..." : "Search by user name..."}
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    {searchQuery && (
+                                        <button onClick={() => setSearchQuery('')} className="absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary">
+                                            <span className="material-symbols-outlined text-[18px]">cancel</span>
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex items-center gap-space-sm">
                                 <div className="relative min-w-[170px]">
-                                    <select className="w-full h-12 px-space-md bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors">
+                                    <select
+                                        className="w-full h-12 pl-space-md pr-11 bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors"
+                                        value={availability}
+                                        onChange={(e) => setAvailability(e.target.value)}
+                                    >
                                         <option value="all">Availability: All</option>
                                         <option value="weekends">Weekends</option>
                                         <option value="evenings">Evenings</option>
@@ -95,11 +136,15 @@ export default function Browse() {
                                     <span className="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted pointer-events-none text-[18px]">expand_more</span>
                                 </div>
                                 <div className="relative min-w-[180px]">
-                                    <select className="w-full h-12 px-space-md bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors">
+                                    <select
+                                        className="w-full h-12 pl-space-md pr-11 bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors"
+                                        value={sortMode}
+                                        onChange={(e) => setSortMode(e.target.value)}
+                                    >
+                                        <option value="recent">Sort by: Recently Joined</option>
                                         <option value="trust">Sort by: Trust Score</option>
                                         <option value="swaps">Sort by: Most Swaps</option>
                                         <option value="rating">Sort by: Highest Rating</option>
-                                        <option value="recent">Sort by: Recently Joined</option>
                                     </select>
                                     <span className="material-symbols-outlined absolute right-space-md top-1/2 -translate-y-1/2 text-text-muted pointer-events-none text-[18px]">swap_vert</span>
                                 </div>
@@ -121,11 +166,21 @@ export default function Browse() {
                     </section>
 
                     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg w-full mb-space-xl">
-                        {users.map(user => <SkillCard key={user.id} user={user} />)}
+                        {displayedUsers.map(user => <SkillCard key={user.id} user={user} />)}
+                        {displayedUsers.length === 0 && !loading && (
+                            <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-space-xl text-text-muted font-body-lg text-body-lg">
+                                No users found matching your filters.
+                            </div>
+                        )}
+                        {loading && (
+                            <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-space-xl text-text-muted font-body-lg text-body-lg">
+                                Loading community...
+                            </div>
+                        )}
                     </section>
 
                     <footer className="flex flex-col sm:flex-row items-center justify-between py-space-md px-space-lg bg-surface-container rounded-xl gap-space-md">
-                        <div className="font-body-md text-body-md text-text-muted">Showing <span className="font-label-md text-label-md text-text-primary">{users.length} members</span></div>
+                        <div className="font-body-md text-body-md text-text-muted">Showing <span className="font-label-md text-label-md text-text-primary">{displayedUsers.length} members</span></div>
                         <div className="flex items-center gap-space-xs">
                             <button className="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-muted cursor-not-allowed opacity-60 flex items-center gap-1" disabled type="button">
                                 <span className="material-symbols-outlined text-[16px]">chevron_left</span>
@@ -133,12 +188,8 @@ export default function Browse() {
                             </button>
                             <div className="flex items-center gap-1 px-space-xs">
                                 <button className="w-8 h-8 rounded-lg font-label-sm text-label-sm bg-primary text-on-primary flex items-center justify-center">1</button>
-                                <button className="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors">2</button>
-                                <button className="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors">3</button>
-                                <span className="text-text-muted px-1 text-caption">…</span>
-                                <button className="w-8 h-8 rounded-lg font-label-sm text-label-sm text-text-secondary hover:bg-surface-elevated flex items-center justify-center transition-colors">8</button>
                             </div>
-                            <button className="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors" type="button">
+                            <button className="h-9 px-space-md rounded-lg font-label-sm text-label-sm bg-surface-elevated text-text-muted cursor-not-allowed opacity-60 flex items-center gap-1 transition-colors" disabled type="button">
                                 Next
                                 <span className="material-symbols-outlined text-[16px]">chevron_right</span>
                             </button>
