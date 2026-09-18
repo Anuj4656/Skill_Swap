@@ -1,56 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SkillCard from '../components/SkillCard';
 
 export default function Browse() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeCategory, setActiveCategory] = useState('All');
+    const [activeCategory, setActiveCategory] = useState({ id: 'all', name: 'All' });
+    const [categories, setCategories] = useState([{ id: 'all', name: 'All' }]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const categories = ['All', 'Design & Creative', 'Development', 'Language', 'Craft & DIY', 'Music', 'Academic'];
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/categories/')
+            .then(res => res.json())
+            .then(data => {
+                setCategories([{ id: 'all', name: 'All' }, ...data]);
+            })
+            .catch(err => console.error("Error fetching categories:", err));
+    }, []);
 
-    const users = [
-        {
-            id: 1, name: 'Marcus Chen', location: 'Portland, OR', availability: 'Available weekends',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUIKSDWSzbBkuuat5L3_aS3VZNjVhFYz4rDaxksPyX39j3gh5d6Ekx7x3Lv4PVQKD7_QT5avdXPMHkh769xgEhvi_8AJnGS9WdIZaz0I45bLabwzuI_tW09Cao-7DUaf7HNnijfqJrL_HQR66yIHB_aSmngBW6yAkokYNgw8SDrwkH7YwAb7zIfVr1Q4w1BoUNbZvtRrUKT6fVO3CBUa836ncIDFdNU6fkspBLBbD8H0YRgPZ3S-409w',
-            offering: ['Python', 'PostgreSQL', 'FastAPI'],
-            lookingFor: ['Figma / UI Design', 'Ceramics'],
-            rating: 4.9, swaps: 14
-        },
-        {
-            id: 2, name: 'Sarah Miller', location: 'Chicago, IL', availability: 'Available evenings',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD9udVhMOUDGWxu9eFjWJ_QLKT_PdaG49RXrmdtdu9mxl8Ji3SkQR3JAMSeDh9HCIEjZcCIWtIjkeJpYVoehZWJomggVw5zwSBDNIXsFk8snQKejmOBlYbarE7CEO9HNM3ijs-2Vi92vDp7uMfkpyIJAN1UlfIDT8m25IFU7wFgtxGehbxhI9-GJY_K82SafdccjN4Q1alQm5x2pIBmZ9cjimJ5SAuKPIOYQfFZsTQwb3zOl_rwM2TvYw',
-            offering: ['Product Design', 'Design Systems'],
-            lookingFor: ['Django', 'React'],
-            rating: 5.0, swaps: 22
-        },
-        {
-            id: 3, name: 'David Adebayo', location: 'Austin, TX', availability: 'Flexible',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAnKYBGWgXmvfdynBCHNFubbniZJYxxEcVy0k8_IYO-Au5YL5pmHp6BvWuBsW2_JPAf6kCYXZNRZTJECPgz771CrIrcypujwbulCj3t2ialE3ROhKWctILYIzsoSwgmG-00hhZHSqqADv43yo-8QTR7KdH6ggeYCA2DruGkcgqulzQHBMUsCVswsGUknIhqg3p6tP86oLVTeLOysbqWkLS-294dHAqN2NLnDKGbmOQIlKJGyk2UnnE_Q',
-            offering: ['Acoustic Guitar', 'Audio Mixing'],
-            lookingFor: ['Spanish Conversation'],
-            rating: 4.8, swaps: 9
-        },
-        {
-            id: 4, name: 'Maya Lin', location: 'Seattle, WA', availability: 'Available weekends',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAfV3yM2yyYSb8lX_xcLcoq9NmGroHMB50d0nyt3jZnJOhY2RNAim-Vhs53O41OgnytiC68UeZzOBoeI_cGS9TLwGR4AYDX8YPssB6PyYrxgO5sCBjlpvS_tA2zOcsJdQUQV8ONstOIWPqDrlApDSFUipoNh493M5S7K-KLMkmpxpTHWqo__0u25kpJZma8A3-wfYLJMGesSReVFjY3CIHR_6_DXhpuaMHOx5PkfGO5pz2N2wiYOpoPYQ',
-            offering: ['Woodworking', 'Furniture Restoration'],
-            lookingFor: ['Tax Preparation', 'Web Development'],
-            rating: 4.9, swaps: 18
-        },
-        {
-            id: 5, name: 'Lucas Rossi', location: 'Brooklyn, NY', availability: 'Available evenings',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5pHR12VB6eCu4xA8Jw2RoY3E1bc7V8z-rprO8KGBh4LCa60hjtWFVexQT-l25kiROJogTAjNuAdh8lnPL-bx2qaeYOr-Tr2EuN17J2928J6OchTz7TJI_S_vd3IasOA4x2A1zJc_XgG2zbUvPt-BY_uigBzsLaGl0ZjiuOW8RGOuiDdgZ5JD1fkyWfn4NuR6mIdnZ9r3ha4bLVGou-MZ6f5NY_UPPCWHt_DmNoSAT1TKbf31nthkaUg',
-            offering: ['Italian (Native)', 'Pasta Making'],
-            lookingFor: ['Tailwind CSS', 'TypeScript'],
-            rating: 4.7, swaps: 8
-        },
-        {
-            id: 6, name: 'Amara Okafor', location: 'San Francisco, CA', availability: 'Flexible',
-            avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjxyO5tYW0DJXgmBoVpn_gPCbE_bMD3zSC10QPcbVl9leGszqNNsMdKH-VBTdfXyvx4thWMZjumzof0MwMtjOo4U3u93SUJ6pwXojqM4ebk5qxJk7Ku8ieEJ9qZlDdS30ahkSbmS-qpoLOWKL3QWHb7YdLdLxSORTVdai7-ecKKlkYfSzQkKlziAl6iuZAL8SV4n9UejB7kpzkO-hQJFo6z3W0Ev3i3VJYcN-NdeUxDFOOhf1XOzEkJQ',
-            offering: ['Technical Writing', 'SEO Strategy'],
-            lookingFor: ['Sourdough Baking', 'Gardening'],
-            rating: 5.0, swaps: 31
+    useEffect(() => {
+        let url = 'http://127.0.0.1:8000/api/users/';
+        const params = new URLSearchParams();
+        if (searchQuery) {
+            params.append('skill', searchQuery);
         }
-    ];
+
+        // Wait, UserBrowseView filters by skill using ?skill=. It does not natively filter by category yet unless I pass category_id, but the PRD says browse users by skill. For now, fetch users and filter by skill if search query is there.
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
+
+        setLoading(true);
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                // Map over DRF response to match SkillCard component format.
+                const mappedUsers = data.map(u => ({
+                    id: u.id,
+                    name: `${u.user.first_name} ${u.user.last_name}`,
+                    location: u.location || 'Unknown',
+                    availability: u.availability ? `Available ${u.availability}` : 'Flexible',
+                    avatar: u.photo || 'https://www.gravatar.com/avatar/00?d=mp',
+                    offering: u.skills_offered || [],
+                    lookingFor: u.skills_wanted || [],
+                    rating: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
+                    swaps: 0 // Mocking swaps since it's not exported by default
+                }));
+                setUsers(mappedUsers);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching users:", err);
+                setLoading(false);
+            });
+    }, [searchQuery]);
 
     return (
         <main className="w-full pt-16 bg-surface-base">
@@ -107,12 +109,12 @@ export default function Browse() {
                         <div className="flex items-center gap-space-xs overflow-x-auto pb-1" id="category-pills">
                             {categories.map(cat => (
                                 <button
-                                    key={cat}
+                                    key={cat.id}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeCategory === cat ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                    className={`category-pill whitespace-nowrap px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeCategory.id === cat.id ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
                                     type="button"
                                 >
-                                    {cat}
+                                    {cat.name}
                                 </button>
                             ))}
                         </div>

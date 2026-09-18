@@ -10,10 +10,20 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     trust_score = serializers.FloatField(read_only=True)
+    skills_offered = serializers.SerializerMethodField()
+    skills_wanted = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'location', 'photo', 'availability', 'is_public', 'trust_score']
+        fields = ['id', 'user', 'location', 'photo', 'availability', 'is_public', 'trust_score', 'skills_offered', 'skills_wanted']
+
+    def get_skills_offered(self, obj):
+        # We need this to return a list of skills for the frontend. 
+        # obj.skills_offered.all() returns UserSkillOffered instances.
+        return [skill.skill.name for skill in obj.skills_offered.all()]
+
+    def get_skills_wanted(self, obj):
+        return [skill.skill.name for skill in obj.skills_wanted.all()]
 
 class SkillCategorySerializer(serializers.ModelSerializer):
     class Meta:

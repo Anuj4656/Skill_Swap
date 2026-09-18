@@ -1,9 +1,35 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Profile() {
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [showToast, setShowToast] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        fetch('http://127.0.0.1:8000/api/profile/me/', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => {
+                setProfile(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching profile:", err);
+                setLoading(false);
+            });
+    }, [navigate]);
+
+    if (loading) return null;
 
     const handleRequestSwap = (e) => {
         e.preventDefault();
@@ -34,14 +60,14 @@ export default function Profile() {
                         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-space-lg min-w-0">
                                 <div className="relative flex-shrink-0">
-                                    <img className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-md" alt="Marcus Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2VDo3FGYVpdYCGrcAOsMpmEycAEFJNWQdxg-EPPZ6Xu6jUOBhxcGMNxUtDy-jXmK-KRZP-zLbaw9GNW-BlD4HqNXQViv3-9CwNYzuqh-cAzI8g1w9iSGphiT0Kl06TR8Ju8OlgUWRMbD8fPawR60urda2ZkOxe0oFoF8EJwyskNNbtHL9cU6JEfSnKeiCm7c91MuNRByvSKzfdkGYAnMralJqdinmdV0qwpzm6S0I4aFpXOusOgZowQ" />
+                                    <img className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-md" alt="Profile avatar" src={profile?.photo || "https://www.gravatar.com/avatar/00?d=mp"} />
                                     <div className="absolute -bottom-1 -right-1 bg-surface-card p-1 rounded-full shadow-sm" title="Verified Peer">
                                         <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                                     </div>
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <div className="flex flex-wrap items-center gap-space-sm mb-space-xs">
-                                        <h1 className="font-headline-xl text-headline-xl text-text-primary tracking-tight truncate">Marcus Chen</h1>
+                                        <h1 className="font-headline-xl text-headline-xl text-text-primary tracking-tight truncate">{profile?.user?.first_name} {profile?.user?.last_name}</h1>
                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-surface-elevated text-text-muted font-caption text-caption">
                                             <span className="material-symbols-outlined text-[13px] text-primary">public</span>
                                             Public Profile
@@ -50,7 +76,7 @@ export default function Profile() {
                                     <div className="flex flex-wrap items-center gap-x-space-md gap-y-1 font-body-md text-body-md text-text-muted mb-space-md">
                                         <span className="inline-flex items-center gap-1">
                                             <span className="material-symbols-outlined text-[16px] text-text-secondary">location_on</span>
-                                            Portland, OR
+                                            {profile?.location || 'Location Not Set'}
                                         </span>
                                         <span className="text-secondary-container">•</span>
                                         <span className="inline-flex items-center gap-1">
@@ -59,13 +85,9 @@ export default function Profile() {
                                         </span>
                                     </div>
                                     <div className="flex flex-wrap items-center gap-space-xs">
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-accepted-bg text-status-accepted font-label-sm text-label-sm">
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-accepted-bg text-status-accepted font-label-sm text-label-sm capitalize">
                                             <span className="w-1.5 h-1.5 rounded-full bg-status-accepted animate-pulse"></span>
-                                            Available weekends
-                                        </span>
-                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-elevated text-text-secondary font-label-sm text-label-sm">
-                                            <span className="material-symbols-outlined text-[14px] text-primary">schedule</span>
-                                            Pacific Time (UTC-7)
+                                            Available {profile?.availability}
                                         </span>
                                     </div>
                                 </div>

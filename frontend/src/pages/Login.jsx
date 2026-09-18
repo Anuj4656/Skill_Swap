@@ -7,9 +7,58 @@ export default function Login() {
     const [activePill, setActivePill] = useState('Flexible');
     const navigate = useNavigate();
 
-    const handleAuth = (e) => {
+    const handleAuth = async (e) => {
         e.preventDefault();
-        navigate('/dashboard');
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            if (isLogin) {
+                // simplejwt requires username and password (which is either username or email in generic setup)
+                // Wait, Django `User` defaults username. We might need to send 'username' instead of 'email' or adjust Django to accept email.
+                // Because in the seed, username=marcus, email=marcus@example.com for example.
+                // Standard simplejwt expects `username` and `password`. If use email, we need to extract username from email's prefix roughly for this MVP.
+                const username = email.split('@')[0];
+
+                const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+                    navigate('/dashboard');
+                } else {
+                    console.error("Login failed:", await response.text());
+                }
+            } else {
+                const fullName = document.getElementById('full-name').value;
+                const username = email.split('@')[0];
+
+                const response = await fetch('http://127.0.0.1:8000/api/auth/register/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        first_name: fullName.split(' ')[0] || '',
+                        last_name: fullName.split(' ').slice(1).join(' ') || ''
+                    })
+                });
+                if (response.ok) {
+                    setIsLogin(true);
+                    alert("Registration successful! Please login.");
+                } else {
+                    console.error("Registration failed:", await response.text());
+                }
+            }
+        } catch (error) {
+            console.error("Auth error:", error);
+        }
     };
 
     const getPillClass = (pill) => {

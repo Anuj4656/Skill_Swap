@@ -4,38 +4,66 @@ export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('received');
     const [activeStatus, setActiveStatus] = useState('all');
 
-    // Hardcoded cards reflecting exact Stitch state
-    const cards = [
-        {
-            id: 1, tab: 'received', status: 'pending',
-            title: 'Sarah Miller', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuABHYMRq31N1cqT9DsUJ8Q2Ns8yvkVApnimPrHLe8NHWV4hLhW6fWBGMzTcCpZGsO1u4WN-siaFkSaxxse6uaXuUqrm1Yz37hrXJTc_6WWBAmd6Kst4ht4A8xpAeetMdz2Zmw2lXhZ8uH8nNa4GG7Or2tsBmTwllrFEV_a5rKI4_qwv5Jn6BlbiQQTLI1-mMj7HNERSnI8FM-rdKgmH4KpILVvcscCQCpdjNtoHdjDVieBy8qyhIfHGjg',
-            location: 'Portland, OR', verified: 18,
-            youOffer: { icon: 'school', title: 'Sarah Offers', tags: ['Product Design', 'Design Systems', 'Figma Master'] },
-            theyOffer: { icon: 'handyman', title: 'You Give', tags: ['Python', 'FastAPI Setup', 'Async Architecture'] },
-            note: "Hey Marcus, saw you wanted Figma & UI design help. I'd love to swap 3 sessions of design systems for FastAPI setup guidance!"
-        },
-        {
-            id: 2, tab: 'received', status: 'accepted',
-            title: 'David Adebayo', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuASeJwdOnV-6eKVKXXvKZckx5VyYSzA_RgXA3QbX6RoO_hJO8OKogFq1oL5re3Kk329c-7f6QdN0FSaWfvI8w4z8oHOejuKo0Cjuy0g0J5kYn8vhSPY8nYAnjmSmBzV8t5D5FQzHHo9XaeRdYCh1Dka0RoR0XVFrN6ytyolEF1PJTMVILFBVqu5idV3utxuIyDiAcM2tsDQWh58YxeKyB9QL7wNAOIgXUf17r4ayQnf6TPRNrBLo6ESsw',
-            location: 'Austin, TX', verified: 'Swap in Progress',
-            youOffer: { icon: 'graphic_eq', title: 'David Offers', tags: ['Acoustic Guitar Basics', 'Chord Progressions'] },
-            theyOffer: { icon: 'database', title: 'You Give', tags: ['PostgreSQL Tuning', 'Index Optimization'] },
-        },
-        {
-            id: 3, tab: 'sent', status: 'pending',
-            title: 'Maya Lin', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiReQ2V06oqat-f44takQXAKs231as-T3VJngzBfbCXU9JW3877kb96MWlLXQHDa62czFaR4jG7uW5rE7C-bPj6U9YrCqbPNfuwPj4Tvbg-OFXqTS4U5ck94No3ap_XBj7n_CUwzWMl19aITmzwbukwkVZGAVheRuvkn2JJ8pw-o9Op49T4pIUeSy-vKO-L7ZnO3xelHGc93autFExLbYJE2ORp5p0aV5vJcbVmbAHucqQU1-w6v2XVg',
-            location: 'Seattle, WA', verified: 'Awaiting response',
-            youOffer: { icon: 'terminal', title: 'You Offer', tags: ['FastAPI', 'REST Endpoints'] },
-            theyOffer: { icon: 'carpenter', title: 'Maya Gives', tags: ['Woodworking Basics', 'Joinery & Tool Care'] },
-            note: "Happy to help setup your portfolio API!"
-        },
-        {
-            id: 4, tab: 'past', status: 'completed',
-            title: 'Elena Vance', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYYr2Xghp-UrIZ6gg__oET2kalbO7kxYSyQsGLDNRdfARWSA1Kdw3OW60On042FQiIXxJKS-a6ASjjOunNFYRX8ydN_I-V0pvceoruk-C3fy11tV1MtsGZ5JnFZNzslEfyV6QkeKKZWYzEyfMyZJKjEqXMfEI_pj_6bbzarm3NO35rHwHiP_OuSMK3mPYn41P6tB1oMBrFvfXXPDRv3Y6MBUOA26IVBLuxkmLppCnww11lbx8hAnltQA',
-            location: 'Completed on Oct 28', verified: '4 hours exchanged',
-            completedMode: true
-        }
-    ];
+    const [cards, setCards] = useState([]);
+
+    React.useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (!token) return;
+
+        fetch('http://127.0.0.1:8000/api/swaps/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                // Need to know current user to map tab: 'sent' vs 'received'
+                fetch('http://127.0.0.1:8000/api/profile/me/', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                    .then(res => res.json())
+                    .then(profile => {
+                        const currentUserId = profile.user.id;
+
+                        const mappedCards = data.map(swap => {
+                            const isRequester = swap.requester.id === currentUserId;
+                            const otherUser = isRequester ? swap.receiver : swap.requester;
+
+                            let tab = 'past';
+                            if (swap.status === 'pending') {
+                                tab = isRequester ? 'sent' : 'received';
+                            } else if (swap.status === 'accepted') {
+                                tab = isRequester ? 'sent' : 'received'; // Wait, accepted should show in their respective send/receive or a separate active tab. Current tabs are received, sent, past. We'll map accepted to current tab.
+                            }
+
+                            return {
+                                id: swap.id,
+                                tab: tab,
+                                status: swap.status,
+                                title: `${otherUser.first_name} ${otherUser.last_name}`,
+                                avatar: otherUser.photo || 'https://www.gravatar.com/avatar/00?d=mp',
+                                location: 'Remote', // location isn't on User instance directly in this response
+                                verified: 'Verified Member',
+                                youOffer: {
+                                    icon: 'school',
+                                    title: 'You Give',
+                                    tags: [isRequester ? swap.skill_offered.name : swap.skill_wanted.name]
+                                },
+                                theyOffer: {
+                                    icon: 'handyman',
+                                    title: 'They Give',
+                                    tags: [isRequester ? swap.skill_wanted.name : swap.skill_offered.name]
+                                },
+                                note: swap.note || '',
+                                completedMode: swap.status === 'completed' || swap.status === 'rejected'
+                            };
+                        });
+
+                        setCards(mappedCards);
+                    });
+            })
+            .catch(err => console.error("Error fetching swaps:", err));
+    }, []);
 
     const filteredCards = cards.filter(c =>
         (activeTab === 'all' || c.tab === activeTab) &&
