@@ -149,6 +149,27 @@ export default function EditProfile() {
             });
     };
 
+    const handleDeleteAccount = async () => {
+        if (!window.confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) return;
+        const token = localStorage.getItem('access_token');
+        try {
+            const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok || res.status === 204) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                navigate('/login');
+            } else {
+                alert("Failed to delete account. Please try again.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error occurring while trying to delete account.");
+        }
+    };
+
     if (loading) return null;
 
     return (
@@ -382,25 +403,35 @@ export default function EditProfile() {
 
                         {/* Persistent Bottom Action Bar */}
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-space-md p-space-md rounded-xl bg-surface-card shadow-lg">
-                            <div className="flex items-center gap-space-xs text-text-muted font-caption text-caption">
-                                <span className="material-symbols-outlined text-[16px] text-text-muted">lock</span>
+                            <div className="flex items-center gap-space-xs text-text-muted font-caption text-caption w-full sm:w-auto text-center sm:text-left">
+                                <span className="material-symbols-outlined text-[16px] text-text-muted hidden sm:inline">lock</span>
                                 Profile details are shared exclusively with confirmed swap peers and in browse mode.
                             </div>
-                            <div className="flex items-center gap-space-sm w-full sm:w-auto justify-end">
-                                <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">
-                                    Discard
-                                </Link>
+                            <div className="flex items-center gap-space-sm w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 border-border-subtle pt-3 sm:pt-0 mt-2 sm:mt-0">
                                 <button
-                                    className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed"
-                                    onClick={handleSave}
-                                    disabled={isSaving}
+                                    className="sm:mr-4 px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors"
+                                    onClick={handleDeleteAccount}
                                     type="button"
                                 >
-                                    <span className={`material-symbols-outlined text-[18px] ${isSaving && saveText === 'Saving...' ? 'animate-spin' : ''}`}>
-                                        {isSaving ? (saveText === 'Saved!' ? 'done_all' : 'refresh') : 'check'}
-                                    </span>
-                                    {saveText}
+                                    <span className="material-symbols-outlined text-[18px]">delete_forever</span>
+                                    <span className="hidden sm:inline">Delete Account</span>
                                 </button>
+                                <div className="flex items-center gap-space-sm">
+                                    <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">
+                                        Discard
+                                    </Link>
+                                    <button
+                                        className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed"
+                                        onClick={handleSave}
+                                        disabled={isSaving}
+                                        type="button"
+                                    >
+                                        <span className={`material-symbols-outlined text-[18px] ${isSaving && saveText === 'Saving...' ? 'animate-spin' : ''}`}>
+                                            {isSaving ? (saveText === 'Saved!' ? 'done_all' : 'refresh') : 'check'}
+                                        </span>
+                                        {saveText}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

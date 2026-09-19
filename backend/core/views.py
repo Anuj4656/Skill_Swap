@@ -20,13 +20,17 @@ class RegisterView(generics.CreateAPIView):
         UserProfile.objects.create(user=user)
         return Response({'status': 'User registered successfully'}, status=status.HTTP_201_CREATED)
 
-class ProfileMeView(generics.RetrieveUpdateAPIView):
+class ProfileMeView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         profile, created = UserProfile.objects.get_or_create(user=self.request.user)
         return profile
+
+    def perform_destroy(self, instance):
+        user = self.request.user
+        user.delete()
 
 class ProfileDetailView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all()
