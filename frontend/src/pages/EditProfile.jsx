@@ -114,23 +114,22 @@ export default function EditProfile() {
         const first = nameParts[0] || '';
         const last = nameParts.slice(1).join(' ');
 
-        const formData = new FormData();
-        formData.append('first_name', first);
-        formData.append('last_name', last);
-        formData.append('location', location);
-        formData.append('availability', availability);
-        formData.append('is_public', isPublic);
-        // Only append photo if it's a File object (user selected a new file)
-        if (photo instanceof File) {
-            formData.append('photo', photo);
-        }
+        const payload = {
+            first_name: first,
+            last_name: last,
+            location: location,
+            availability: availability,
+            is_public: isPublic,
+            photo: typeof photo === 'string' ? photo : null
+        };
 
         fetch('http://127.0.0.1:8000/api/profile/me/', {
             method: 'PATCH',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
-            body: formData
+            body: JSON.stringify(payload)
         })
             .then(res => {
                 if (res.ok) {
@@ -161,16 +160,13 @@ export default function EditProfile() {
 
                     {/* Breadcrumb and Context Nav */}
                     <div className="flex items-center justify-between pb-space-lg">
-                        <nav aria-label="Breadcrumb" className="flex items-center gap-space-xs font-label-sm text-label-sm text-text-muted">
-                            <span className="hover:text-text-secondary transition-colors cursor-pointer">Account Settings</span>
-                            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                            <span className="text-text-primary font-semibold">My Profile</span>
+                        <nav aria-label="Breadcrumb" className="flex items-center">
+                            <Link to="/profile" className="flex items-center gap-space-xs font-label-sm text-label-sm text-text-muted hover:text-text-primary transition-colors cursor-pointer group">
+                                <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                                <span className="font-semibold">Back to Profile</span>
+                            </Link>
                         </nav>
                         <div className="flex items-center gap-space-sm">
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container font-caption text-caption text-text-muted">
-                                <span className="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
-                                All changes auto-saved to draft
-                            </span>
                         </div>
                     </div>
 
@@ -185,24 +181,18 @@ export default function EditProfile() {
                                     {/* Avatar Unit */}
                                     <div className="relative group shrink-0">
                                         <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-surface-elevated">
-                                            <img alt="Portrait" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src={photo instanceof File ? URL.createObjectURL(photo) : getImageUrl(photo)} />
+                                            <img alt="Portrait" className="w-full h-full object-cover group-hover:opacity-85 transition-opacity" src={getImageUrl(photo)} />
                                         </div>
-                                        <input
-                                            type="file"
-                                            id="photoUpload"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                if (e.target.files && e.target.files[0]) {
-                                                    setPhoto(e.target.files[0]);
-                                                }
-                                            }}
-                                        />
                                         <button
                                             aria-label="Change photo"
                                             className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all"
                                             title="Change Profile Photo"
-                                            onClick={() => document.getElementById('photoUpload').click()}
+                                            onClick={() => {
+                                                const url = prompt("Enter Image URL:", typeof photo === 'string' ? photo : "");
+                                                if (url !== null) {
+                                                    setPhoto(url.trim());
+                                                }
+                                            }}
                                             type="button"
                                         >
                                             <span className="material-symbols-outlined text-[16px]">photo_camera</span>

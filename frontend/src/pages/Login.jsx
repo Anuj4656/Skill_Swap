@@ -25,7 +25,7 @@ export default function Login() {
                     const data = await response.json();
                     localStorage.setItem('access_token', data.access);
                     localStorage.setItem('refresh_token', data.refresh);
-                    navigate('/dashboard');
+                    navigate('/my-swaps');
                 } else {
                     console.error("Login failed:", await response.text());
                 }

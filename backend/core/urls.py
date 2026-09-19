@@ -37,12 +37,5 @@ urlpatterns = [
     path('admin/skills/pending/', views.AdminPendingSkillsView.as_view(), name='admin-skills-pending'),
     path('admin/skills/<int:pk>/approve/', views.admin_approve_skill, name='admin-skills-approve'),
     path('admin/skills/<int:pk>/reject/', views.admin_reject_skill, name='admin-skills-reject'),
-
     path('', include(router.urls)),
 ]
-
-from django.conf import settings
-from django.conf.urls.static import static
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

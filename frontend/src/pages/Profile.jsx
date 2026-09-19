@@ -119,17 +119,10 @@ export default function Profile() {
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-space-lg min-w-0">
                                 <div className="relative flex-shrink-0">
                                     <img className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-md" alt="Profile avatar" src={getImageUrl(profile?.photo)} />
-                                    <div className="absolute -bottom-1 -right-1 bg-surface-card p-1 rounded-full shadow-sm" title="Verified Peer">
-                                        <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                                    </div>
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <div className="flex flex-wrap items-center gap-space-sm mb-space-xs">
                                         <h1 className="font-headline-xl text-headline-xl text-text-primary tracking-tight truncate">{profile?.user?.first_name} {profile?.user?.last_name}</h1>
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-surface-elevated text-text-muted font-caption text-caption">
-                                            <span className="material-symbols-outlined text-[13px] text-primary">public</span>
-                                            Public Profile
-                                        </span>
                                     </div>
                                     <div className="flex flex-wrap items-center gap-x-space-md gap-y-1 font-body-md text-body-md text-text-muted mb-space-md">
                                         <span className="inline-flex items-center gap-1">

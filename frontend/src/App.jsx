@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import MySwaps from './pages/MySwaps';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import Browse from './pages/Browse';
@@ -34,7 +34,7 @@ function App() {
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Landing />} />
                     <Route path="browse" element={<Browse />} />
-                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="my-swaps" element={<MySwaps />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="profile/:id" element={<Profile />} />
                     <Route path="profile/edit" element={<EditProfile />} />

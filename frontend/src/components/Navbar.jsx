@@ -40,7 +40,8 @@ export default function Navbar() {
                 </Link>
                 <nav className="flex items-center gap-space-lg h-full">
                     <Link to="/browse" className={getNavClass('/browse')}>Browse Users</Link>
-                    <Link to="/dashboard" className={`${getNavClass('/dashboard')} gap-space-xs`}>
+                    <Link to="/my-swaps" className={`${getNavClass('/my-swaps')} gap-space-xs`}>
+                        <span className="material-symbols-outlined text-[20px]">swap_horiz</span>
                         My Swaps
                     </Link>
                     <a href="#footer" className={getNavClass('#footer')}>About Us</a>

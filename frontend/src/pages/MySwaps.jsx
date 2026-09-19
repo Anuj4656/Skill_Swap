@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getImageUrl } from '../utils';
-export default function Dashboard() {
+export default function MySwaps() {
     const [activeTab, setActiveTab] = useState('received');
     const [activeStatus, setActiveStatus] = useState('all');
 
@@ -45,8 +45,7 @@ export default function Dashboard() {
                                 status: swap.status,
                                 title: `${otherUser.first_name} ${otherUser.last_name}`,
                                 avatar: getImageUrl(otherUser?.photo),
-                                location: 'Remote', // location isn't on User instance directly in this response
-                                verified: 'Verified Member',
+                                location: otherUser.location || 'Location Not Set',
                                 youOffer: {
                                     icon: 'school',
                                     title: 'You Give',
@@ -141,39 +140,32 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex flex-col gap-space-md mb-space-lg">
-                        <div className="flex items-center justify-between overflow-x-auto no-scrollbar bg-surface-container-lowest rounded-xl p-1.5">
+                        <div className="flex items-center justify-center overflow-x-auto no-scrollbar bg-surface-container-lowest rounded-xl p-1.5">
                             <div className="flex items-center gap-1.5">
                                 <button
                                     onClick={() => setActiveTab('received')}
                                     className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'received' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
                                 >
                                     <span>Received</span>
-                                    <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full bg-status-pending-bg text-status-pending text-caption font-caption">2 pending</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('sent')}
                                     className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'sent' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
                                 >
                                     <span>Sent</span>
-                                    <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full bg-surface-container-high text-text-muted text-caption font-caption">1 pending</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('past')}
                                     className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'past' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
                                 >
-                                    <span>Completed & Past</span>
-                                    <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full bg-surface-container-high text-text-muted text-caption font-caption">5</span>
+                                    <span>Completed</span>
                                 </button>
-                            </div>
-                            <div className="hidden sm:flex items-center gap-space-xs text-text-muted px-space-sm font-caption text-caption">
-                                <span className="material-symbols-outlined text-[14px]">info</span>
-                                <span>Auto-expires after 7 days without response</span>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center justify-between gap-space-sm">
+                        <div className="flex flex-wrap items-center justify-center gap-space-sm">
                             <div className="flex items-center gap-1.5">
-                                <span className="font-caption text-caption uppercase text-text-muted tracking-wider mr-1">Status:</span>
+                                <span className="font-caption text-caption uppercase text-text-muted tracking-wider mr-1">Status</span>
                                 {['all', 'pending', 'accepted', 'completed'].map(status => (
                                     <button
                                         key={status}
@@ -183,9 +175,6 @@ export default function Dashboard() {
                                         {status.charAt(0).toUpperCase() + status.slice(1)} {status === 'all' && 'Statuses'}
                                     </button>
                                 ))}
-                            </div>
-                            <div className="flex items-center gap-space-xs text-caption font-caption text-text-muted">
-                                <span>Displaying <strong className="text-text-primary">{filteredCards.length}</strong> swaps</span>
                             </div>
                         </div>
                     </div>

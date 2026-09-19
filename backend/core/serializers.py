@@ -3,9 +3,12 @@ from django.contrib.auth.models import User
 from .models import UserProfile, SkillCategory, Skill, UserSkillOffered, UserSkillWanted, SwapRequest, Rating
 
 class UserSerializer(serializers.ModelSerializer):
+    photo = serializers.URLField(source='profile.photo', read_only=True)
+    location = serializers.CharField(source='profile.location', read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'photo', 'location']
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
