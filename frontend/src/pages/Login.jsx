@@ -12,11 +12,11 @@ export default function Login() {
     const handleAuth = async (e) => {
         e.preventDefault();
         setErrorMsg('');
-        const emailOrUsername = document.getElementById('emailOrUsername').value;
         const password = document.getElementById('password').value;
 
         try {
             if (isLogin) {
+                const emailOrUsername = document.getElementById('emailOrUsername').value;
                 const response = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/auth/login/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -34,26 +34,20 @@ export default function Login() {
                     setErrorMsg("Login failed. Please check your credentials.");
                 }
             } else {
-                const fullName = document.getElementById('full-name').value;
-                let username = emailOrUsername;
-                let email = emailOrUsername;
-                if (!emailOrUsername.includes('@')) {
-                    // Registration typically requires a valid email. If they entered a username for registration, 
-                    // this logic might need tweaking. But for this MVP let's assume they enter an email to register.
-                    email = `${emailOrUsername}@example.com`; // Fallback if they only put a username during registration
-                } else {
-                    username = emailOrUsername.split('@')[0];
-                }
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const username = document.getElementById('register-username').value;
+                const email = document.getElementById('register-email').value;
 
                 const response = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/auth/register/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        username,
-                        email,
-                        password,
-                        first_name: fullName.split(' ')[0] || '',
-                        last_name: fullName.split(' ').slice(1).join(' ') || ''
+                        username: username,
+                        email: email,
+                        password: password,
+                        first_name: firstName,
+                        last_name: lastName
                     })
                 });
                 if (response.ok) {
@@ -136,21 +130,35 @@ export default function Login() {
                 )}
 
                 <form onSubmit={handleAuth} className="space-y-space-md relative z-10">
-                    {!isLogin && (
-                        <div className="flex flex-col gap-1.5 transition-all duration-200">
-                            <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="full-name">Full Name</label>
+                    {!isLogin ? (
+                        <>
+                            <div className="grid grid-cols-2 gap-space-md transition-all duration-200">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="first-name">First Name</label>
+                                    <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="first-name" placeholder="Elena" required type="text" />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="last-name">Last Name</label>
+                                    <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="last-name" placeholder="Vance" required type="text" />
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="register-username">Username</label>
+                                <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="register-username" placeholder="elenavance99" required type="text" />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="register-email">Email Address</label>
+                                <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="register-email" placeholder="elena@example.edu" required type="email" />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex flex-col gap-1.5">
+                            <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="emailOrUsername">Username or Email</label>
                             <div className="relative">
-                                <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="full-name" placeholder="Elena Vance" type="text" />
+                                <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="emailOrUsername" placeholder="elena.vance or elena@example.edu" required type="text" />
                             </div>
                         </div>
                     )}
-
-                    <div className="flex flex-col gap-1.5">
-                        <label className="font-label-sm text-label-sm text-text-secondary" htmlFor="emailOrUsername">Username or Email</label>
-                        <div className="relative">
-                            <input className="w-full h-[38px] px-3 bg-surface-base rounded-lg text-text-primary placeholder:text-text-muted font-body-md text-body-md transition-colors focus:outline-none focus:bg-surface-elevated" id="emailOrUsername" placeholder="elena.vance or elena@example.edu" required type="text" />
-                        </div>
-                    </div>
 
                     <div className="flex flex-col gap-1.5">
                         <div className="flex items-center justify-between">

@@ -8,7 +8,8 @@ export default function EditProfile() {
     const [saveText, setSaveText] = useState('Save Profile');
     const [loading, setLoading] = useState(true);
 
-    const [fullName, setFullName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [location, setLocation] = useState('');
     const [availability, setAvailability] = useState('flexible');
     const [isPublic, setIsPublic] = useState(true);
@@ -39,9 +40,8 @@ export default function EditProfile() {
 
                 const skillsFinal = Array.isArray(skillsData) ? skillsData : skillsData.results || [];
 
-                const fName = data.user?.first_name || '';
-                const lName = data.user?.last_name || '';
-                setFullName([fName, lName].filter(Boolean).join(' '));
+                setFirstName(data.user?.first_name || '');
+                setLastName(data.user?.last_name || '');
                 setLocation(data.location || '');
                 setAvailability(data.availability || 'flexible');
                 setIsPublic(data.is_public);
@@ -112,13 +112,9 @@ export default function EditProfile() {
         setSaveText('Saving...');
 
         const token = localStorage.getItem('access_token');
-        const nameParts = fullName.trim().split(' ');
-        const first = nameParts[0] || '';
-        const last = nameParts.slice(1).join(' ');
-
         const payload = {
-            first_name: first,
-            last_name: last,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
             location: location,
             availability: availability,
             is_public: isPublic,
@@ -203,11 +199,19 @@ export default function EditProfile() {
 
                                     {/* Basic Metadata Fields */}
                                     <div className="space-y-space-md w-full max-w-lg">
-                                        <div>
-                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="fullName">
-                                                Full Name
-                                            </label>
-                                            <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="fullName" placeholder="Your full name" type="text" />
+                                        <div className="grid grid-cols-2 gap-space-md">
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="firstName">
+                                                    First Name
+                                                </label>
+                                                <input value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="firstName" placeholder="First" type="text" />
+                                            </div>
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="lastName">
+                                                    Last Name
+                                                </label>
+                                                <input value={lastName} onChange={e => setLastName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" placeholder="Last" type="text" />
+                                            </div>
                                         </div>
                                         <div>
                                             <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">
