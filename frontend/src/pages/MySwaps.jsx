@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { getImageUrl } from '../utils';
+import Modal from '../components/Modal';
+
 export default function MySwaps() {
     const [activeTab, setActiveTab] = useState('received');
+    const [modalConfig, setModalConfig] = useState({ isOpen: false });
+    const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
     const [activeStatus, setActiveStatus] = useState('all');
 
     const [cards, setCards] = useState([]);
@@ -102,17 +106,24 @@ export default function MySwaps() {
             .catch(err => console.error("Error updating swap:", err));
     };
     const handleDeleteSwap = (id) => {
-        if (!window.confirm("Are you sure you want to cancel this request?")) return;
-
-        const token = localStorage.getItem('access_token');
-        fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${id}/`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        }).then(res => {
-            if (res.ok) {
-                setCards(prev => prev.filter(c => c.id !== id));
+        setModalConfig({
+            isOpen: true,
+            type: 'confirm',
+            title: 'Cancel Request',
+            message: 'Are you sure you want to cancel this request?',
+            isDestructive: true,
+            onConfirm: () => {
+                const token = localStorage.getItem('access_token');
+                fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${id}/`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(res => {
+                    if (res.ok) {
+                        setCards(prev => prev.filter(c => c.id !== id));
+                    }
+                }).catch(err => console.error("Error cancelling swap:", err));
             }
-        }).catch(err => console.error("Error cancelling swap:", err));
+        });
     };
 
     const submitRating = (e) => {
@@ -398,6 +409,7 @@ export default function MySwaps() {
                 </div>
             )
             }
+            <Modal {...modalConfig} onClose={closeModal} />
         </main >
     );
 }

@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils';
+import Modal from '../components/Modal';
 
 export default function EditProfile() {
+    const [modalConfig, setModalConfig] = useState({ isOpen: false });
+    const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
     const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
     const [saveText, setSaveText] = useState('Save Profile');
@@ -73,14 +76,22 @@ export default function EditProfile() {
         }
     };
 
-    const handleRemoveOffered = async (id) => {
-        if (!window.confirm("Are you sure you want to remove this skill?")) return;
-        const token = localStorage.getItem('access_token');
-        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
+    const handleRemoveOffered = (id) => {
+        setModalConfig({
+            isOpen: true,
+            type: 'confirm',
+            title: 'Remove Skill',
+            message: 'Are you sure you want to remove this skill?',
+            isDestructive: true,
+            onConfirm: async () => {
+                const token = localStorage.getItem('access_token');
+                const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) setOffered(prev => prev.filter(item => item.id !== id));
+            }
         });
-        if (res.ok) setOffered(offered.filter(item => item.id !== id));
     };
 
     const handleAddWanted = async () => {
@@ -97,14 +108,22 @@ export default function EditProfile() {
         }
     };
 
-    const handleRemoveWanted = async (id) => {
-        if (!window.confirm("Are you sure you want to remove this skill?")) return;
-        const token = localStorage.getItem('access_token');
-        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
+    const handleRemoveWanted = (id) => {
+        setModalConfig({
+            isOpen: true,
+            type: 'confirm',
+            title: 'Remove Skill',
+            message: 'Are you sure you want to remove this skill?',
+            isDestructive: true,
+            onConfirm: async () => {
+                const token = localStorage.getItem('access_token');
+                const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) setWanted(prev => prev.filter(item => item.id !== id));
+            }
         });
-        if (res.ok) setWanted(wanted.filter(item => item.id !== id));
     };
 
     const handleSave = () => {
@@ -149,25 +168,33 @@ export default function EditProfile() {
             });
     };
 
-    const handleDeleteAccount = async () => {
-        if (!window.confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) return;
-        const token = localStorage.getItem('access_token');
-        try {
-            const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok || res.status === 204) {
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                navigate('/login');
-            } else {
-                alert("Failed to delete account. Please try again.");
+    const handleDeleteAccount = () => {
+        setModalConfig({
+            isOpen: true,
+            type: 'confirm',
+            title: 'Delete Account',
+            message: 'Are you sure you want to permanently delete your account? This action cannot be undone.',
+            isDestructive: true,
+            onConfirm: async () => {
+                const token = localStorage.getItem('access_token');
+                try {
+                    const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok || res.status === 204) {
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('refresh_token');
+                        navigate('/login');
+                    } else {
+                        alert("Failed to delete account. Please try again.");
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert("Error occurring while trying to delete account.");
+                }
             }
-        } catch (e) {
-            console.error(e);
-            alert("Error occurring while trying to delete account.");
-        }
+        });
     };
 
     if (loading) return null;
@@ -207,10 +234,18 @@ export default function EditProfile() {
                                             className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all"
                                             title="Change Profile Photo"
                                             onClick={() => {
-                                                const url = prompt("Enter Image URL:", typeof photo === 'string' ? photo : "");
-                                                if (url !== null) {
-                                                    setPhoto(url.trim());
-                                                }
+                                                setModalConfig({
+                                                    isOpen: true,
+                                                    type: 'prompt',
+                                                    title: 'Change Profile Picture',
+                                                    message: 'Enter the URL of your new profile picture.',
+                                                    defaultValue: typeof photo === 'string' ? photo : "",
+                                                    onConfirm: (url) => {
+                                                        if (url !== null) {
+                                                            setPhoto(url.trim());
+                                                        }
+                                                    }
+                                                });
                                             }}
                                             type="button"
                                         >
@@ -437,6 +472,7 @@ export default function EditProfile() {
                     </div>
                 </div>
             </div>
+            <Modal {...modalConfig} onClose={closeModal} />
         </main>
     );
 }
