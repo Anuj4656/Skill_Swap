@@ -51,11 +51,7 @@ export default function Navbar() {
                 </nav>
                 <div className="flex items-center gap-space-md">
 
-                    <button aria-label="Notifications" className="p-space-xs text-text-muted hover:text-text-primary transition-colors rounded-lg hover:bg-surface-elevated relative" type="button">
-                        <span className="material-symbols-outlined text-[20px]">notifications</span>
-                        <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    </button>
-                    <div className="h-5 w-px bg-border-subtle"></div>
+
                     {userProfile ? (
                         <div className="flex items-center gap-space-md pl-space-xs">
                             <Link to="/profile" className="flex items-center gap-space-sm cursor-pointer group">

@@ -7,9 +7,11 @@ export default function Login() {
     const [activePill, setActivePill] = useState('Flexible');
     const navigate = useNavigate();
     const [toast, setToast] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
 
     const handleAuth = async (e) => {
         e.preventDefault();
+        setErrorMsg('');
         const emailOrUsername = document.getElementById('emailOrUsername').value;
         const password = document.getElementById('password').value;
 
@@ -27,7 +29,9 @@ export default function Login() {
                     localStorage.setItem('refresh_token', data.refresh);
                     navigate('/my-swaps');
                 } else {
-                    console.error("Login failed:", await response.text());
+                    const errData = await response.text();
+                    console.error("Login failed:", errData);
+                    setErrorMsg("Login failed. Please check your credentials.");
                 }
             } else {
                 const fullName = document.getElementById('full-name').value;
@@ -57,7 +61,21 @@ export default function Login() {
                     setToast("Registration successful! You may now log in.");
                     setTimeout(() => setToast(''), 3000);
                 } else {
-                    console.error("Registration failed:", await response.text());
+                    const errData = await response.text();
+                    console.error("Registration failed:", errData);
+                    try {
+                        const parsed = JSON.parse(errData);
+                        const firstError = Object.values(parsed)[0];
+                        if (Array.isArray(firstError)) {
+                            setErrorMsg(firstError[0]);
+                        } else if (typeof firstError === 'string') {
+                            setErrorMsg(firstError);
+                        } else {
+                            setErrorMsg("Registration failed. Please check your details.");
+                        }
+                    } catch (e) {
+                        setErrorMsg("Registration failed. Please check your details.");
+                    }
                 }
             }
         } catch (error) {
@@ -96,19 +114,26 @@ export default function Login() {
                 <div className="grid grid-cols-2 p-1 bg-surface-base rounded-lg mb-space-lg relative z-10">
                     <button
                         type="button"
-                        onClick={() => setIsLogin(true)}
+                        onClick={() => { setIsLogin(true); setErrorMsg(''); }}
                         className={`py-2 text-center rounded-lg font-label-md text-label-md transition-all ${isLogin ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'}`}
                     >
                         Log in
                     </button>
                     <button
                         type="button"
-                        onClick={() => setIsLogin(false)}
+                        onClick={() => { setIsLogin(false); setErrorMsg(''); }}
                         className={`py-2 text-center rounded-lg font-label-md text-label-md transition-all ${!isLogin ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'}`}
                     >
                         Register
                     </button>
                 </div>
+
+                {errorMsg && (
+                    <div className="mb-space-md p-space-sm bg-status-rejected-bg border border-status-rejected text-status-rejected rounded-lg font-label-sm text-label-sm relative z-10 text-center flex items-center justify-center">
+                        <span className="material-symbols-outlined mr-1.5 text-[18px]">error</span>
+                        <span>{errorMsg}</span>
+                    </div>
+                )}
 
                 <form onSubmit={handleAuth} className="space-y-space-md relative z-10">
                     {!isLogin && (
@@ -187,7 +212,7 @@ export default function Login() {
                 </form>
 
                 <div className="mt-space-md text-center relative z-10">
-                    <button className="font-body-md text-body-md text-text-muted hover:text-text-primary transition-colors" onClick={() => setIsLogin(!isLogin)} type="button">
+                    <button className="font-body-md text-body-md text-text-muted hover:text-text-primary transition-colors" onClick={() => { setIsLogin(!isLogin); setErrorMsg(''); }} type="button">
                         {isLogin ? (
                             <>Don't have an account yet? <span className="text-primary-fixed-dim font-label-md underline underline-offset-4">Register here</span></>
                         ) : (

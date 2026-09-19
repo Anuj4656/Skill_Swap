@@ -102,6 +102,8 @@ export default function MySwaps() {
             .catch(err => console.error("Error updating swap:", err));
     };
     const handleDeleteSwap = (id) => {
+        if (!window.confirm("Are you sure you want to cancel this request?")) return;
+
         const token = localStorage.getItem('access_token');
         fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${id}/`, {
             method: 'DELETE',
