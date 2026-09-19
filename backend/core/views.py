@@ -16,7 +16,13 @@ class RegisterView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        user = User.objects.create_user(username=data['username'], password=data['password'], email=data.get('email', ''))
+        user = User.objects.create_user(
+            username=data['username'], 
+            password=data['password'], 
+            email=data.get('email', ''),
+            first_name=data.get('first_name', ''),
+            last_name=data.get('last_name', '')
+        )
         UserProfile.objects.create(user=user)
         return Response({'status': 'User registered successfully'}, status=status.HTTP_201_CREATED)
 
