@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getImageUrl } from '../utils';
+import Modal from './Modal';
 
 export default function Navbar() {
     const location = useLocation();
     const [userProfile, setUserProfile] = useState(null);
+    const [modalConfig, setModalConfig] = useState({ isOpen: false });
+    const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -61,7 +64,20 @@ export default function Navbar() {
                                 </span>
                             </Link>
                             <button
-                                onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); window.location.href = '/login'; }}
+                                onClick={() => {
+                                    setModalConfig({
+                                        isOpen: true,
+                                        type: 'confirm',
+                                        title: 'Confirm Logout',
+                                        message: 'Are you sure you want to log out of your account?',
+                                        isDestructive: false,
+                                        onConfirm: () => {
+                                            localStorage.removeItem('access_token');
+                                            localStorage.removeItem('refresh_token');
+                                            window.location.href = '/login';
+                                        }
+                                    });
+                                }}
                                 className="font-label-md text-label-md text-text-muted hover:text-primary transition-colors border border-border-subtle px-space-sm py-1 rounded-md hover:border-primary"
                             >
                                 Logout
@@ -76,6 +92,7 @@ export default function Navbar() {
                     )}
                 </div>
             </div>
+            <Modal {...modalConfig} onClose={closeModal} />
         </header>
     );
 }
