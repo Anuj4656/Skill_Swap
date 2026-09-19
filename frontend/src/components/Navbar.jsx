@@ -58,8 +58,7 @@ export default function Navbar() {
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-space-lg h-full absolute left-1/2 -translate-x-1/2">
                     <Link to="/browse" className={getNavClass('/browse')}>Browse Users</Link>
-                    <Link to="/my-swaps" className={`${getNavClass('/my-swaps')} gap-space-xs`}>
-                        <span className="material-symbols-outlined text-[20px]">swap_horiz</span>
+                    <Link to="/my-swaps" className={getNavClass('/my-swaps')}>
                         My Swaps
                     </Link>
                     <a href="#footer" className={getNavClass('#footer')}>About Us</a>
@@ -115,8 +114,7 @@ export default function Navbar() {
                 <div className="md:hidden absolute top-16 left-0 w-full bg-surface-container border-b border-border-subtle shadow-xl overflow-hidden animate-in slide-in-from-top-4 duration-200 z-40">
                     <div className="flex flex-col py-space-sm">
                         <Link to="/browse" className="px-gutter py-space-md text-text-primary font-body-md text-body-md hover:bg-surface-elevated transition-colors border-b border-border-subtle/50" onClick={() => setIsMobileMenuOpen(false)}>Browse Users</Link>
-                        <Link to="/my-swaps" className="px-gutter py-space-md text-text-primary font-body-md text-body-md flex items-center gap-space-sm hover:bg-surface-elevated transition-colors border-b border-border-subtle/50" onClick={() => setIsMobileMenuOpen(false)}>
-                            <span className="material-symbols-outlined text-[20px]">swap_horiz</span>
+                        <Link to="/my-swaps" className="px-gutter py-space-md text-text-primary font-body-md text-body-md hover:bg-surface-elevated transition-colors border-b border-border-subtle/50" onClick={() => setIsMobileMenuOpen(false)}>
                             My Swaps
                         </Link>
                         <a href="#footer" className="px-gutter py-space-md text-text-primary font-body-md text-body-md hover:bg-surface-elevated transition-colors border-b border-border-subtle/50" onClick={() => setIsMobileMenuOpen(false)}>About Us</a>
