@@ -14,6 +14,7 @@ export default function Profile() {
     // Modal states
     const [offeredSki, setOfferedSki] = useState('');
     const [wantedSki, setWantedSki] = useState('');
+    const [note, setNote] = useState('');
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -25,10 +26,10 @@ export default function Profile() {
             return;
         }
 
-        const url = id ? `http://127.0.0.1:8000/api/profile/${id}/` : `http://127.0.0.1:8000/api/profile/me/`;
+        const url = id ? `${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/${id}/` : `${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/`;
 
         const p1 = fetch(url, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json());
-        const p2 = id ? fetch('http://127.0.0.1:8000/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()) : Promise.resolve(null);
+        const p2 = id ? fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()) : Promise.resolve(null);
 
         Promise.all([p1, p2])
             .then(([targetProfile, myProf]) => {
@@ -49,7 +50,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (!profile || !profile.user) return;
-        fetch(`http://127.0.0.1:8000/api/users/${profile.user.id}/ratings/`)
+        fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/users/${profile.user.id}/ratings/`)
             .then(res => res.json())
             .then(data => setRatings(data))
             .catch(err => console.error(err));
@@ -82,14 +83,14 @@ export default function Profile() {
         if (!offeredSki || !wantedSki) return;
 
         const token = localStorage.getItem('access_token');
-        const res = await fetch('http://127.0.0.1:8000/api/swaps/', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/swaps/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 receiver_id: profile.user.id,
                 skill_offered_id: offeredSki,
                 skill_wanted_id: wantedSki,
-                note: "Hey! I'd love to swap with you."
+                note: note
             })
         });
 
@@ -168,10 +169,16 @@ export default function Profile() {
 
                         <div className="mt-space-md pt-space-md border-t border-surface-container-high flex flex-wrap items-center gap-space-lg font-caption text-caption text-text-muted">
                             <div className="flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-[18px] text-tertiary">workspace_premium</span>
+                                <span className="font-label-md text-label-md text-text-primary">{profile?.trust_score && profile?.trust_score > 0 ? (Math.round(profile.trust_score * 10) / 10).toFixed(1) : 'New'}</span>
+                                <span>Trust Score</span>
+                            </div>
+                            <span className="text-border-strong">•</span>
+                            <div className="flex items-center gap-1.5">
                                 <div className="flex items-center text-status-pending">
                                     <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                                 </div>
-                                <span className="font-label-md text-label-md text-text-primary">{profile?.trust_score && profile?.trust_score > 0 ? (Math.round(profile.trust_score * 10) / 10).toFixed(1) : 'New'}</span>
+                                <span className="font-label-md text-label-md text-text-primary">{profile?.avg_rating && profile?.avg_rating > 0 ? (Math.round(profile.avg_rating * 10) / 10).toFixed(1) : 'New'}</span>
                                 <span>({ratings.length || 0} reviews)</span>
                             </div>
                             <span className="text-border-strong">•</span>
@@ -324,7 +331,14 @@ export default function Profile() {
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-sm text-label-sm text-text-secondary">Proposal Note &amp; Availability</label>
-                                    <textarea className="w-full p-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md placeholder-text-muted focus:outline-none focus:bg-surface-container resize-none" placeholder="Hey Marcus, saw you're interested in design system fundamentals. I'd love to exchange that for your Python testing expertise..." rows="3"></textarea>
+                                    <textarea
+                                        className="w-full p-3 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md placeholder-text-muted focus:outline-none focus:bg-surface-container resize-none"
+                                        placeholder="Hey Marcus, saw you're interested in design system fundamentals. I'd love to exchange that for your Python testing expertise..."
+                                        rows="3"
+                                        value={note}
+                                        onChange={(e) => setNote(e.target.value)}
+                                        required
+                                    ></textarea>
                                 </div>
                                 <div className="flex items-center justify-end gap-space-sm pt-space-sm">
                                     <button onClick={() => setShowModal(false)} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">

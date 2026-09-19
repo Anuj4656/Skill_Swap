@@ -9,7 +9,7 @@ export default function Navbar() {
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (token) {
-            fetch('http://127.0.0.1:8000/api/profile/me/', {
+            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => {
@@ -46,7 +46,7 @@ export default function Navbar() {
                     </Link>
                     <a href="#footer" className={getNavClass('#footer')}>About Us</a>
                     {userProfile?.is_staff && (
-                        <a href="http://127.0.0.1:8000/admin/" className={getNavClass('/admin')}>Admin</a>
+                        <a href={(import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + "/admin/"} className={getNavClass('/admin')}>Admin</a>
                     )}
                 </nav>
                 <div className="flex items-center gap-space-md">

@@ -17,7 +17,7 @@ export default function Browse() {
     const ITEMS_PER_PAGE = 6;
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/categories/')
+        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/categories/')
             .then(res => res.json())
             .then(data => {
                 setCategories([{ id: 'all', name: 'All' }, ...data]);
@@ -30,7 +30,7 @@ export default function Browse() {
         const token = localStorage.getItem('access_token');
         const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
-        fetch('http://127.0.0.1:8000/api/users/', { headers })
+        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/users/', { headers })
             .then(res => res.json())
             .then(data => {
                 const mappedUsers = data.map(u => ({
@@ -41,7 +41,8 @@ export default function Browse() {
                     avatar: getImageUrl(u.photo),
                     offering: u.skills_offered || [],
                     lookingFor: u.skills_wanted || [],
-                    rating: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
+                    trust_score: typeof u.trust_score === 'number' && u.trust_score > 0 ? (Math.round(u.trust_score * 10) / 10).toFixed(1) : 'New',
+                    avg_rating: typeof u.avg_rating === 'number' && u.avg_rating > 0 ? (Math.round(u.avg_rating * 10) / 10).toFixed(1) : 'New',
                     swaps: u.completed_swaps || 0
                 }));
                 setAllUsers(mappedUsers);

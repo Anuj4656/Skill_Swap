@@ -15,6 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name', required=False, allow_blank=True)
     last_name = serializers.CharField(source='user.last_name', required=False, allow_blank=True)
     trust_score = serializers.SerializerMethodField()
+    avg_rating = serializers.SerializerMethodField()
     completed_swaps = serializers.SerializerMethodField()
     completion_rate = serializers.SerializerMethodField()
     reviews_count = serializers.SerializerMethodField()
@@ -25,7 +26,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'first_name', 'last_name', 'location', 'photo', 'availability', 'is_public', 'trust_score', 'completed_swaps', 'completion_rate', 'reviews_count', 'date_joined', 'is_staff', 'skills_offered', 'skills_wanted']
+        fields = ['id', 'user', 'first_name', 'last_name', 'location', 'photo', 'availability', 'is_public', 'trust_score', 'avg_rating', 'completed_swaps', 'completion_rate', 'reviews_count', 'date_joined', 'is_staff', 'skills_offered', 'skills_wanted']
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', {})
@@ -52,19 +53,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
             return 1.0 # default to 100% completion if no swaps
         return float(completed) / total
 
+    def get_avg_rating(self, obj):
+        from django.db.models import Avg
+        avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
+        return float(avg) if avg is not None else 0.0
+
     def get_trust_score(self, obj):
         from django.db.models import Avg
         avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
         avg_score = float(avg) if avg is not None else 0.0
         
+        completed = self.get_completed_swaps(obj)
+        cancelled_or_rejected = obj.user.sent_requests.filter(status__in=['cancelled', 'rejected']).count() + \
+                                obj.user.received_requests.filter(status__in=['cancelled', 'rejected']).count()
+        total_finished = completed + cancelled_or_rejected
+        
+        # If no ratings and no finished swaps, safely return 0.0 (New profile)
+        if avg is None and total_finished == 0:
+            return 0.0
+        
         comp_rate = self.get_completion_rate(obj)
         
         # Scale comp_rate to 5.0 to align scales, apply weights
         trust = (avg_score * 0.6) + (comp_rate * 5.0 * 0.4)
-        
-        # If no ratings and no swaps, safely return 0.0 (New profile)
-        if avg is None and obj.user.sent_requests.count() == 0 and obj.user.received_requests.count() == 0:
-            return 0.0
             
         return round(min(trust, 5.0), 1)
 
@@ -113,11 +124,18 @@ class SwapRequestSerializer(serializers.ModelSerializer):
     skill_offered_id = serializers.PrimaryKeyRelatedField(queryset=Skill.objects.all(), source='skill_offered', write_only=True)
     skill_wanted = SkillSerializer(read_only=True)
     skill_wanted_id = serializers.PrimaryKeyRelatedField(queryset=Skill.objects.all(), source='skill_wanted', write_only=True)
+    is_rated = serializers.SerializerMethodField()
 
     class Meta:
         model = SwapRequest
-        fields = ['id', 'requester', 'receiver', 'receiver_id', 'skill_offered', 'skill_offered_id', 'skill_wanted', 'skill_wanted_id', 'status', 'note', 'created_at', 'updated_at']
-        read_only_fields = ['status']
+        fields = ['id', 'requester', 'receiver', 'receiver_id', 'skill_offered', 'skill_offered_id', 'skill_wanted', 'skill_wanted_id', 'status', 'note', 'is_rated', 'created_at', 'updated_at']
+        # removed 'status' from read_only_fields to allow frontend patches
+
+    def get_is_rated(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.ratings.filter(rater=request.user).exists()
+        return False
 
 class RatingSerializer(serializers.ModelSerializer):
     rater = UserSerializer(read_only=True)

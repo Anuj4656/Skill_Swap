@@ -16,7 +16,7 @@ export default function SkillCard({ user }) {
                             </div>
                         </div>
                     </div>
-                    <span className="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted">
+                    <span className="inline-flex items-center gap-1 font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-status-accepted-bg text-status-accepted whitespace-nowrap">
                         <span className="w-1.5 h-1.5 rounded-full bg-status-accepted"></span>
                         {user.availability}
                     </span>
@@ -46,8 +46,10 @@ export default function SkillCard({ user }) {
                 <div className="flex items-center justify-between mb-space-md">
                     <div className="flex items-center gap-space-xs">
                         <span className="material-symbols-outlined text-status-pending text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="font-title-md text-title-md text-text-primary">{user.rating}</span>
-                        <span className="font-caption text-caption text-text-muted">({user.swaps} swaps)</span>
+                        <span className="font-title-md text-title-md text-text-primary mr-2">{user.avg_rating}</span>
+                        <span className="material-symbols-outlined text-tertiary text-[17px]">workspace_premium</span>
+                        <span className="font-title-md text-title-md text-text-primary">{user.trust_score}</span>
+                        <span className="font-caption text-caption text-text-muted ml-0.5">({user.swaps} swaps)</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-space-xs">

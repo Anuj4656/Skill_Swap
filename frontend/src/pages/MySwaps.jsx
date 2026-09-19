@@ -8,12 +8,14 @@ export default function MySwaps() {
     const [ratingModal, setRatingModal] = useState(null);
     const [ratingScore, setRatingScore] = useState(5);
     const [ratingComment, setRatingComment] = useState("");
+    const [hoveredStar, setHoveredStar] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     React.useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (!token) return;
 
-        fetch('http://127.0.0.1:8000/api/swaps/', {
+        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/swaps/', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -21,7 +23,7 @@ export default function MySwaps() {
             .then(res => res.json())
             .then(data => {
                 // Need to know current user to map tab: 'sent' vs 'received'
-                fetch('http://127.0.0.1:8000/api/profile/me/', {
+                fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                     .then(res => res.json())
@@ -36,7 +38,11 @@ export default function MySwaps() {
                             if (swap.status === 'pending') {
                                 tab = isRequester ? 'sent' : 'received';
                             } else if (swap.status === 'accepted') {
-                                tab = isRequester ? 'sent' : 'received'; // Wait, accepted should show in their respective send/receive or a separate active tab. Current tabs are received, sent, past. We'll map accepted to current tab.
+                                tab = 'active';
+                            } else if (swap.status === 'rejected') {
+                                tab = 'rejected';
+                            } else if (swap.status === 'completed') {
+                                tab = 'past';
                             }
 
                             return {
@@ -57,10 +63,12 @@ export default function MySwaps() {
                                     tags: [isRequester ? swap.skill_wanted.name : swap.skill_offered.name]
                                 },
                                 note: swap.note || '',
+                                isRated: swap.is_rated || false,
                                 completedMode: swap.status === 'completed' || swap.status === 'rejected'
                             };
                         });
 
+                        mappedCards.sort((a, b) => b.id - a.id);
                         setCards(mappedCards);
                     });
             })
@@ -69,7 +77,7 @@ export default function MySwaps() {
 
     const handleUpdateSwap = (id, status) => {
         const token = localStorage.getItem('access_token');
-        fetch(`http://127.0.0.1:8000/api/swaps/${id}/`, {
+        fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${id}/`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -85,7 +93,7 @@ export default function MySwaps() {
                             ...c,
                             status: updated.status,
                             completedMode: updated.status === 'completed' || updated.status === 'rejected',
-                            tab: updated.status === 'rejected' ? 'past' : c.tab
+                            tab: updated.status === 'completed' ? 'past' : updated.status === 'rejected' ? 'rejected' : updated.status === 'accepted' ? 'active' : c.tab
                         };
                     }
                     return c;
@@ -95,7 +103,7 @@ export default function MySwaps() {
     };
     const handleDeleteSwap = (id) => {
         const token = localStorage.getItem('access_token');
-        fetch(`http://127.0.0.1:8000/api/swaps/${id}/`, {
+        fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => {
@@ -107,19 +115,21 @@ export default function MySwaps() {
 
     const submitRating = (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const token = localStorage.getItem('access_token');
-        fetch(`http://127.0.0.1:8000/api/swaps/${ratingModal}/rate/`, {
+        fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/swaps/${ratingModal?.id}/rate/`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ score: ratingScore, comment: ratingComment })
         }).then(res => {
             if (res.ok) {
-                setCards(prev => prev.map(c => c.id === ratingModal ? { ...c, isRated: true } : c));
+                setCards(prev => prev.map(c => c.id === ratingModal?.id ? { ...c, isRated: true } : c));
                 setRatingModal(null);
                 setRatingScore(5);
                 setRatingComment("");
             }
-        }).catch(err => console.error("Error rating swap:", err));
+        }).catch(err => console.error("Error rating swap:", err))
+            .finally(() => setIsSubmitting(false));
     };
 
 
@@ -155,26 +165,23 @@ export default function MySwaps() {
                                     <span>Sent</span>
                                 </button>
                                 <button
+                                    onClick={() => setActiveTab('active')}
+                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'active' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
+                                >
+                                    <span>Active</span>
+                                </button>
+                                <button
                                     onClick={() => setActiveTab('past')}
                                     className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'past' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
                                 >
                                     <span>Completed</span>
                                 </button>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-center gap-space-sm">
-                            <div className="flex items-center gap-1.5">
-                                <span className="font-caption text-caption uppercase text-text-muted tracking-wider mr-1">Status</span>
-                                {['all', 'pending', 'accepted', 'completed'].map(status => (
-                                    <button
-                                        key={status}
-                                        onClick={() => setActiveStatus(status)}
-                                        className={`px-3 py-1 rounded-full font-label-sm text-label-sm transition-colors ${activeStatus === status ? 'bg-primary text-on-primary' : 'bg-surface-elevated text-text-muted hover:text-text-primary'}`}
-                                    >
-                                        {status.charAt(0).toUpperCase() + status.slice(1)} {status === 'all' && 'Statuses'}
-                                    </button>
-                                ))}
+                                <button
+                                    onClick={() => setActiveTab('rejected')}
+                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'rejected' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
+                                >
+                                    <span>Rejected</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -281,12 +288,25 @@ export default function MySwaps() {
                                     </div>
                                 )}
 
+                                {card.status === 'accepted' && card.tab === 'active' && (
+                                    <div className="flex flex-col sm:flex-row items-center justify-between pt-space-sm gap-space-md border-t border-surface-container-high mt-space-sm">
+                                        <div className="flex items-center gap-space-md text-caption font-caption text-text-muted">
+                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[15px]">handshake</span> Swap In Progress</span>
+                                        </div>
+                                        <div className="flex items-center gap-space-sm w-full sm:w-auto">
+                                            <button onClick={() => handleUpdateSwap(card.id, 'completed')} className="w-full sm:w-auto px-space-md py-2 rounded-lg font-label-md text-label-md bg-status-accepted-bg text-status-accepted hover:bg-status-accepted/20 transition-colors flex items-center justify-center gap-1">
+                                                <span className="material-symbols-outlined text-[18px]">done_all</span> Mark Session Complete
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {card.completedMode && !card.isRated && card.status === 'completed' && (
                                     <div className="bg-surface-elevated/50 rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mt-2">
                                         <div className="flex items-center gap-space-md">
                                             <span className="font-label-md text-label-md text-text-primary">Session Completed. Verify the exchange to build trust!</span>
                                         </div>
-                                        <button onClick={() => setRatingModal(card.id)} className="px-space-md py-2 rounded-lg font-label-md bg-primary text-on-primary transition-colors hover:opacity-90">
+                                        <button onClick={() => setRatingModal(card)} className="px-space-md py-2 rounded-lg font-label-md bg-primary text-on-primary transition-colors hover:opacity-90">
                                             Leave a Review
                                         </button>
                                     </div>
@@ -321,23 +341,55 @@ export default function MySwaps() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-gutter transition-opacity duration-200">
                     <div className="bg-surface-elevated rounded-xl max-w-md w-full p-space-lg shadow-2xl">
                         <div className="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
-                            <h2 className="font-title-md text-text-primary">Leave a Review</h2>
+                            <div className="flex items-center gap-space-sm">
+                                <h2 className="font-title-md text-text-primary">Leave a Review</h2>
+                                {ratingModal?.avatar && (
+                                    <div className="flex items-center gap-2 max-w-[200px]">
+                                        <span className="text-text-muted font-caption text-caption">for</span>
+                                        <img src={ratingModal.avatar} alt="Profile" className="w-6 h-6 rounded-full object-cover shadow-sm" />
+                                        <span className="font-label-md text-label-md text-text-primary truncate">{ratingModal.title}</span>
+                                    </div>
+                                )}
+                            </div>
                             <button onClick={() => setRatingModal(null)} className="p-1 rounded bg-surface-container-high hover:bg-surface-container-highest transition-colors text-text-secondary" type="button">
                                 <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
                         <form onSubmit={submitRating} className="flex flex-col gap-space-md">
                             <div>
-                                <label className="block font-label-sm text-text-secondary mb-2">Rating (1 to 5)</label>
-                                <input type="number" min="1" max="5" required value={ratingScore} onChange={(e) => setRatingScore(e.target.value)} className="w-full bg-surface-container-lowest border border-surface-container-high focus:border-border-strong rounded-lg px-space-md py-2 text-text-primary font-body-md transition-colors outline-none" />
+                                <label className="block font-label-sm text-text-secondary mb-2">Rating</label>
+                                <div className="flex items-center gap-1">
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                        <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() => setRatingScore(star)}
+                                            onMouseEnter={() => setHoveredStar(star)}
+                                            onMouseLeave={() => setHoveredStar(0)}
+                                            className="focus:outline-none transition-transform hover:scale-110 active:scale-95"
+                                        >
+                                            <span
+                                                className={`material-symbols-outlined text-[32px] transition-colors ${(hoveredStar || ratingScore) >= star
+                                                    ? 'text-status-pending drop-shadow-sm'
+                                                    : 'text-surface-container-highest'
+                                                    }`}
+                                                style={{ fontVariationSettings: "'FILL' 1" }}
+                                            >
+                                                star
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                             <div>
                                 <label className="block font-label-sm text-text-secondary mb-2">Comment</label>
                                 <textarea rows="3" required value={ratingComment} onChange={(e) => setRatingComment(e.target.value)} className="w-full bg-surface-container-lowest border border-surface-container-high focus:border-border-strong rounded-lg px-space-md py-2 text-text-primary font-body-md transition-colors outline-none resize-none" placeholder="Provide feedback about the session..." />
                             </div>
                             <div className="flex items-center justify-end gap-space-sm pt-space-sm border-t border-surface-container-high">
-                                <button onClick={() => setRatingModal(null)} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary bg-surface-container-high" type="button">Cancel</button>
-                                <button type="submit" className="px-space-md py-2 rounded-lg bg-primary text-on-primary">Submit Review</button>
+                                <button onClick={() => setRatingModal(null)} disabled={isSubmitting} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary bg-surface-container-high disabled:opacity-50" type="button">Cancel</button>
+                                <button type="submit" disabled={isSubmitting} className="px-space-md py-2 rounded-lg bg-primary text-on-primary disabled:opacity-75 flex items-center gap-2">
+                                    {isSubmitting ? <span className="material-symbols-outlined text-[18px] animate-spin">refresh</span> : 'Submit Review'}
+                                </button>
                             </div>
                         </form>
                     </div>

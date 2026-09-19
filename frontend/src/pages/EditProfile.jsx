@@ -26,10 +26,10 @@ export default function EditProfile() {
         if (!token) return navigate('/login');
 
         Promise.all([
-            fetch('http://127.0.0.1:8000/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://127.0.0.1:8000/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://127.0.0.1:8000/api/profile/me/offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://127.0.0.1:8000/api/profile/me/wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
+            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
         ])
             .then(async ([profileRes, skillsRes, offeredRes, wantedRes]) => {
                 const data = await profileRes.json();
@@ -62,7 +62,7 @@ export default function EditProfile() {
     const handleAddOffered = async () => {
         if (!selectedOfferedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch('http://127.0.0.1:8000/api/profile/me/offered/', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/offered/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedOfferedSkill })
@@ -75,7 +75,7 @@ export default function EditProfile() {
 
     const handleRemoveOffered = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/profile/me/offered/${id}/`, {
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -85,7 +85,7 @@ export default function EditProfile() {
     const handleAddWanted = async () => {
         if (!selectedWantedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch('http://127.0.0.1:8000/api/profile/me/wanted/', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/wanted/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedWantedSkill })
@@ -98,7 +98,7 @@ export default function EditProfile() {
 
     const handleRemoveWanted = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`http://127.0.0.1:8000/api/profile/me/wanted/${id}/`, {
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -123,7 +123,7 @@ export default function EditProfile() {
             photo: typeof photo === 'string' ? photo : null
         };
 
-        fetch('http://127.0.0.1:8000/api/profile/me/', {
+        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
