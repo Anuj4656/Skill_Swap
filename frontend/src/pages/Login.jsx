@@ -100,7 +100,7 @@ export default function Login() {
 
                 <div className="flex flex-col items-center text-center mb-space-lg relative z-10">
                     <div className="w-12 h-12 rounded-lg bg-surface-elevated flex items-center justify-center p-2 mb-space-sm shadow-sm">
-                        <img alt="Skill Swap Logo" className="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XAXuyozRnk2Os9KtnusOxzt1cPCQcK6fRnB61HaS2qcjJ5PLbXUDPNDjeTVaM0K3py9o6JHtF_JO7xOHkjKnDDA_QNJk2rbiheg0pqhWIFImLXhcYTipuQJS_sGb0GSpNfJAkku7naH1tQp87cyTjkYU_yqlBt4sQMfIodL261L9PQBHcRLrv8GO0C2xnK8Od14_Y-_ZeI7to1qacdhbaPl7U73hBPuVgNtHIFNoOxtfV7kMwc01WcWzOr" />
+                        <img alt="Skill Swap Logo" className="w-full h-full object-contain" src="/favicon.svg" />
                     </div>
                     <h1 className="font-headline-lg text-headline-lg text-text-primary tracking-tight">Skill Swap</h1>
                 </div>

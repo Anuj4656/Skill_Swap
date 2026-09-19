@@ -35,7 +35,7 @@ export default function Navbar() {
         <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md border-b border-border-subtle">
             <div className="h-16 max-w-6xl mx-auto px-gutter flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-space-sm">
-                    <img alt="Skill Swap Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XAXuyozRnk2Os9KtnusOxzt1cPCQcK6fRnB61HaS2qcjJ5PLbXUDPNDjeTVaM0K3py9o6JHtF_JO7xOHkjKnDDA_QNJk2rbiheg0pqhWIFImLXhcYTipuQJS_sGb0GSpNfJAkku7naH1tQp87cyTjkYU_yqlBt4sQMfIodL261L9PQBHcRLrv8GO0C2xnK8Od14_Y-_ZeI7to1qacdhbaPl7U73hBPuVgNtHIFNoOxtfV7kMwc01WcWzOr" />
+                    <img alt="Skill Swap Logo" className="h-8 w-auto object-contain" src="/favicon.svg" />
                     <span className="font-title-md text-title-md text-text-primary tracking-tight">Skill Swap</span>
                 </Link>
                 <nav className="flex items-center gap-space-lg h-full">

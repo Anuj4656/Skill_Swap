@@ -46,30 +46,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def get_completion_rate(self, obj):
         completed = self.get_completed_swaps(obj)
-        cancelled_or_rejected = obj.user.sent_requests.filter(status__in=['cancelled', 'rejected']).count() + \
-                                obj.user.received_requests.filter(status__in=['cancelled', 'rejected']).count()
+        cancelled_or_rejected = len([r for r in obj.user.sent_requests.all() if r.status in ['cancelled', 'rejected']]) + \
+                                len([r for r in obj.user.received_requests.all() if r.status in ['cancelled', 'rejected']])
         total = completed + cancelled_or_rejected
         if total == 0:
             return 1.0 # default to 100% completion if no swaps
         return float(completed) / total
 
     def get_avg_rating(self, obj):
-        from django.db.models import Avg
-        avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
-        return float(avg) if avg is not None else 0.0
+        ratings = obj.user.ratings_received.all()
+        if not ratings: return 0.0
+        return sum([r.score for r in ratings]) / len(ratings)
 
     def get_trust_score(self, obj):
-        from django.db.models import Avg
-        avg = obj.user.ratings_received.aggregate(Avg('score'))['score__avg']
-        avg_score = float(avg) if avg is not None else 0.0
+        ratings = obj.user.ratings_received.all()
+        avg_score = sum([r.score for r in ratings]) / len(ratings) if ratings else 0.0
         
         completed = self.get_completed_swaps(obj)
-        cancelled_or_rejected = obj.user.sent_requests.filter(status__in=['cancelled', 'rejected']).count() + \
-                                obj.user.received_requests.filter(status__in=['cancelled', 'rejected']).count()
+        cancelled_or_rejected = len([r for r in obj.user.sent_requests.all() if r.status in ['cancelled', 'rejected']]) + \
+                                len([r for r in obj.user.received_requests.all() if r.status in ['cancelled', 'rejected']])
         total_finished = completed + cancelled_or_rejected
         
         # If no ratings and no finished swaps, safely return 0.0 (New profile)
-        if avg is None and total_finished == 0:
+        if not ratings and total_finished == 0:
             return 0.0
         
         comp_rate = self.get_completion_rate(obj)
@@ -80,11 +79,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return round(min(trust, 5.0), 1)
 
     def get_completed_swaps(self, obj):
-        return obj.user.sent_requests.filter(status='completed').count() + \
-               obj.user.received_requests.filter(status='completed').count()
+        return len([r for r in obj.user.sent_requests.all() if r.status == 'completed']) + \
+               len([r for r in obj.user.received_requests.all() if r.status == 'completed'])
 
     def get_reviews_count(self, obj):
-        return obj.user.ratings_received.count()
+        return len(obj.user.ratings_received.all())
 
 
 class SkillCategorySerializer(serializers.ModelSerializer):

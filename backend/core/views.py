@@ -25,15 +25,21 @@ class ProfileMeView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        profile, created = UserProfile.objects.get_or_create(user=self.request.user)
-        return profile
+        qs = UserProfile.objects.select_related('user').prefetch_related(
+            'skills_offered__skill', 'skills_wanted__skill', 
+            'user__sent_requests', 'user__received_requests', 'user__ratings_received'
+        )
+        return qs.get(user=self.request.user)
 
     def perform_destroy(self, instance):
         user = self.request.user
         user.delete()
 
 class ProfileDetailView(generics.RetrieveAPIView):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related('user').prefetch_related(
+        'skills_offered__skill', 'skills_wanted__skill', 
+        'user__sent_requests', 'user__received_requests', 'user__ratings_received'
+    )
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -65,7 +71,7 @@ class UserSkillOfferedViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserSkillOffered.objects.filter(user=self.request.user.profile)
+        return UserSkillOffered.objects.filter(user=self.request.user.profile).select_related('skill')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user.profile)
@@ -75,7 +81,7 @@ class UserSkillWantedViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserSkillWanted.objects.filter(user=self.request.user.profile)
+        return UserSkillWanted.objects.filter(user=self.request.user.profile).select_related('skill')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user.profile)
@@ -85,7 +91,11 @@ class UserBrowseView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        qs = UserProfile.objects.filter(is_public=True)
+        qs = UserProfile.objects.select_related('user').prefetch_related(
+            'skills_offered__skill', 'skills_wanted__skill', 
+            'user__sent_requests', 'user__received_requests', 'user__ratings_received'
+        ).filter(is_public=True)
+        
         qs = qs.exclude(skills_offered__isnull=True)
         if self.request.user.is_authenticated:
             qs = qs.exclude(user=self.request.user)
