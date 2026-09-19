@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 const Modal = ({
     isOpen,
@@ -29,7 +30,7 @@ const Modal = ({
         onClose();
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#070707]/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="bg-surface-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 border border-border-subtle">
                 <div className="p-space-lg">
@@ -66,7 +67,8 @@ const Modal = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

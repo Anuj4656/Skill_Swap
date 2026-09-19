@@ -70,7 +70,7 @@ export default function Navbar() {
                                         type: 'confirm',
                                         title: 'Confirm Logout',
                                         message: 'Are you sure you want to log out of your account?',
-                                        isDestructive: false,
+                                        isDestructive: true,
                                         onConfirm: () => {
                                             localStorage.removeItem('access_token');
                                             localStorage.removeItem('refresh_token');
