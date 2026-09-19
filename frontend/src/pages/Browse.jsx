@@ -109,8 +109,8 @@ export default function Browse() {
                     </section>
 
                     <section className="flex flex-col gap-space-md mb-space-xl">
-                        <div className="flex flex-col sm:flex-row items-stretch gap-space-sm">
-                            <div className="relative flex-1 flex">
+                        <div className="flex flex-col lg:flex-row items-stretch gap-space-md">
+                            <div className="relative flex-1 flex flex-row">
                                 <select
                                     className="h-12 px-space-md bg-surface-elevated rounded-l-xl border-r border-border-subtle text-text-secondary font-label-md text-label-md focus:outline-none cursor-pointer transition-colors"
                                     value={searchMode}
@@ -135,8 +135,8 @@ export default function Browse() {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-space-sm">
-                                <div className="relative min-w-[170px]">
+                            <div className="flex flex-col sm:flex-row items-stretch gap-space-sm">
+                                <div className="relative flex-1 sm:min-w-[170px]">
                                     <select
                                         className="w-full h-12 pl-space-md pr-11 bg-surface-container rounded-xl text-text-secondary font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-elevated cursor-pointer transition-colors"
                                         value={availability}

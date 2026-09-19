@@ -5,7 +5,7 @@ export default function SkillCard({ user }) {
     return (
         <article className="bg-surface-card rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-elevated transition-colors duration-200">
             <div>
-                <div className="flex items-start justify-between gap-space-sm mb-space-md">
+                <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-space-sm mb-space-md">
                     <div className="flex items-center gap-space-sm">
                         <img className="w-12 h-12 rounded-full object-cover bg-surface-container" alt={user.name} src={user.avatar} />
                         <div>
