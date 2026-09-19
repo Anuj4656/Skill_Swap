@@ -165,7 +165,7 @@ export default function Browse() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-space-xs overflow-x-auto pb-1" id="category-pills">
+                        <div className="flex items-center gap-space-xs overflow-x-auto scrollbar-hide pb-1" id="category-pills">
                             {categories.map(cat => (
                                 <button
                                     key={cat.id}
