@@ -75,7 +75,7 @@ export default function Navbar() {
                             <Link to="/profile" className="flex items-center gap-space-sm cursor-pointer group" onClick={() => setIsMobileMenuOpen(false)}>
                                 <img alt="Profile" className="w-8 h-8 sm:w-8 sm:h-8 rounded-full object-cover border border-border-subtle" src={getImageUrl(userProfile.photo)} />
                                 <span className="font-label-md text-label-md text-text-primary group-hover:text-primary transition-colors">
-                                    {userProfile.first_name} <span className="hidden lg:inline">{userProfile.last_name}</span>
+                                    {userProfile.first_name} {userProfile.last_name}
                                 </span>
                             </Link>
                             <button
