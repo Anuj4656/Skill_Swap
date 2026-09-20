@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils';
-import { SkeletonEditForm } from '../components/Skeletons';
+import { SkeletonEditForm, Spinner } from '../components/Skeletons';
 import Modal from '../components/Modal';
 
 export default function EditProfile() {

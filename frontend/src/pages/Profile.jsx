@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { SkeletonProfile } from '../components/Skeletons';
+import { SkeletonProfile, Spinner } from '../components/Skeletons';
 import { getImageUrl } from '../utils';
 
 export default function Profile() {
