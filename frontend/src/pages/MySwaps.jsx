@@ -170,39 +170,42 @@ export default function MySwaps() {
                     </div>
 
                     <div className="flex flex-col gap-space-md mb-space-lg">
-                        <div className="flex items-center justify-center overflow-x-auto no-scrollbar bg-surface-container-lowest rounded-xl p-1.5">
-                            <div className="flex items-center gap-1.5">
-                                <button
-                                    onClick={() => setActiveTab('received')}
-                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'received' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
-                                >
-                                    <span>Received</span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('sent')}
-                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'sent' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
-                                >
-                                    <span>Sent</span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('active')}
-                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'active' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
-                                >
-                                    <span>Active</span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('past')}
-                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'past' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
-                                >
-                                    <span>Completed</span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('rejected')}
-                                    className={`flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'rejected' ? 'bg-surface-elevated text-text-primary shadow-sm' : 'text-text-muted hover:text-text-primary'}`}
-                                >
-                                    <span>Rejected</span>
-                                </button>
-                            </div>
+                        <div className="flex items-center gap-space-xs overflow-x-auto scrollbar-hide pb-1">
+                            <button
+                                onClick={() => setActiveTab('received')}
+                                className={`whitespace-nowrap flex items-center gap-space-xs px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeTab === 'received' ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                type="button"
+                            >
+                                <span>Received</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('sent')}
+                                className={`whitespace-nowrap flex items-center gap-space-xs px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeTab === 'sent' ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                type="button"
+                            >
+                                <span>Sent</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('active')}
+                                className={`whitespace-nowrap flex items-center gap-space-xs px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeTab === 'active' ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                type="button"
+                            >
+                                <span>Active</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('past')}
+                                className={`whitespace-nowrap flex items-center gap-space-xs px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeTab === 'past' ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                type="button"
+                            >
+                                <span>Completed</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('rejected')}
+                                className={`whitespace-nowrap flex items-center gap-space-xs px-space-md py-1.5 rounded-full font-label-sm text-label-sm transition-colors ${activeTab === 'rejected' ? 'bg-primary text-on-primary' : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-elevated'}`}
+                                type="button"
+                            >
+                                <span>Rejected</span>
+                            </button>
                         </div>
                     </div>
 
