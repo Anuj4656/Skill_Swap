@@ -85,7 +85,9 @@ class SkillCategoryListView(generics.ListAPIView):
     serializer_class = SkillCategorySerializer
     permission_classes = [permissions.AllowAny]
 
-class SkillViewSet(viewsets.ModelViewSet):
+from rest_framework import viewsets, mixins
+
+class SkillViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
