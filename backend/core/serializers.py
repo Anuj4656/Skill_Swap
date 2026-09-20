@@ -14,6 +14,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     first_name = serializers.CharField(source='user.first_name', required=False, allow_blank=True)
     last_name = serializers.CharField(source='user.last_name', required=False, allow_blank=True)
+    username = serializers.CharField(source='user.username', required=False, allow_blank=False)
+    email = serializers.EmailField(source='user.email', required=False, allow_blank=True)
     trust_score = serializers.SerializerMethodField()
     avg_rating = serializers.SerializerMethodField()
     completed_swaps = serializers.SerializerMethodField()
@@ -34,6 +36,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.user.first_name = user_data['first_name']
         if 'last_name' in user_data:
             instance.user.last_name = user_data['last_name']
+        if 'username' in user_data:
+            instance.user.username = user_data['username']
+        if 'email' in user_data:
+            instance.user.email = user_data['email']
         instance.user.save()
 
         return super().update(instance, validated_data)

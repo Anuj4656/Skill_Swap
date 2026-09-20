@@ -8,6 +8,25 @@ from .serializers import (
     UserSkillOfferedSerializer, UserSkillWantedSerializer, SwapRequestSerializer, RatingSerializer
 )
 from django.db.models import Q
+from rest_framework.views import APIView
+
+class ChangePasswordView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        
+        if not old_password or not new_password:
+            return Response({'error': 'Old password and new password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if not user.check_password(old_password):
+            return Response({'error': 'Incorrect current password.'}, status=status.HTTP_403_FORBIDDEN)
+            
+        user.set_password(new_password)
+        user.save()
+        return Response({'status': 'Password updated successfully.'})
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

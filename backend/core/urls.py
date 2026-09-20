@@ -10,10 +10,11 @@ router.register(r'profile/me/wanted', views.UserSkillWantedViewSet, basename='us
 router.register(r'swaps', views.SwapRequestViewSet, basename='swaprequest')
 
 urlpatterns = [
-    # Auth register
+    # Auth register & tokens
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/change-password/', views.ChangePasswordView.as_view(), name='change-password'),
     # Profile
     path('profile/me/', views.ProfileMeView.as_view(), name='profile-me'),
     path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='profile-detail'),

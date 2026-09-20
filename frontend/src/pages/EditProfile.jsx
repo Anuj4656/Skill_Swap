@@ -14,6 +14,8 @@ export default function EditProfile() {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [location, setLocation] = useState('');
     const [availability, setAvailability] = useState('flexible');
     const [isPublic, setIsPublic] = useState(true);
@@ -46,6 +48,8 @@ export default function EditProfile() {
 
                 setFirstName(data.user?.first_name || '');
                 setLastName(data.user?.last_name || '');
+                setUsername(data.user?.username || '');
+                setEmail(data.user?.email || '');
                 setLocation(data.location || '');
                 setAvailability(data.availability || 'flexible');
                 setIsPublic(data.is_public);
@@ -135,6 +139,8 @@ export default function EditProfile() {
         const payload = {
             first_name: firstName.trim(),
             last_name: lastName.trim(),
+            username: username.trim(),
+            email: email.trim(),
             location: location,
             availability: availability,
             is_public: isPublic,
@@ -268,6 +274,20 @@ export default function EditProfile() {
                                                     Last Name
                                                 </label>
                                                 <input value={lastName} onChange={e => setLastName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" placeholder="Last" type="text" />
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="username">
+                                                    Username
+                                                </label>
+                                                <input value={username} onChange={e => setUsername(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="username" placeholder="Username" type="text" />
+                                            </div>
+                                            <div>
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="email">
+                                                    Email Address
+                                                </label>
+                                                <input value={email} onChange={e => setEmail(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="email" placeholder="Email" type="email" />
                                             </div>
                                         </div>
                                         <div>
@@ -444,6 +464,14 @@ export default function EditProfile() {
                                 Profile details are shared exclusively with confirmed swap peers and in browse mode.
                             </div>
                             <div className="flex items-center gap-space-sm w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 border-border-subtle pt-3 sm:pt-0 mt-2 sm:mt-0">
+                                <button
+                                    className="px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
+                                    onClick={() => alert("The Change Password Modal logic will be implemented pending final mock approval.")}
+                                    type="button"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">key</span>
+                                    <span className="hidden sm:inline">Change Password</span>
+                                </button>
                                 <button
                                     className="sm:mr-4 px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors"
                                     onClick={handleDeleteAccount}

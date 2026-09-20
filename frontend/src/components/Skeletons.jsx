@@ -151,7 +151,17 @@ export const SkeletonEditForm = () => {
                                     <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-surface-elevated shrink-0"></div>
                                     {/* Inputs */}
                                     <div className="space-y-space-md w-full max-w-lg mt-2 sm:mt-0">
-                                        <div className="grid grid-cols-2 gap-space-md">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                                            <div>
+                                                <div className="h-3 w-20 bg-surface-container rounded-sm mb-1.5"></div>
+                                                <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
+                                            </div>
+                                            <div>
+                                                <div className="h-3 w-20 bg-surface-container rounded-sm mb-1.5"></div>
+                                                <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
                                             <div>
                                                 <div className="h-3 w-20 bg-surface-container rounded-sm mb-1.5"></div>
                                                 <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
