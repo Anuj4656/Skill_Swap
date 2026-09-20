@@ -151,7 +151,25 @@ class SwapRequestViewSet(viewsets.ModelViewSet):
         return SwapRequest.objects.filter(Q(requester=user) | Q(receiver=user))
 
     def perform_create(self, serializer):
+        from rest_framework.exceptions import ValidationError
+        receiver = serializer.validated_data.get('receiver')
+        if receiver == self.request.user:
+            raise ValidationError("You cannot initiate a swap request with yourself.")
         serializer.save(requester=self.request.user, status='pending')
+
+    def perform_update(self, serializer):
+        from rest_framework.exceptions import ValidationError, PermissionDenied
+        instance = self.get_object()
+        new_status = serializer.validated_data.get('status')
+
+        if new_status and new_status != instance.status:
+            if new_status in ['accepted', 'rejected'] and self.request.user != instance.receiver:
+                raise PermissionDenied("Only the receiver can accept or reject this request.")
+            
+            if new_status == 'completed' and instance.status != 'accepted':
+                raise ValidationError("You can only complete an active, accepted swap.")
+                
+        serializer.save()
 
     def perform_destroy(self, instance):
         if instance.requester == self.request.user and instance.status == 'pending':
@@ -187,9 +205,19 @@ class RatingCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
+        from rest_framework.exceptions import ValidationError, PermissionDenied
         swap_id = self.kwargs['pk']
         swap = SwapRequest.objects.get(pk=swap_id)
-        # simplistic validation
+        
+        if self.request.user not in [swap.requester, swap.receiver]:
+            raise PermissionDenied("You are not part of this swap session.")
+            
+        if swap.status != 'completed':
+            raise ValidationError("You can only rate a swap session after it has been completed.")
+            
+        if Rating.objects.filter(swap=swap, rater=self.request.user).exists():
+            raise ValidationError("You have already submitted a rating for this swap.")
+
         ratee = swap.receiver if self.request.user == swap.requester else swap.requester
         serializer.save(swap=swap, rater=self.request.user, ratee=ratee)
 
