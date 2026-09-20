@@ -35,10 +35,22 @@ class RegisterView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        username = data.get('username', '').strip()
+        email = data.get('email', '').strip()
+        
+        if not username:
+            return Response({'error': 'Username is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if User.objects.filter(username__iexact=username).exists():
+            return Response({'error': 'This username is already taken.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if email and User.objects.filter(email__iexact=email).exists():
+            return Response({'error': 'This email is already in use by another account.'}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.create_user(
-            username=data['username'], 
-            password=data['password'], 
-            email=data.get('email', ''),
+            username=username, 
+            password=data.get('password', ''), 
+            email=email,
             first_name=data.get('first_name', ''),
             last_name=data.get('last_name', '')
         )
