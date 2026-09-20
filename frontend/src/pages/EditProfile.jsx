@@ -1,20 +1,35 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils';
+import { SkeletonEditForm, Spinner } from '../components/Skeletons';
+import Modal from '../components/Modal';
+import { useToast } from '../contexts/ToastContext';
 
 export default function EditProfile() {
+    const { showToast } = useToast();
     const navigate = useNavigate();
+    const [modalConfig, setModalConfig] = useState({ isOpen: false });
+    const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
+
     const [isSaving, setIsSaving] = useState(false);
     const [saveText, setSaveText] = useState('Save Profile');
     const [loading, setLoading] = useState(true);
 
-    const [fullName, setFullName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [location, setLocation] = useState('');
     const [availability, setAvailability] = useState('flexible');
     const [isPublic, setIsPublic] = useState(true);
     const [photo, setPhoto] = useState('');
 
-    // Skills state
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+
     const [offered, setOffered] = useState([]);
     const [wanted, setWanted] = useState([]);
     const [availableSkills, setAvailableSkills] = useState([]);
@@ -26,10 +41,10 @@ export default function EditProfile() {
         if (!token) return navigate('/login');
 
         Promise.all([
-            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
+            fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/skills/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/offered/', { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/wanted/', { headers: { 'Authorization': `Bearer ${token}` } })
         ])
             .then(async ([profileRes, skillsRes, offeredRes, wantedRes]) => {
                 const data = await profileRes.json();
@@ -39,13 +54,14 @@ export default function EditProfile() {
 
                 const skillsFinal = Array.isArray(skillsData) ? skillsData : skillsData.results || [];
 
-                const fName = data.user?.first_name || '';
-                const lName = data.user?.last_name || '';
-                setFullName([fName, lName].filter(Boolean).join(' '));
+                setFirstName(data.user?.first_name || '');
+                setLastName(data.user?.last_name || '');
+                setUsername(data.user?.username || '');
+                setEmail(data.user?.email || '');
                 setLocation(data.location || '');
                 setAvailability(data.availability || 'flexible');
                 setIsPublic(data.is_public);
-                setPhoto(getImageUrl(data.photo));
+                setPhoto(data.photo || '');
 
                 setAvailableSkills(skillsFinal);
                 setOffered(Array.isArray(offeredData) ? offeredData : offeredData.results || []);
@@ -62,7 +78,7 @@ export default function EditProfile() {
     const handleAddOffered = async () => {
         if (!selectedOfferedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/offered/', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/offered/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedOfferedSkill })
@@ -75,7 +91,7 @@ export default function EditProfile() {
 
     const handleRemoveOffered = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')}/api/profile/me/offered/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -85,7 +101,7 @@ export default function EditProfile() {
     const handleAddWanted = async () => {
         if (!selectedWantedSkill) return;
         const token = localStorage.getItem('access_token');
-        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/wanted/', {
+        const res = await fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/wanted/', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ skill_id: selectedWantedSkill })
@@ -98,11 +114,51 @@ export default function EditProfile() {
 
     const handleRemoveWanted = async (id) => {
         const token = localStorage.getItem('access_token');
-        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')}/api/profile/me/wanted/${id}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (res.ok) setWanted(wanted.filter(item => item.id !== id));
+        if (res.ok) {
+            setWanted(prev => prev.filter(item => item.id !== id));
+            showToast('Wanted skill removed.');
+        }
+    };
+
+    const handleChangePassword = () => {
+        setPasswordError('');
+        setIsSubmittingPassword(true);
+        const token = localStorage.getItem('access_token');
+        fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/auth/change-password/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                old_password: oldPassword,
+                new_password: newPassword,
+                confirm_password: newPassword
+            })
+        })
+            .then(async (res) => {
+                if (res.ok) {
+                    showToast('Password changed securely!');
+                    setOldPassword('');
+                    setNewPassword('');
+                    setTimeout(() => {
+                        setPasswordModalOpen(false);
+                    }, 500);
+                } else {
+                    const data = await res.json();
+                    setPasswordError(data.old_password?.[0] || data.new_password?.[0] || data.non_field_errors?.[0] || data.error || "Failed to update password");
+                }
+            })
+            .catch(err => {
+                setPasswordError("Network error occurred.");
+            })
+            .finally(() => {
+                setIsSubmittingPassword(false);
+            });
     };
 
     const handleSave = () => {
@@ -110,20 +166,18 @@ export default function EditProfile() {
         setSaveText('Saving...');
 
         const token = localStorage.getItem('access_token');
-        const nameParts = fullName.trim().split(' ');
-        const first = nameParts[0] || '';
-        const last = nameParts.slice(1).join(' ');
-
         const payload = {
-            first_name: first,
-            last_name: last,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            username: username.trim(),
+            email: email.trim(),
             location: location,
             availability: availability,
             is_public: isPublic,
             photo: typeof photo === 'string' ? photo : null
         };
 
-        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
+        fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/', {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -134,6 +188,7 @@ export default function EditProfile() {
             .then(res => {
                 if (res.ok) {
                     setSaveText('Saved!');
+                    showToast('Profile updated successfully!');
                     setTimeout(() => {
                         setIsSaving(false);
                         setSaveText('Save Profile');
@@ -151,13 +206,41 @@ export default function EditProfile() {
             });
     };
 
-    if (loading) return null;
+    const handleDeleteAccount = () => {
+        setModalConfig({
+            isOpen: true,
+            type: 'confirm',
+            title: 'Delete Account',
+            message: 'Are you sure you want to permanently delete your account? This action cannot be undone.',
+            isDestructive: true,
+            onConfirm: async () => {
+                const token = localStorage.getItem('access_token');
+                try {
+                    const res = await fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/profile/me/', {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok || res.status === 204) {
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('refresh_token');
+                        navigate('/login');
+                    } else {
+                        showToast("Failed to delete account. Please try again.", "error");
+                    }
+                } catch (e) {
+                    console.error(e);
+                    showToast("Error occurring while trying to delete account.", "error");
+                }
+            }
+        });
+    };
+
+    if (loading) return <SkeletonEditForm />;
 
     return (
         <main className="w-full pt-16 bg-surface-base min-h-screen">
             <div className="max-w-6xl mx-auto px-gutter py-space-xl">
                 <div className="flex flex-col w-full">
-
                     {/* Breadcrumb and Context Nav */}
                     <div className="flex items-center justify-between pb-space-lg">
                         <nav aria-label="Breadcrumb" className="flex items-center">
@@ -166,14 +249,11 @@ export default function EditProfile() {
                                 <span className="font-semibold">Back to Profile</span>
                             </Link>
                         </nav>
-                        <div className="flex items-center gap-space-sm">
-                        </div>
                     </div>
 
                     {/* Main Profile Form Wrapper */}
                     <div className="space-y-space-xl">
-
-                        {/* Header Card: Identity, Location, Availability, Trust */}
+                        {/* Header Card */}
                         <section className="bg-surface-card rounded-xl p-space-lg sm:p-space-xl shadow-md relative overflow-hidden">
                             <div className="flex flex-col lg:flex-row gap-space-xl items-start justify-between">
                                 {/* Left: Photo and Direct Details */}
@@ -189,9 +269,7 @@ export default function EditProfile() {
                                             title="Change Profile Photo"
                                             onClick={() => {
                                                 const url = prompt("Enter Image URL:", typeof photo === 'string' ? photo : "");
-                                                if (url !== null) {
-                                                    setPhoto(url.trim());
-                                                }
+                                                if (url !== null) setPhoto(url.trim());
                                             }}
                                             type="button"
                                         >
@@ -201,37 +279,41 @@ export default function EditProfile() {
 
                                     {/* Basic Metadata Fields */}
                                     <div className="space-y-space-md w-full max-w-lg">
-                                        <div>
-                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="fullName">
-                                                Full Name
-                                            </label>
-                                            <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="fullName" placeholder="Your full name" type="text" />
+                                        <div className="flex flex-col sm:flex-row gap-space-md">
+                                            <div className="flex-1">
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="firstName">First Name</label>
+                                                <input value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="firstName" placeholder="First Name" type="text" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="lastName">Last Name</label>
+                                                <input value={lastName} onChange={e => setLastName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" placeholder="Last Name" type="text" />
+                                            </div>
                                         </div>
+
+                                        <div className="flex flex-col sm:flex-row gap-space-md">
+                                            <div className="flex-1">
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="username">Username</label>
+                                                <input value={username} onChange={e => setUsername(e.target.value)} className="w-full h-9 px-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="username" placeholder="Username" type="text" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="email">Email</label>
+                                                <input value={email} onChange={e => setEmail(e.target.value)} className="w-full h-9 px-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="email" placeholder="Email Address" type="email" />
+                                            </div>
+                                        </div>
+
                                         <div>
-                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">
-                                                Location &amp; Timezone
-                                            </label>
+                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">Location &amp; Timezone</label>
                                             <div className="relative flex items-center">
                                                 <span className="material-symbols-outlined absolute left-3 text-text-muted text-[18px] pointer-events-none">location_on</span>
                                                 <input value={location} onChange={e => setLocation(e.target.value)} className="w-full h-9 pl-9 pr-3.5 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="userLocation" placeholder="City, State or Country" type="text" />
                                             </div>
                                         </div>
 
-                                        {/* Availability Selector */}
                                         <div>
-                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5">
-                                                General Availability
-                                            </label>
+                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5">General Availability</label>
                                             <div aria-label="Availability" className="flex flex-wrap gap-2" role="radiogroup">
                                                 {['weekends', 'evenings', 'weekdays', 'flexible'].map(opt => (
-                                                    <button
-                                                        key={opt}
-                                                        onClick={() => setAvailability(opt)}
-                                                        className={`px-3 py-1.5 rounded-lg text-label-sm font-label-sm capitalize transition-colors ${availability === opt
-                                                            ? 'bg-primary-container text-on-primary-container shadow-sm flex items-center gap-1.5'
-                                                            : 'bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high'
-                                                            }`}
-                                                        type="button">
+                                                    <button key={opt} onClick={() => setAvailability(opt)} className={`px-3 py-1.5 rounded-lg text-label-sm font-label-sm capitalize transition-colors ${availability === opt ? 'bg-primary-container text-on-primary-container shadow-sm flex items-center gap-1.5' : 'bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface-container-high'}`} type="button">
                                                         {availability === opt && <span className="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>}
                                                         {opt}
                                                     </button>
@@ -241,7 +323,7 @@ export default function EditProfile() {
                                     </div>
                                 </div>
 
-                                {/* Right: Privacy Switch */}
+                                {/* Right: Privacy Switch & Danger Zone */}
                                 <div className="w-full lg:w-80 flex flex-col gap-space-lg shrink-0">
                                     <div className="p-space-md rounded-lg bg-surface-elevated flex flex-col gap-space-xs">
                                         <div className="flex items-center justify-between">
@@ -258,6 +340,18 @@ export default function EditProfile() {
                                             Your profile and offered skills are visible in Browse &amp; Search. Disabling hides you from prospective partners.
                                         </p>
                                     </div>
+
+                                    <div className="p-space-md rounded-lg bg-status-rejected/10 border border-status-rejected/20 flex flex-col gap-space-sm">
+                                        <h3 className="font-label-md text-label-md text-status-rejected flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-[18px]">warning</span> Danger Zone
+                                        </h3>
+                                        <button onClick={() => setPasswordModalOpen(true)} className="w-full h-9 rounded-lg bg-surface-elevated hover:bg-surface-container-highest border border-surface-container-high text-text-secondary hover:text-text-primary font-label-sm text-label-sm transition-colors mt-2" type="button">
+                                            Change Password
+                                        </button>
+                                        <button onClick={handleDeleteAccount} className="w-full h-9 rounded-lg bg-status-rejected text-on-primary hover:opacity-90 font-label-sm text-label-sm transition-opacity" type="button">
+                                            Delete Account
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -273,9 +367,7 @@ export default function EditProfile() {
                                                 <span className="w-2 h-2 rounded-full bg-primary"></span>
                                                 <h2 className="font-headline-md text-headline-md text-text-primary">Skills I Offer</h2>
                                             </div>
-                                            <p className="font-body-md text-body-md text-text-muted mt-1">
-                                                Skills you can teach or mentor peers in during collaborative sessions.
-                                            </p>
+                                            <p className="font-body-md text-body-md text-text-muted mt-1">Skills you can teach or mentor peers in.</p>
                                         </div>
                                         <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary whitespace-nowrap">{offered.length} Active</span>
                                     </div>
@@ -284,25 +376,21 @@ export default function EditProfile() {
                                         {offered.map(item => (
                                             <div key={item.id} className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
                                                 <div className="flex flex-col min-w-0 pr-2">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="font-label-md text-label-md text-text-primary truncate">{item.skill?.name}</span>
-                                                    </div>
+                                                    <span className="font-label-md text-label-md text-text-primary truncate">{item.skill?.name}</span>
                                                     <span className="font-caption text-caption text-text-muted mt-0.5">Category: {item.skill?.category?.name || 'Uncategorized'}</span>
                                                 </div>
-                                                <button onClick={() => handleRemoveOffered(item.id)} aria-label="Remove Skill" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
+                                                <button onClick={() => handleRemoveOffered(item.id)} className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
                                                     <span className="material-symbols-outlined text-[18px]">close</span>
                                                 </button>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-
                                 <div className="mt-space-lg pt-space-md rounded-lg bg-surface-elevated p-space-md">
                                     <span className="font-label-sm text-label-sm text-text-secondary block mb-space-sm">Add New Offered Skill</span>
                                     <div className="space-y-space-sm">
                                         <div className="relative">
-                                            <label className="sr-only" htmlFor="offeredSkillSelect">Select Skill</label>
-                                            <select value={selectedOfferedSkill} onChange={e => setSelectedOfferedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="offeredSkillSelect">
+                                            <select value={selectedOfferedSkill} onChange={e => setSelectedOfferedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
                                                 <option value="" disabled>Select a skill you can teach...</option>
                                                 {availableSkills.map(skill => (
                                                     <option key={skill.id} value={skill.id}>{skill.name}</option>
@@ -310,10 +398,8 @@ export default function EditProfile() {
                                             </select>
                                             <span className="material-symbols-outlined absolute right-2 top-1.5 text-text-muted text-[18px] pointer-events-none">expand_more</span>
                                         </div>
-
-                                        <button onClick={handleAddOffered} className="w-full mt-1 h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary-fixed font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
-                                            <span className="material-symbols-outlined text-[16px]">add</span>
-                                            Add Offered Skill
+                                        <button onClick={handleAddOffered} className="w-full h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary-fixed font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+                                            <span className="material-symbols-outlined text-[16px]">add</span> Add Offered Skill
                                         </button>
                                     </div>
                                 </div>
@@ -328,13 +414,10 @@ export default function EditProfile() {
                                                 <span className="w-2 h-2 rounded-full bg-tertiary"></span>
                                                 <h2 className="font-headline-md text-headline-md text-text-primary">Skills I Want</h2>
                                             </div>
-                                            <p className="font-body-md text-body-md text-text-muted mt-1">
-                                                Skills you are looking to learn from fellow members in exchange.
-                                            </p>
+                                            <p className="font-body-md text-body-md text-text-muted mt-1">Skills you are looking to learn.</p>
                                         </div>
                                         <span className="px-2 py-0.5 rounded text-caption font-caption bg-surface-elevated text-text-secondary whitespace-nowrap">{wanted.length} Active</span>
                                     </div>
-
                                     <div className="space-y-space-xs mt-space-sm">
                                         {wanted.map(item => (
                                             <div key={item.id} className="group flex items-center justify-between p-3 rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors">
@@ -344,20 +427,18 @@ export default function EditProfile() {
                                                         <span className="font-label-md text-label-md text-text-primary truncate">{item.skill?.name}</span>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => handleRemoveWanted(item.id)} aria-label="Remove Target Skill" className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
+                                                <button onClick={() => handleRemoveWanted(item.id)} className="shrink-0 p-1.5 text-text-muted hover:text-status-rejected hover:bg-status-rejected-bg rounded transition-colors" type="button">
                                                     <span className="material-symbols-outlined text-[18px]">close</span>
                                                 </button>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-
                                 <div className="mt-space-lg pt-space-md rounded-lg bg-surface-elevated p-space-md">
                                     <span className="font-label-sm text-label-sm text-text-secondary block mb-space-sm">Add Desired Learning Goal</span>
                                     <div className="space-y-space-sm">
                                         <div className="relative">
-                                            <label className="sr-only" htmlFor="wantedSkillSelect">Select Wanted Skill</label>
-                                            <select value={selectedWantedSkill} onChange={e => setSelectedWantedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="wantedSkillSelect">
+                                            <select value={selectedWantedSkill} onChange={e => setSelectedWantedSkill(e.target.value)} className="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-base text-text-primary font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
                                                 <option value="" disabled>Select a skill you want to learn...</option>
                                                 {availableSkills.map(skill => (
                                                     <option key={skill.id} value={skill.id}>{skill.name}</option>
@@ -366,8 +447,7 @@ export default function EditProfile() {
                                             <span className="material-symbols-outlined absolute right-2 top-1.5 text-text-muted text-[18px] pointer-events-none">expand_more</span>
                                         </div>
                                         <button onClick={handleAddWanted} className="w-full h-9 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
-                                            <span className="material-symbols-outlined text-[16px]">add</span>
-                                            Add Wanted Skill
+                                            <span className="material-symbols-outlined text-[16px]">add</span> Add Wanted Skill
                                         </button>
                                     </div>
                                 </div>
@@ -381,18 +461,9 @@ export default function EditProfile() {
                                 Profile details are shared exclusively with confirmed swap peers and in browse mode.
                             </div>
                             <div className="flex items-center gap-space-sm w-full sm:w-auto justify-end">
-                                <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">
-                                    Discard
-                                </Link>
-                                <button
-                                    className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed"
-                                    onClick={handleSave}
-                                    disabled={isSaving}
-                                    type="button"
-                                >
-                                    <span className={`material-symbols-outlined text-[18px] ${isSaving && saveText === 'Saving...' ? 'animate-spin' : ''}`}>
-                                        {isSaving ? (saveText === 'Saved!' ? 'done_all' : 'refresh') : 'check'}
-                                    </span>
+                                <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">Discard</Link>
+                                <button className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed" onClick={handleSave} disabled={isSaving} type="button">
+                                    {isSaving ? <Spinner color="text-white" /> : <span className="material-symbols-outlined text-[18px]">check</span>}
                                     {saveText}
                                 </button>
                             </div>
@@ -400,6 +471,45 @@ export default function EditProfile() {
                     </div>
                 </div>
             </div>
+
+            {/* Re-usable Modal Contexts */}
+            <Modal config={modalConfig} onClose={closeModal} />
+
+            {/* Change Password Modal */}
+            {passwordModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-space-md">
+                    <div aria-hidden="true" className="absolute inset-0 bg-surface-base/80 backdrop-blur-sm" onClick={() => !isSubmittingPassword && setPasswordModalOpen(false)}></div>
+                    <div className="relative w-full max-w-md bg-surface-elevated border border-surface-container-high rounded-xl shadow-2xl p-space-lg flex flex-col gap-space-md animate-fade-in-up">
+                        <div className="flex items-center justify-between border-b border-surface-container pb-space-sm">
+                            <h2 className="font-headline-md text-headline-md text-text-primary">Change Password</h2>
+                            <button onClick={() => !isSubmittingPassword && setPasswordModalOpen(false)} className="text-text-muted hover:text-text-primary transition-colors" type="button">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        {passwordError && (
+                            <div className="p-3 rounded-lg bg-status-rejected/10 text-status-rejected font-label-sm text-label-sm flex items-start gap-2 border border-status-rejected/20">
+                                <span className="material-symbols-outlined text-[18px]">error</span>
+                                <span>{passwordError}</span>
+                            </div>
+                        )}
+                        <div className="flex flex-col gap-space-sm">
+                            <div>
+                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1" htmlFor="oldPassword">Current Password</label>
+                                <input value={oldPassword} onChange={e => setOldPassword(e.target.value)} className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary focus:outline-none focus:ring-1 focus:ring-primary border border-surface-container-high" id="oldPassword" type="password" />
+                            </div>
+                            <div>
+                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1" htmlFor="newPassword">New Password</label>
+                                <input value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full h-10 px-3 rounded-lg bg-surface-base text-text-primary focus:outline-none focus:ring-1 focus:ring-primary border border-surface-container-high" id="newPassword" type="password" />
+                            </div>
+                        </div>
+                        <div className="flex justify-end pt-space-xs">
+                            <button onClick={handleChangePassword} disabled={isSubmittingPassword || !oldPassword || !newPassword} className="h-10 px-space-lg rounded-lg bg-primary text-on-primary font-label-md text-label-md disabled:opacity-60 flex items-center justify-center gap-2 transition-colors min-w-[120px]" type="button">
+                                {isSubmittingPassword ? <Spinner color="text-white" /> : 'Update'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
