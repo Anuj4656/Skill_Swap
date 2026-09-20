@@ -472,7 +472,7 @@ export default function EditProfile() {
             </div>
 
             {/* Re-usable Modal Contexts */}
-            <Modal config={modalConfig} onClose={closeModal} />
+            <Modal {...modalConfig} onClose={closeModal} />
 
             {/* Change Password Modal */}
             {passwordModalOpen && (
