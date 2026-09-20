@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { Spinner } from './Skeletons';
 
 const Modal = ({
     isOpen,
@@ -12,22 +13,31 @@ const Modal = ({
     defaultValue = ''
 }) => {
     const [inputValue, setInputValue] = useState(defaultValue);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
             setInputValue(defaultValue);
+            setIsProcessing(false);
         }
     }, [isOpen, defaultValue]);
 
     if (!isOpen) return null;
 
-    const handleConfirm = () => {
-        if (type === 'prompt') {
-            onConfirm(inputValue);
-        } else {
-            onConfirm();
+    const handleConfirm = async () => {
+        setIsProcessing(true);
+        try {
+            if (type === 'prompt') {
+                await onConfirm(inputValue);
+            } else {
+                await onConfirm();
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsProcessing(false);
+            onClose();
         }
-        onClose();
     };
 
     return createPortal(
@@ -60,9 +70,14 @@ const Modal = ({
                         <button
                             type="button"
                             onClick={handleConfirm}
-                            className={`px-5 py-2.5 rounded-lg font-label-md text-label-md text-on-primary transition-colors flex items-center justify-center ${isDestructive ? 'bg-status-rejected hover:bg-red-600' : 'bg-primary hover:bg-primary-fixed-dim'}`}
+                            disabled={isProcessing}
+                            className={`px-5 py-2.5 rounded-lg font-label-md text-label-md text-on-primary transition-colors flex items-center justify-center ${isDestructive ? 'bg-status-rejected hover:bg-red-600' : 'bg-primary hover:bg-primary-fixed-dim'} ${isProcessing ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
-                            {type === 'prompt' ? 'Submit' : 'Confirm'}
+                            {isProcessing ? (
+                                <Spinner />
+                            ) : (
+                                type === 'prompt' ? 'Submit' : 'Confirm'
+                            )}
                         </button>
                     </div>
                 </div>

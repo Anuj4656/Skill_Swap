@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getImageUrl } from '../utils';
-import { SkeletonSwapRow } from '../components/Skeletons';
+import { SkeletonSwapRow, Spinner } from '../components/Skeletons';
 import Modal from '../components/Modal';
 
 export default function MySwaps() {
@@ -409,8 +409,8 @@ export default function MySwaps() {
                             </div>
                             <div className="flex items-center justify-end gap-space-sm pt-space-sm border-t border-surface-container-high">
                                 <button onClick={() => setRatingModal(null)} disabled={isSubmitting} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary bg-surface-container-high disabled:opacity-50" type="button">Cancel</button>
-                                <button type="submit" disabled={isSubmitting} className="px-space-md py-2 rounded-lg bg-primary text-on-primary disabled:opacity-75 flex items-center gap-2">
-                                    {isSubmitting ? <span className="material-symbols-outlined text-[18px] animate-spin">refresh</span> : 'Submit Review'}
+                                <button type="submit" disabled={isSubmitting} className="px-space-md py-2 rounded-lg bg-primary text-on-primary disabled:opacity-75 flex items-center justify-center gap-2 min-w-[140px]">
+                                    {isSubmitting ? <Spinner /> : 'Submit Review'}
                                 </button>
                             </div>
                         </form>

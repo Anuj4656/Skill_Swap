@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Spinner } from '../components/Skeletons';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -8,10 +9,12 @@ export default function Login() {
     const navigate = useNavigate();
     const [toast, setToast] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleAuth = async (e) => {
         e.preventDefault();
         setErrorMsg('');
+        setIsSubmitting(true);
         const password = document.getElementById('password').value;
 
         try {
@@ -74,6 +77,8 @@ export default function Login() {
             }
         } catch (error) {
             console.error("Auth error:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -212,9 +217,15 @@ export default function Login() {
                     )}
 
                     <div className="pt-2">
-                        <button className="w-full h-[38px] bg-[#2E8B82] hover:bg-[#349A90] active:bg-[#27756E] text-text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm" type="submit">
-                            <span>{isLogin ? 'Log in' : 'Create Account'}</span>
-                            <span className="material-symbols-outlined text-[16px]">{isLogin ? 'login' : 'arrow_forward'}</span>
+                        <button disabled={isSubmitting} className={`w-full h-[38px] bg-[#2E8B82] hover:bg-[#349A90] active:bg-[#27756E] text-text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`} type="submit">
+                            {isSubmitting ? (
+                                <Spinner />
+                            ) : (
+                                <>
+                                    <span>{isLogin ? 'Log in' : 'Create Account'}</span>
+                                    <span className="material-symbols-outlined text-[16px]">{isLogin ? 'login' : 'arrow_forward'}</span>
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>

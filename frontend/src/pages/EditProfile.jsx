@@ -457,15 +457,21 @@ export default function EditProfile() {
                                         Discard
                                     </Link>
                                     <button
-                                        className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed"
+                                        className={`px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-1.5 shadow-sm min-w-[140px] ${isSaving ? 'opacity-80 cursor-not-allowed' : ''}`}
                                         onClick={handleSave}
                                         disabled={isSaving}
                                         type="button"
                                     >
-                                        <span className={`material-symbols-outlined text-[18px] ${isSaving && saveText === 'Saving...' ? 'animate-spin' : ''}`}>
-                                            {isSaving ? (saveText === 'Saved!' ? 'done_all' : 'refresh') : 'check'}
-                                        </span>
-                                        {saveText}
+                                        {isSaving && saveText !== 'Saved!' ? (
+                                            <Spinner />
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-[18px]">
+                                                    {saveText === 'Saved!' ? 'done_all' : 'check'}
+                                                </span>
+                                                {saveText}
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </div>

@@ -16,6 +16,7 @@ export default function Profile() {
     const [offeredSki, setOfferedSki] = useState('');
     const [wantedSki, setWantedSki] = useState('');
     const [note, setNote] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -88,23 +89,30 @@ export default function Profile() {
     const handleRequestSwap = async (e) => {
         e.preventDefault();
         if (!offeredSki || !wantedSki) return;
+        setIsSubmitting(true);
 
         const token = localStorage.getItem('access_token');
-        const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/swaps/', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                receiver_id: profile.user.id,
-                skill_offered_id: offeredSki,
-                skill_wanted_id: wantedSki,
-                note: note
-            })
-        });
+        try {
+            const res = await fetch((import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000') + '/api/swaps/', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    receiver_id: profile.user.id,
+                    skill_offered_id: offeredSki,
+                    skill_wanted_id: wantedSki,
+                    note: note
+                })
+            });
 
-        if (res.ok) {
-            setShowModal(false);
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 4000);
+            if (res.ok) {
+                setShowModal(false);
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 4000);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -348,11 +356,11 @@ export default function Profile() {
                                     ></textarea>
                                 </div>
                                 <div className="flex items-center justify-end gap-space-sm pt-space-sm">
-                                    <button onClick={() => setShowModal(false)} className="px-space-md py-2 rounded-lg text-text-secondary hover:text-text-primary font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+                                    <button onClick={() => setShowModal(false)} disabled={isSubmitting} className="px-space-md py-2 text-text-secondary hover:text-text-primary font-label-md text-label-md hover:bg-surface-container transition-colors disabled:opacity-50" type="button">
                                         Cancel
                                     </button>
-                                    <button className="px-space-lg py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-fixed-dim transition-all shadow-sm" type="submit">
-                                        Send Proposal
+                                    <button disabled={isSubmitting} className={`px-space-lg py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm flex items-center justify-center gap-2 min-w-[140px] flex-shrink-0 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-fixed-dim'}`} type="submit">
+                                        {isSubmitting ? <Spinner /> : 'Send Proposal'}
                                     </button>
                                 </div>
                             </form>
