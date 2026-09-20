@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getImageUrl } from '../utils';
+import { SkeletonSwapRow } from '../components/Skeletons';
 import Modal from '../components/Modal';
 
 export default function MySwaps() {
@@ -200,7 +201,9 @@ export default function MySwaps() {
                     </div>
 
                     <div className="flex flex-col gap-space-lg">
-                        {filteredCards.map(card => (
+                        {loading && [...Array(3)].map((_, i) => <SkeletonSwapRow key={i} />)}
+
+                        {!loading && filteredCards.map(card => (
                             <div key={card.id} className="swap-card bg-surface-card rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm transition-all hover:bg-surface-elevated/80 relative overflow-hidden">
                                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-status-${card.status} via-status-${card.status}/60 to-transparent`}></div>
 

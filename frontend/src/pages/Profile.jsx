@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { SkeletonProfile } from '../components/Skeletons';
 import { getImageUrl } from '../utils';
 
 export default function Profile() {
@@ -56,7 +57,13 @@ export default function Profile() {
             .catch(err => console.error(err));
     }, [profile]);
 
-    if (loading) return null;
+    if (loading) {
+        return (
+            <main className="w-full pt-16 bg-surface-base relative min-h-screen">
+                <SkeletonProfile />
+            </main>
+        );
+    }
 
     if (id && profile && !profile.is_public && myProfile?.user?.id !== profile.user?.id) {
         return (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils';
+import { SkeletonEditForm } from '../components/Skeletons';
 import Modal from '../components/Modal';
 
 export default function EditProfile() {
@@ -197,7 +198,7 @@ export default function EditProfile() {
         });
     };
 
-    if (loading) return null;
+    if (loading) return <SkeletonEditForm />;
 
     return (
         <main className="w-full pt-16 bg-surface-base min-h-screen">

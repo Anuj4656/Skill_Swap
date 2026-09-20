@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SkillCard from '../components/SkillCard';
+import { SkeletonCard } from '../components/Skeletons';
 import { getImageUrl } from '../utils';
 
 export default function Browse() {
@@ -187,9 +188,11 @@ export default function Browse() {
                             </div>
                         )}
                         {loading && (
-                            <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-space-xl text-text-muted font-body-lg text-body-lg">
-                                Loading community...
-                            </div>
+                            <>
+                                {[...Array(6)].map((_, i) => (
+                                    <SkeletonCard key={i} />
+                                ))}
+                            </>
                         )}
                     </section>
 
