@@ -341,14 +341,13 @@ export default function EditProfile() {
                                         </p>
                                     </div>
 
-                                    <div className="p-space-md rounded-lg bg-status-rejected/10 border border-status-rejected/20 flex flex-col gap-space-sm">
-                                        <h3 className="font-label-md text-label-md text-status-rejected flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-[18px]">warning</span> Danger Zone
-                                        </h3>
-                                        <button onClick={() => setPasswordModalOpen(true)} className="w-full h-9 rounded-lg bg-surface-elevated hover:bg-surface-container-highest border border-surface-container-high text-text-secondary hover:text-text-primary font-label-sm text-label-sm transition-colors mt-2" type="button">
+                                    <div className="flex flex-col gap-space-sm pt-space-xs">
+                                        <button onClick={() => setPasswordModalOpen(true)} className="w-full h-10 rounded-lg bg-surface-elevated hover:bg-surface-container-high border border-surface-container text-text-primary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+                                            <span className="material-symbols-outlined text-[18px]">lock</span>
                                             Change Password
                                         </button>
-                                        <button onClick={handleDeleteAccount} className="w-full h-9 rounded-lg bg-status-rejected text-on-primary hover:opacity-90 font-label-sm text-label-sm transition-opacity" type="button">
+                                        <button onClick={handleDeleteAccount} className="w-full h-10 rounded-lg bg-surface-elevated hover:bg-status-rejected/10 text-status-rejected border border-surface-container font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+                                            <span className="material-symbols-outlined text-[18px]">delete</span>
                                             Delete Account
                                         </button>
                                     </div>
