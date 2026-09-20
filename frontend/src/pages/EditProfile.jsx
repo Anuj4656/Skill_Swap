@@ -22,6 +22,13 @@ export default function EditProfile() {
     const [photo, setPhoto] = useState('');
 
     // Skills state
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState(false);
+
     const [offered, setOffered] = useState([]);
     const [wanted, setWanted] = useState([]);
     const [availableSkills, setAvailableSkills] = useState([]);
@@ -129,6 +136,45 @@ export default function EditProfile() {
                 if (res.ok) setWanted(prev => prev.filter(item => item.id !== id));
             }
         });
+    };
+
+    const handleChangePassword = () => {
+        setPasswordError('');
+        setPasswordSuccess(false);
+        setIsSubmittingPassword(true);
+        const token = localStorage.getItem('access_token');
+        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/auth/change-password/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                old_password: oldPassword,
+                new_password: newPassword,
+                confirm_password: newPassword
+            })
+        })
+            .then(async (res) => {
+                const data = await res.json();
+                if (res.ok) {
+                    setPasswordSuccess(true);
+                    setOldPassword('');
+                    setNewPassword('');
+                    setTimeout(() => {
+                        setPasswordModalOpen(false);
+                        setPasswordSuccess(false);
+                    }, 2000);
+                } else {
+                    setPasswordError(data.old_password?.[0] || data.new_password?.[0] || data.non_field_errors?.[0] || data.error || "Failed to update password");
+                }
+            })
+            .catch(err => {
+                setPasswordError("Network error occurred.");
+            })
+            .finally(() => {
+                setIsSubmittingPassword(false);
+            });
     };
 
     const handleSave = () => {
@@ -466,7 +512,7 @@ export default function EditProfile() {
                             <div className="flex items-center gap-space-sm w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 border-border-subtle pt-3 sm:pt-0 mt-2 sm:mt-0">
                                 <button
                                     className="px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
-                                    onClick={() => alert("The Change Password Modal logic will be implemented pending final mock approval.")}
+                                    onClick={() => setPasswordModalOpen(true)}
                                     type="button"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">key</span>
@@ -508,6 +554,41 @@ export default function EditProfile() {
                 </div>
             </div>
             <Modal {...modalConfig} onClose={closeModal} />
+            {/* Custom Change Password Modal */}
+            {passwordModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 bg-surface-container-highest/80 backdrop-blur-sm" onClick={() => !isSubmittingPassword && setPasswordModalOpen(false)}></div>
+                    <div className="relative w-full max-w-sm bg-surface-base rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-border-subtle">
+                        <div className="p-space-lg">
+                            <h3 className="font-title-lg text-title-lg text-text-primary mb-2">Change Password</h3>
+                            <p className="font-body-sm text-body-sm text-text-muted mb-4">Please enter your current password to authorize this action.</p>
+
+                            {passwordError && <p className="text-status-rejected font-label-sm text-label-sm mb-3 bg-status-rejected-bg p-2 rounded-md border border-status-rejected/20">{passwordError}</p>}
+                            {passwordSuccess && <p className="text-status-approved font-label-sm text-label-sm mb-3 bg-status-approved-bg p-2 rounded-md border border-status-approved/20">Password changed successfully!</p>}
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-label-sm font-label-sm text-text-muted mb-1" htmlFor="oldPassword">Current Password</label>
+                                    <input id="oldPassword" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-container border border-border-subtle focus:border-primary focus:outline-none transition-colors" placeholder="••••••••" />
+                                </div>
+                                <div>
+                                    <label className="block text-label-sm font-label-sm text-text-muted mb-1" htmlFor="newPassword">New Password</label>
+                                    <input id="newPassword" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-container border border-border-subtle focus:border-primary focus:outline-none transition-colors" placeholder="••••••••" />
+                                </div>
+                            </div>
+
+                            <div className="mt-6 flex justify-end gap-3">
+                                <button type="button" onClick={() => { setPasswordError(''); setPasswordModalOpen(false); }} disabled={isSubmittingPassword} className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:bg-surface-elevated transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="button" onClick={handleChangePassword} disabled={isSubmittingPassword || !oldPassword || !newPassword} className="px-4 py-2 rounded-lg font-label-md text-label-md bg-text-primary text-surface-base hover:opacity-90 flex items-center justify-center min-w-[120px] transition-opacity disabled:opacity-50 shadow-sm">
+                                    {isSubmittingPassword ? <Spinner size="w-4 h-4" color="text-surface-base" /> : "Update Password"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
