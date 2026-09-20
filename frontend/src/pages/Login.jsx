@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from '../components/Skeletons';
 
@@ -10,6 +10,12 @@ export default function Login() {
     const [toast, setToast] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem('access_token')) {
+            navigate('/my-swaps');
+        }
+    }, [navigate]);
 
     const handleAuth = async (e) => {
         e.preventDefault();

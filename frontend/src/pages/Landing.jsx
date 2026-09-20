@@ -147,9 +147,15 @@ export default function Landing() {
                             </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-space-sm">
-                            <Link to="/login" className="px-space-lg py-space-sm rounded-lg bg-primary-container text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">
-                                Create Member Profile
-                            </Link>
+                            {localStorage.getItem('access_token') ? (
+                                <Link to="/my-swaps" className="px-space-lg py-space-sm rounded-lg bg-primary-container text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">
+                                    Go to My Swaps
+                                </Link>
+                            ) : (
+                                <Link to="/login" className="px-space-lg py-space-sm rounded-lg bg-primary-container text-text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">
+                                    Create Member Profile
+                                </Link>
+                            )}
 
                         </div>
                     </div>
