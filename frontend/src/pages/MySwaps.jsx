@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getImageUrl } from '../utils';
 import { SkeletonSwapRow, Spinner } from '../components/Skeletons';
 import Modal from '../components/Modal';
+import { useToast } from '../contexts/ToastContext';
 
 export default function MySwaps() {
+    const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState('received');
     const [modalConfig, setModalConfig] = useState({ isOpen: false });
     const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
@@ -98,6 +100,7 @@ export default function MySwaps() {
         })
             .then(res => res.json())
             .then(updated => {
+                showToast(`Swap ${updated.status} successfully!`);
                 setCards(prev => prev.map(c => {
                     if (c.id === id) {
                         return {
@@ -126,6 +129,7 @@ export default function MySwaps() {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }).then(res => {
                     if (res.ok) {
+                        showToast('Request cancelled.');
                         setCards(prev => prev.filter(c => c.id !== id));
                     }
                 }).catch(err => console.error("Error cancelling swap:", err));
@@ -143,6 +147,7 @@ export default function MySwaps() {
             body: JSON.stringify({ score: ratingScore, comment: ratingComment })
         }).then(res => {
             if (res.ok) {
+                showToast('Trade rated and finalized!');
                 setCards(prev => prev.map(c => c.id === ratingModal?.id ? { ...c, isRated: true } : c));
                 setRatingModal(null);
                 setRatingScore(5);

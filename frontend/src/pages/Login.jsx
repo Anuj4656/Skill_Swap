@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from '../components/Skeletons';
+import { useToast } from '../contexts/ToastContext';
 
 export default function Login() {
+    const { showToast } = useToast();
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [activePill, setActivePill] = useState('Flexible');
     const navigate = useNavigate();
-    const [toast, setToast] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,8 +62,7 @@ export default function Login() {
                 });
                 if (response.ok) {
                     setIsLogin(true);
-                    setToast("Registration successful! You may now log in.");
-                    setTimeout(() => setToast(''), 3000);
+                    showToast("Registration successful! You may now log in.");
                 } else {
                     const errData = await response.text();
                     console.error("Registration failed:", errData);
@@ -97,13 +97,6 @@ export default function Login() {
 
     return (
         <div className="flex flex-col w-full items-center justify-center py-space-xl px-margin-mobile md:px-margin min-h-screen pt-24 relative">
-            {/* Custom Toast Alert */}
-            {toast && (
-                <div className="fixed bottom-space-xl right-space-lg bg-surface-elevated border border-surface-container-high rounded-lg p-space-md shadow-lg text-text-primary z-50 flex items-center gap-space-sm border-l-4 border-l-status-accepted animate-fade-in-up">
-                    <span className="material-symbols-outlined text-status-accepted">check_circle</span>
-                    <span className="font-label-md text-label-md">{toast}</span>
-                </div>
-            )}
 
             <div className="w-full max-w-[480px] bg-surface-card rounded-xl p-space-md sm:p-space-lg shadow-xl relative overflow-hidden">
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>

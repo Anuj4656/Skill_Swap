@@ -92,7 +92,7 @@ export default function Browse() {
 
     const totalPages = Math.max(1, Math.ceil(displayedUsers.length / ITEMS_PER_PAGE));
     const paginatedUsers = displayedUsers.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
+        0,
         currentPage * ITEMS_PER_PAGE
     );
 
@@ -196,33 +196,18 @@ export default function Browse() {
                         )}
                     </section>
 
-                    <footer className="flex justify-center py-space-md px-space-lg bg-surface-container rounded-xl mb-space-sm">
-                        <div className="flex items-center gap-space-md">
+                    {currentPage < totalPages && (
+                        <footer className="flex justify-center py-space-md px-space-lg mb-space-sm">
                             <button
-                                className={`h-9 px-space-md rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors ${currentPage === 1 ? 'bg-surface-elevated text-text-muted cursor-not-allowed opacity-60' : 'bg-surface-elevated text-text-secondary hover:text-text-primary'}`}
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                className="h-10 px-space-xl rounded-full font-label-md text-label-md bg-surface-elevated text-text-primary hover:bg-surface-container-high transition-colors shadow-sm flex items-center justify-center gap-2"
+                                onClick={() => setCurrentPage(prev => prev + 1)}
                                 type="button"
                             >
-                                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
-                                Previous
+                                <span>Load More Talents</span>
+                                <span className="material-symbols-outlined text-[18px]">expand_more</span>
                             </button>
-
-                            <div className="font-body-md text-body-md text-text-secondary px-space-sm">
-                                Page <span className="font-label-md text-text-primary">{totalPages === 0 ? 0 : currentPage}</span> of <span className="font-label-md text-text-primary">{totalPages}</span>
-                            </div>
-
-                            <button
-                                className={`h-9 px-space-md rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors ${currentPage >= totalPages || totalPages === 0 ? 'bg-surface-elevated text-text-muted cursor-not-allowed opacity-60' : 'bg-surface-elevated text-text-secondary hover:text-text-primary'}`}
-                                disabled={currentPage >= totalPages || totalPages === 0}
-                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                                type="button"
-                            >
-                                Next
-                                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-                            </button>
-                        </div>
-                    </footer>
+                        </footer>
+                    )}
                 </div>
             </div>
         </main>

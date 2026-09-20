@@ -1,34 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils';
-import { SkeletonEditForm, Spinner } from '../components/Skeletons';
-import Modal from '../components/Modal';
 
 export default function EditProfile() {
-    const [modalConfig, setModalConfig] = useState({ isOpen: false });
-    const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
     const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
     const [saveText, setSaveText] = useState('Save Profile');
     const [loading, setLoading] = useState(true);
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [fullName, setFullName] = useState('');
     const [location, setLocation] = useState('');
     const [availability, setAvailability] = useState('flexible');
     const [isPublic, setIsPublic] = useState(true);
     const [photo, setPhoto] = useState('');
 
     // Skills state
-    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
-    const [passwordError, setPasswordError] = useState('');
-    const [passwordSuccess, setPasswordSuccess] = useState(false);
-
     const [offered, setOffered] = useState([]);
     const [wanted, setWanted] = useState([]);
     const [availableSkills, setAvailableSkills] = useState([]);
@@ -53,10 +39,9 @@ export default function EditProfile() {
 
                 const skillsFinal = Array.isArray(skillsData) ? skillsData : skillsData.results || [];
 
-                setFirstName(data.user?.first_name || '');
-                setLastName(data.user?.last_name || '');
-                setUsername(data.user?.username || '');
-                setEmail(data.user?.email || '');
+                const fName = data.user?.first_name || '';
+                const lName = data.user?.last_name || '';
+                setFullName([fName, lName].filter(Boolean).join(' '));
                 setLocation(data.location || '');
                 setAvailability(data.availability || 'flexible');
                 setIsPublic(data.is_public);
@@ -88,22 +73,13 @@ export default function EditProfile() {
         }
     };
 
-    const handleRemoveOffered = (id) => {
-        setModalConfig({
-            isOpen: true,
-            type: 'confirm',
-            title: 'Remove Skill',
-            message: 'Are you sure you want to remove this skill?',
-            isDestructive: true,
-            onConfirm: async () => {
-                const token = localStorage.getItem('access_token');
-                const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) setOffered(prev => prev.filter(item => item.id !== id));
-            }
+    const handleRemoveOffered = async (id) => {
+        const token = localStorage.getItem('access_token');
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/offered/${id}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (res.ok) setOffered(offered.filter(item => item.id !== id));
     };
 
     const handleAddWanted = async () => {
@@ -120,61 +96,13 @@ export default function EditProfile() {
         }
     };
 
-    const handleRemoveWanted = (id) => {
-        setModalConfig({
-            isOpen: true,
-            type: 'confirm',
-            title: 'Remove Skill',
-            message: 'Are you sure you want to remove this skill?',
-            isDestructive: true,
-            onConfirm: async () => {
-                const token = localStorage.getItem('access_token');
-                const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) setWanted(prev => prev.filter(item => item.id !== id));
-            }
-        });
-    };
-
-    const handleChangePassword = () => {
-        setPasswordError('');
-        setPasswordSuccess(false);
-        setIsSubmittingPassword(true);
+    const handleRemoveWanted = async (id) => {
         const token = localStorage.getItem('access_token');
-        fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/auth/change-password/', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                old_password: oldPassword,
-                new_password: newPassword,
-                confirm_password: newPassword
-            })
-        })
-            .then(async (res) => {
-                const data = await res.json();
-                if (res.ok) {
-                    setPasswordSuccess(true);
-                    setOldPassword('');
-                    setNewPassword('');
-                    setTimeout(() => {
-                        setPasswordModalOpen(false);
-                        setPasswordSuccess(false);
-                    }, 2000);
-                } else {
-                    setPasswordError(data.old_password?.[0] || data.new_password?.[0] || data.non_field_errors?.[0] || data.error || "Failed to update password");
-                }
-            })
-            .catch(err => {
-                setPasswordError("Network error occurred.");
-            })
-            .finally(() => {
-                setIsSubmittingPassword(false);
-            });
+        const res = await fetch(`${(import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'))}/api/profile/me/wanted/${id}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) setWanted(wanted.filter(item => item.id !== id));
     };
 
     const handleSave = () => {
@@ -182,11 +110,13 @@ export default function EditProfile() {
         setSaveText('Saving...');
 
         const token = localStorage.getItem('access_token');
+        const nameParts = fullName.trim().split(' ');
+        const first = nameParts[0] || '';
+        const last = nameParts.slice(1).join(' ');
+
         const payload = {
-            first_name: firstName.trim(),
-            last_name: lastName.trim(),
-            username: username.trim(),
-            email: email.trim(),
+            first_name: first,
+            last_name: last,
             location: location,
             availability: availability,
             is_public: isPublic,
@@ -221,36 +151,7 @@ export default function EditProfile() {
             });
     };
 
-    const handleDeleteAccount = () => {
-        setModalConfig({
-            isOpen: true,
-            type: 'confirm',
-            title: 'Delete Account',
-            message: 'Are you sure you want to permanently delete your account? This action cannot be undone.',
-            isDestructive: true,
-            onConfirm: async () => {
-                const token = localStorage.getItem('access_token');
-                try {
-                    const res = await fetch((import.meta.env.VITE_API_BASE_URL || (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000')) + '/api/profile/me/', {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    if (res.ok || res.status === 204) {
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('refresh_token');
-                        navigate('/login');
-                    } else {
-                        alert("Failed to delete account. Please try again.");
-                    }
-                } catch (e) {
-                    console.error(e);
-                    alert("Error occurring while trying to delete account.");
-                }
-            }
-        });
-    };
-
-    if (loading) return <SkeletonEditForm />;
+    if (loading) return null;
 
     return (
         <main className="w-full pt-16 bg-surface-base min-h-screen">
@@ -287,18 +188,10 @@ export default function EditProfile() {
                                             className="absolute -bottom-1 -right-1 flex items-center justify-center p-2 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary hover:bg-surface-container-highest shadow-sm transition-all"
                                             title="Change Profile Photo"
                                             onClick={() => {
-                                                setModalConfig({
-                                                    isOpen: true,
-                                                    type: 'prompt',
-                                                    title: 'Change Profile Picture',
-                                                    message: 'Enter the URL of your new profile picture.',
-                                                    defaultValue: typeof photo === 'string' ? photo : "",
-                                                    onConfirm: (url) => {
-                                                        if (url !== null) {
-                                                            setPhoto(url.trim());
-                                                        }
-                                                    }
-                                                });
+                                                const url = prompt("Enter Image URL:", typeof photo === 'string' ? photo : "");
+                                                if (url !== null) {
+                                                    setPhoto(url.trim());
+                                                }
                                             }}
                                             type="button"
                                         >
@@ -308,33 +201,11 @@ export default function EditProfile() {
 
                                     {/* Basic Metadata Fields */}
                                     <div className="space-y-space-md w-full max-w-lg">
-                                        <div className="grid grid-cols-2 gap-space-md">
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="firstName">
-                                                    First Name
-                                                </label>
-                                                <input value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="firstName" placeholder="First" type="text" />
-                                            </div>
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="lastName">
-                                                    Last Name
-                                                </label>
-                                                <input value={lastName} onChange={e => setLastName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="lastName" placeholder="Last" type="text" />
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="username">
-                                                    Username
-                                                </label>
-                                                <input value={username} onChange={e => setUsername(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="username" placeholder="Username" type="text" />
-                                            </div>
-                                            <div>
-                                                <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="email">
-                                                    Email Address
-                                                </label>
-                                                <input value={email} onChange={e => setEmail(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="email" placeholder="Email" type="email" />
-                                            </div>
+                                        <div>
+                                            <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="fullName">
+                                                Full Name
+                                            </label>
+                                            <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-base text-text-primary font-headline-md text-headline-md focus:outline-none focus:ring-1 focus:ring-primary transition-all placeholder:text-text-muted" id="fullName" placeholder="Your full name" type="text" />
                                         </div>
                                         <div>
                                             <label className="block font-caption text-caption text-text-muted uppercase tracking-wider mb-1.5" htmlFor="userLocation">
@@ -505,90 +376,30 @@ export default function EditProfile() {
 
                         {/* Persistent Bottom Action Bar */}
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-space-md p-space-md rounded-xl bg-surface-card shadow-lg">
-                            <div className="flex items-center gap-space-xs text-text-muted font-caption text-caption w-full sm:w-auto text-center sm:text-left">
-                                <span className="material-symbols-outlined text-[16px] text-text-muted hidden sm:inline">lock</span>
+                            <div className="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+                                <span className="material-symbols-outlined text-[16px] text-text-muted">lock</span>
                                 Profile details are shared exclusively with confirmed swap peers and in browse mode.
                             </div>
-                            <div className="flex items-center gap-space-sm w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 border-border-subtle pt-3 sm:pt-0 mt-2 sm:mt-0">
+                            <div className="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+                                <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">
+                                    Discard
+                                </Link>
                                 <button
-                                    className="px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
-                                    onClick={() => setPasswordModalOpen(true)}
+                                    className="px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-80 disabled:cursor-not-allowed"
+                                    onClick={handleSave}
+                                    disabled={isSaving}
                                     type="button"
                                 >
-                                    <span className="material-symbols-outlined text-[18px]">key</span>
-                                    <span className="hidden sm:inline">Change Password</span>
+                                    <span className={`material-symbols-outlined text-[18px] ${isSaving && saveText === 'Saving...' ? 'animate-spin' : ''}`}>
+                                        {isSaving ? (saveText === 'Saved!' ? 'done_all' : 'refresh') : 'check'}
+                                    </span>
+                                    {saveText}
                                 </button>
-                                <button
-                                    className="sm:mr-4 px-3 sm:px-4 py-2 flex items-center gap-1.5 rounded-lg font-label-md text-label-md text-status-rejected hover:bg-status-rejected-bg transition-colors"
-                                    onClick={handleDeleteAccount}
-                                    type="button"
-                                >
-                                    <span className="material-symbols-outlined text-[18px]">delete_forever</span>
-                                    <span className="hidden sm:inline">Delete Account</span>
-                                </button>
-                                <div className="flex items-center gap-space-sm">
-                                    <Link to="/profile" className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors">
-                                        Discard
-                                    </Link>
-                                    <button
-                                        className={`px-5 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-1.5 shadow-sm min-w-[140px] ${isSaving ? 'opacity-80 cursor-not-allowed' : ''}`}
-                                        onClick={handleSave}
-                                        disabled={isSaving}
-                                        type="button"
-                                    >
-                                        {isSaving && saveText !== 'Saved!' ? (
-                                            <Spinner />
-                                        ) : (
-                                            <>
-                                                <span className="material-symbols-outlined text-[18px]">
-                                                    {saveText === 'Saved!' ? 'done_all' : 'check'}
-                                                </span>
-                                                {saveText}
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <Modal {...modalConfig} onClose={closeModal} />
-            {/* Custom Change Password Modal */}
-            {passwordModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="fixed inset-0 bg-surface-container-highest/80 backdrop-blur-sm" onClick={() => !isSubmittingPassword && setPasswordModalOpen(false)}></div>
-                    <div className="relative w-full max-w-sm bg-surface-base rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-border-subtle">
-                        <div className="p-space-lg">
-                            <h3 className="font-title-lg text-title-lg text-text-primary mb-2">Change Password</h3>
-                            <p className="font-body-sm text-body-sm text-text-muted mb-4">Please enter your current password to authorize this action.</p>
-
-                            {passwordError && <p className="text-status-rejected font-label-sm text-label-sm mb-3 bg-status-rejected-bg p-2 rounded-md border border-status-rejected/20">{passwordError}</p>}
-                            {passwordSuccess && <p className="text-status-approved font-label-sm text-label-sm mb-3 bg-status-approved-bg p-2 rounded-md border border-status-approved/20">Password changed successfully!</p>}
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-label-sm font-label-sm text-text-muted mb-1" htmlFor="oldPassword">Current Password</label>
-                                    <input id="oldPassword" type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-container border border-border-subtle focus:border-primary focus:outline-none transition-colors" placeholder="••••••••" />
-                                </div>
-                                <div>
-                                    <label className="block text-label-sm font-label-sm text-text-muted mb-1" htmlFor="newPassword">New Password</label>
-                                    <input id="newPassword" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full h-10 px-3.5 rounded-lg bg-surface-container border border-border-subtle focus:border-primary focus:outline-none transition-colors" placeholder="••••••••" />
-                                </div>
-                            </div>
-
-                            <div className="mt-6 flex justify-end gap-3">
-                                <button type="button" onClick={() => { setPasswordError(''); setPasswordModalOpen(false); }} disabled={isSubmittingPassword} className="px-4 py-2 rounded-lg font-label-md text-label-md text-text-secondary hover:bg-surface-elevated transition-colors">
-                                    Cancel
-                                </button>
-                                <button type="button" onClick={handleChangePassword} disabled={isSubmittingPassword || !oldPassword || !newPassword} className="px-4 py-2 rounded-lg font-label-md text-label-md bg-text-primary text-surface-base hover:opacity-90 flex items-center justify-center min-w-[120px] transition-opacity disabled:opacity-50 shadow-sm">
-                                    {isSubmittingPassword ? <Spinner size="w-4 h-4" color="text-surface-base" /> : "Update Password"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </main>
     );
 }
