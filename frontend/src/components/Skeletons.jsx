@@ -131,30 +131,67 @@ export const SkeletonProfile = () => {
 // SKELETON: USED IN /profile/edit
 export const SkeletonEditForm = () => {
     return (
-        <div className="animate-pulse w-full max-w-6xl mx-auto px-gutter py-space-xl">
-            <div className="flex items-center gap-space-sm mb-space-lg">
-                <div className="h-4 w-32 bg-surface-container rounded-md"></div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
-                <div className="lg:col-span-3 flex flex-col gap-2">
-                    <div className="h-10 w-full bg-surface-card border border-border-subtle rounded-lg"></div>
-                    <div className="h-10 w-full bg-surface-card border border-border-subtle rounded-lg"></div>
-                    <div className="h-10 w-full bg-surface-card border border-border-subtle rounded-lg"></div>
-                </div>
-                <div className="lg:col-span-9 bg-surface-card rounded-xl p-space-lg md:p-space-xl shadow-xl border border-border-subtle flex flex-col gap-space-xl">
-                    <div className="flex items-center gap-space-lg">
-                        <div className="w-24 h-24 rounded-full bg-surface-elevated"></div>
-                        <div className="flex flex-col gap-2">
-                            <div className="h-4 w-40 bg-surface-container rounded-md"></div>
-                            <div className="h-10 w-32 bg-surface-elevated rounded-lg"></div>
-                            <div className="h-3 w-48 bg-surface-container rounded-md"></div>
+        <div className="animate-pulse w-full pt-16 bg-surface-base min-h-screen">
+            <div className="max-w-6xl mx-auto px-gutter py-space-xl">
+                <div className="flex flex-col w-full">
+                    {/* Breadcrumb skeleton */}
+                    <div className="flex items-center justify-between pb-space-lg">
+                        <div className="flex items-center gap-2">
+                            <div className="h-4 w-4 bg-surface-container rounded-sm"></div>
+                            <div className="h-4 w-24 bg-surface-container rounded-md"></div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
-                        <div className="h-16 w-full bg-surface-elevated rounded-lg"></div>
-                        <div className="h-16 w-full bg-surface-elevated rounded-lg"></div>
-                        <div className="h-16 w-full bg-surface-elevated rounded-lg md:col-span-2"></div>
-                        <div className="h-16 w-full bg-surface-elevated rounded-lg"></div>
+
+                    <div className="space-y-space-xl">
+                        {/* Header Card Skeleton */}
+                        <div className="bg-surface-card rounded-xl p-space-lg sm:p-space-xl shadow-md">
+                            <div className="flex flex-col lg:flex-row gap-space-xl items-start justify-between">
+                                <div className="flex flex-col sm:flex-row gap-space-lg items-start flex-1 w-full min-w-0">
+                                    {/* Avatar */}
+                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-surface-elevated shrink-0"></div>
+                                    {/* Inputs */}
+                                    <div className="space-y-space-md w-full max-w-lg mt-2 sm:mt-0">
+                                        <div className="grid grid-cols-2 gap-space-md">
+                                            <div>
+                                                <div className="h-3 w-20 bg-surface-container rounded-sm mb-1.5"></div>
+                                                <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
+                                            </div>
+                                            <div>
+                                                <div className="h-3 w-20 bg-surface-container rounded-sm mb-1.5"></div>
+                                                <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="h-3 w-32 bg-surface-container rounded-sm mb-1.5"></div>
+                                            <div className="h-9 w-full bg-surface-elevated rounded-lg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Right side block */}
+                                <div className="flex flex-col sm:flex-row lg:flex-col gap-space-lg min-w-[240px] pt-4 lg:pt-0 border-t border-surface-container lg:border-t-0">
+                                    <div>
+                                        <div className="h-3 w-24 bg-surface-container rounded-sm mb-1.5"></div>
+                                        <div className="h-10 w-full bg-surface-elevated rounded-lg"></div>
+                                    </div>
+                                    <div>
+                                        <div className="h-3 w-32 bg-surface-container rounded-sm mb-1.5"></div>
+                                        <div className="flex items-center gap-3 mt-2">
+                                            <div className="h-6 w-11 bg-surface-elevated rounded-full"></div>
+                                            <div className="h-4 w-24 bg-surface-container rounded-md"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Skills Grid */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
+                            <div className="bg-surface-card rounded-xl p-space-lg shadow-sm h-80"></div>
+                            <div className="bg-surface-card rounded-xl p-space-lg shadow-sm h-80"></div>
+                        </div>
+
+                        {/* Danger Zone */}
+                        <div className="bg-surface-card border border-status-rejected/20 rounded-xl p-space-lg h-32"></div>
                     </div>
                 </div>
             </div>

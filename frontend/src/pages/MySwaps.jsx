@@ -8,6 +8,7 @@ export default function MySwaps() {
     const [modalConfig, setModalConfig] = useState({ isOpen: false });
     const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
     const [activeStatus, setActiveStatus] = useState('all');
+    const [loading, setLoading] = useState(true);
 
     const [cards, setCards] = useState([]);
     const [ratingModal, setRatingModal] = useState(null);
@@ -75,9 +76,14 @@ export default function MySwaps() {
 
                         mappedCards.sort((a, b) => b.id - a.id);
                         setCards(mappedCards);
-                    });
+                        setLoading(false);
+                    })
+                    .catch(() => setLoading(false));
             })
-            .catch(err => console.error("Error fetching swaps:", err));
+            .catch(err => {
+                console.error("Error fetching swaps:", err);
+                setLoading(false);
+            });
     }, []);
 
     const handleUpdateSwap = (id, status) => {
